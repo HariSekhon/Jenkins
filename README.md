@@ -14,7 +14,7 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 - [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline config
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library directory - structured so you can use this repo straight from Jenkins
 
-See [Jenkins - Using Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) documentation for how to load and use this library directly from Jenkins.
+See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for how to load and use this library directly from Jenkins.
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
 
