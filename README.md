@@ -11,6 +11,11 @@
 
 Advanced Jenkinsfile & Jenkins Shared Library (Groovy).
 
+- `Jenkinsfile` - Jenkins Pipeline config
+- `vars/` - Jenkins Shared Library - structured so you can use this repo straight from Jenkins
+
+See [Jenkins - Using Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) documentation for how to load and use this library directly from Jenkins.
+
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
 
 ### See Also
