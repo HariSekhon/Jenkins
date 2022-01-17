@@ -9,10 +9,10 @@
 [![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2.1k-lightgrey?logo=codecademy)](https://github.com/HariSekhon/Jenkins)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/commits/master)
 
-Advanced Jenkinsfile & Jenkins Shared Library (Groovy).
+Advanced Jenkinsfile & Jenkins Shared Library.
 
-- `Jenkinsfile` - Jenkins Pipeline config
-- `vars/` - Jenkins Shared Library - structured so you can use this repo straight from Jenkins
+- [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline config
+- [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library directory - structured so you can use this repo straight from Jenkins
 
 See [Jenkins - Using Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) documentation for how to load and use this library directly from Jenkins.
 
