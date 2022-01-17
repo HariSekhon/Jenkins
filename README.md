@@ -5,7 +5,7 @@
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-2088FF?logo=github)](https://github.com/HariSekhon/Jenkins)
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-FCA121?logo=gitlab)](https://gitlab.com/HariSekhon/Jenkins)
 [![Repo on BitBucket](https://img.shields.io/badge/repo-BitBucket-0052CC?logo=bitbucket)](https://bitbucket.org/HariSekhon/Jenkins)
-[![Lines of Code](https://img.shields.io/badge/lines%20of%20code-5k-lightgrey?logo=codecademy)](https://github.com/HariSekhon/Jenkins)
+[![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2.1k-lightgrey?logo=codecademy)](https://github.com/HariSekhon/Jenkins)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/commits/master)
 
 Advanced Jenkinsfile & Jenkins Shared Library (Groovy)
