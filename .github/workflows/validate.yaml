@@ -30,4 +30,4 @@ on:
 jobs:
   validate:
     name: Validate
-    uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
