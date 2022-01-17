@@ -8,7 +8,7 @@
 [![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2.1k-lightgrey?logo=codecademy)](https://github.com/HariSekhon/Jenkins)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/commits/master)
 
-Advanced Jenkinsfile & Jenkins Shared Library (Groovy)
+Advanced Jenkinsfile & Jenkins Shared Library (Groovy).
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
 
@@ -31,7 +31,3 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 - [HAProxy Configs](https://github.com/HariSekhon/HAProxy-configs) - 80+ HAProxy Configs for Hadoop, Big Data, NoSQL, Docker, Elasticsearch, SolrCloud, HBase, Cloudera, Hortonworks, MapR, MySQL, PostgreSQL, Apache Drill, Hive, Presto, Impala, ZooKeeper, OpenTSDB, InfluxDB, Prometheus, Kibana, Graphite, SSH, RabbitMQ, Redis, Riak, Rancher etc.
 
 - [Dockerfiles](https://github.com/HariSekhon/Dockerfiles) - 50+ DockerHub public images for Docker & Kubernetes - Hadoop, Kafka, ZooKeeper, HBase, Cassandra, Solr, SolrCloud, Presto, Apache Drill, Nifi, Spark, Mesos, Consul, Riak, OpenTSDB, Jython, Advanced Nagios Plugins & DevOps Tools repos on Alpine, CentOS, Debian, Fedora, Ubuntu, Superset, H2O, Serf, Alluxio / Tachyon, FakeS3
-
-[![Stargazers over time](https://starchart.cc/HariSekhon/Templates.svg)](https://starchart.cc/HariSekhon/Templates)
-
-[git.io/code-templates](https://git.io/code-templates)
