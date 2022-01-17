@@ -19,7 +19,7 @@
 //		loadScript('script.sh')
 //		// or
 //		// loadScript('script.sh', 'path/to/srcdir')
-//	 	sh './script.sh ...'
+//		sh './script.sh ...'
 //	}
 //
 // Alternatively, do what I do for my GitHub repos and use a git submodule or clone another repo locally to use its tools
