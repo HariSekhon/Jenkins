@@ -15,19 +15,19 @@
 
 // Copies a unix script to the local workspace and chmod's it to be used in a subsequent 'sh' step, eg:
 //
-//	steps {
-//		loadScript('script.sh')
-//		// or
-//		// loadScript('script.sh', 'path/to/srcdir')
-//		sh './script.sh ...'
-//	}
+//    steps {
+//        loadScript('script.sh')
+//        // or
+//        // loadScript('script.sh', 'path/to/srcdir')
+//        sh './script.sh ...'
+//    }
 //
 // Alternatively, do what I do for my GitHub repos and use a git submodule or clone another repo locally to use its tools
 
 def call(file, dir = '.') {
-	def scriptContents = libraryResource "$dir/$file"
-	writeFile file: "$file",
-			  text: scriptContents
-			  //encoding: "Base64"  # if the file is Base 64 encoded to decode it before writing (eg. for binaries)
-	sh "chmod a+x ./$file"
+    def scriptContents = libraryResource "$dir/$file"
+    writeFile file: "$file",
+              text: scriptContents
+              //encoding: "Base64"  # if the file is Base 64 encoded to decode it before writing (eg. for binaries)
+    sh "chmod a+x ./$file"
 }
