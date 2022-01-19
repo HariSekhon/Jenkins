@@ -490,6 +490,16 @@ pipeline {
     }
 
     // ========================================================================== //
+    stage('Checkov') {
+      when {
+        // Scan changed files in PRs, block on new issues only (existing issues ignored)
+        expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
+        beforeAgent true
+      }
+      checkov()
+    }
+
+    // ========================================================================== //
     stage('Semgrep') {
       when {
         // Scan changed files in PRs, block on new issues only (existing issues ignored)
