@@ -496,7 +496,9 @@ pipeline {
         expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
         beforeAgent true
       }
-      checkov()
+      steps {
+        checkov()
+      }
     }
 
     // ========================================================================== //
