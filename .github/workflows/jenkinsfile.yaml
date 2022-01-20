@@ -46,15 +46,20 @@ jobs:
       #    #ref: master         # use default branch in case it changes in future
       #    #submodules: 'true'  # don't need the submodules for just this script, save time
       #    path: bash-tools
+      - name: Environment
+        run: env | sort
       - name: Git Checkout
         run: |
-          cd $HOME
+          git --version
+          cd "$JENKINS_HOME"
           git clone "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}" repo
           cd repo
           git checkout -f ${{ env.GITHUB_SHA }}
       - name: Git Checkout Bash Tools
-        run: cd $HOME && git clone "${{ env.GITHUB_SERVER_URL }}/HariSekhon/DevOps-Bash-tools" bash-tools
+        run: |
+          cd "$JENKINS_HOME"
+          git clone "${{ env.GITHUB_SERVER_URL }}/HariSekhon/DevOps-Bash-tools" bash-tools
       - name: Validate Jenkinsfiles
         run: |
-          cd $HOME/repo
+          cd "$JENKINS_HOME/repo"
           ../bash-tools/check_jenkinsfiles.sh
