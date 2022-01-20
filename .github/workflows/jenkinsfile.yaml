@@ -62,11 +62,11 @@ jobs:
           git clone "$GITHUB_SERVER_URL/HariSekhon/DevOps-Bash-tools" bash-tools
       - name: Jenkins Install Pipeline Plugin
         # deprecated
-        run: /usr/local/bin/install-plugins.sh workflow-aggregator:2.6
+        #run: /usr/local/bin/install-plugins.sh workflow-aggregator:2.6
         # new
-        #run: /bin/jenkins-plugin-cli --plugins workflow-aggregator:2.6
+        run: /bin/jenkins-plugin-cli --plugins workflow-aggregator:2.6
       - name: Start Jenkins
-        run: /usr/local/bin/jenkins.sh
+        run: /usr/local/bin/jenkins.sh & disown
       - name: Wait for Jenkins Initial Password
         run: while true; do [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ] && break; sleep 1; done
         timeout-minutes: 10
