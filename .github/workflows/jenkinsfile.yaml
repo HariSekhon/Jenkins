@@ -65,8 +65,10 @@ jobs:
         #run: /usr/local/bin/install-plugins.sh workflow-aggregator:2.6
         # new
         run: /bin/jenkins-plugin-cli --plugins workflow-aggregator:2.6
+        timeout-minutes: 3
       - name: Start Jenkins
         run: /usr/local/bin/jenkins.sh &
+        timeout-minutes: 1
       - name: Wait for Jenkins Initial Password
         run: while ! [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ]; do sleep 1; done
         timeout-minutes: 5
@@ -77,3 +79,4 @@ jobs:
         run: |
           cd "$JENKINS_HOME/repo"
           ../bash-tools/check_jenkinsfiles.sh
+        timeout-minutes: 5
