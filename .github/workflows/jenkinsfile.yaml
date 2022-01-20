@@ -1,0 +1,45 @@
+#
+#  Author: Hari Sekhon
+#  Date: Tue Feb 4 09:53:28 2020 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/harisekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Jenkinsfile Validation
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Jenkinsfile Validate
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container: jenkins/jenkins:lts
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - uses: actions/checkout@v2
+        with:
+          name: HariSekhon/DevOps-Bash-tools
+          ref: master
+          submodules: 'true'
+          path: bash-tools
+      - name: Validate Jenkinsfiles
+        run: bash-tools/check_jenkinsfiles.sh
