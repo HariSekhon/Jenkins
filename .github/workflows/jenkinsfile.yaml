@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           name: HariSekhon/DevOps-Bash-tools
-          #ref: master				 # use default branch in case it changes in future
+          #ref: master         # use default branch in case it changes in future
           #submodules: 'true'  # don't need the submodules for just this script, save time
           path: bash-tools
       - name: Validate Jenkinsfiles
