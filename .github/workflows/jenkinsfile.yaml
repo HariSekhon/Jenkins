@@ -25,66 +25,9 @@ on:
       - main
   workflow_dispatch:
 
-# doesn't get set
-#env:
-#  GITHUB_WORKSPACE: /var/jenkins_home
-
 jobs:
-  validate:
-    name: Jenkinsfile Validate
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    #container: harisekhon/jenkins:latest
-    container: jenkins/jenkins:lts
-    steps:
-      # can't set GITHUB_WORKSPACE to path: /var/_jenkins_home outside of it due to actions/checkout validation
-      #- uses: actions/checkout@v2
-      #  with:
-      #    submodules: 'true'
-      #- uses: actions/checkout@v2
-      #  with:
-      #    name: HariSekhon/DevOps-Bash-tools
-      #    #ref: master         # use default branch in case it changes in future
-      #    #submodules: 'true'  # don't need the submodules for just this script, save time
-      #    path: bash-tools
-      - name: Environment
-        run: env | sort
-      - name: Git Checkout
-        run: |
-          git --version
-          cd "$JENKINS_HOME"
-          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" repo
-          cd repo
-          git checkout -f "$GITHUB_SHA"
-      - name: Git Checkout Bash Tools
-        run: |
-          cd "$JENKINS_HOME"
-          git clone "$GITHUB_SERVER_URL/HariSekhon/DevOps-Bash-tools" bash-tools
-      - name: Jenkins Install Plugins
-        # deprecated
-        #run: /usr/local/bin/install-plugins.sh workflow-aggregator:2.6
-        # new
-        run: |
-          /bin/jenkins-plugin-cli --plugins \
-            ansicolor:1.0.1 \
-            lockable-resources:2.13 \
-            ssh-agent:1.23 \
-            timestamper:1.16 \
-            workflow-aggregator:2.6 \
-            ;
-            #kubernetes:1.31.2 \
-        timeout-minutes: 3
-      - name: Start Jenkins
-        run: /usr/local/bin/jenkins.sh &
-        timeout-minutes: 1
-      - name: Wait for Jenkins Initial Password
-        run: while ! [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ]; do sleep 1; done
-        timeout-minutes: 5
-      - name: Wait for Jenkins to initialize
-        run: while ! curl -sSf http://localhost:8080/login | grep -qi jenkins; do sleep 1; done
-        timeout-minutes: 5
-      - name: Validate Jenkinsfiles
-        run: |
-          cd "$JENKINS_HOME/repo"
-          ../bash-tools/check_jenkinsfiles.sh
-        timeout-minutes: 5
+  jenkinsfile:
+    name: Jenkinsfile
+    uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
+    permissions:
+      contents: read
