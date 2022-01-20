@@ -26,7 +26,7 @@ on:
   workflow_dispatch:
 
 env:
-	GITHUB_WORKSPACE: /var/jenkins_home
+  GITHUB_WORKSPACE: /var/jenkins_home
 
 jobs:
   validate:
