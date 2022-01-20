@@ -29,7 +29,9 @@
 // XXX: see vars/ directory in this repo for Shared Libary code
 
 // import a preconfigured shared library to use its functions for code reuse
-@Library('namedlibrary@master') _
+//@Library(value="name@version", changelog=true|false)  // changelog will not only include lib changes in changeset but also trigger new builds when the library changes, not very scalable to auto-re-run all your pipelines
+//@Library('namedlibrary@master') _
+@Library(value='harisekhon@master', changelog=false) _
 
 // more dynamic but $BRANCH_NAME is only available in a Jenkins MultiBranch Pipeline
 //library "namedlibrary@$BRANCH_NAME"
