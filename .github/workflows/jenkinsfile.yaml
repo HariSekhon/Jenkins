@@ -29,9 +29,6 @@ on:
 #env:
 #  GITHUB_WORKSPACE: /var/jenkins_home
 
-github:
-  workspace: /var/jenkins_home
-
 jobs:
   validate:
     name: Jenkinsfile Validate
@@ -39,15 +36,25 @@ jobs:
     runs-on: ubuntu-latest
     container: jenkins/jenkins:lts
     steps:
-      - run: env | sort
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
-      - uses: actions/checkout@v2
-        with:
-          name: HariSekhon/DevOps-Bash-tools
-          #ref: master         # use default branch in case it changes in future
-          #submodules: 'true'  # don't need the submodules for just this script, save time
-          path: bash-tools
+      # can't set GITHUB_WORKSPACE to path: /var/_jenkins_home outside of it due to actions/checkout validation
+      #- uses: actions/checkout@v2
+      #  with:
+      #    submodules: 'true'
+      #- uses: actions/checkout@v2
+      #  with:
+      #    name: HariSekhon/DevOps-Bash-tools
+      #    #ref: master         # use default branch in case it changes in future
+      #    #submodules: 'true'  # don't need the submodules for just this script, save time
+      #    path: bash-tools
+      - name: Git Checkout
+        run: |
+          cd $HOME
+          git clone "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}" repo
+          cd repo
+          git checkout -f ${{ env.GITHUB_SHA }}
+      - name: Git Checkout Bash Tools
+        run: cd $HOME && git clone "${{ env.GITHUB_SERVER_URL }}/HariSekhon/DevOps-Bash-tools" bash-tools
       - name: Validate Jenkinsfiles
-        run: bash-tools/check_jenkinsfiles.sh
+        run: |
+          cd $HOME/repo
+          ../bash-tools/check_jenkinsfiles.sh
