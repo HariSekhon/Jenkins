@@ -35,6 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     container: jenkins/jenkins:lts
     steps:
+      - run: env | sort
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
