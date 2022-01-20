@@ -40,7 +40,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
-        working-dir:
       - uses: actions/checkout@v2
         with:
           name: HariSekhon/DevOps-Bash-tools
