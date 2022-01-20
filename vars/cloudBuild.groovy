@@ -28,13 +28,11 @@ def call(timeoutMinutes=60){
   int timeoutSeconds = timeoutMinutes * 60
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
+      gcpActivateServiceAccount()
       echo 'Running GCP CloudBuild'
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
         sh '''#!/bin/bash
           set -euxo pipefail
-          echo "$GCP_SERVICEACCOUNT_KEY" | base64 --decode > credentials.json
-          gcloud auth activate-service-account --key-file=credentials.json
-          rm -f credentials.json
           if [ -z "$(gcloud container images list-tags "$DOCKER_IMAGE" --filter="tags:$GIT_COMMIT" --format=text)" ]; then
             gcloud builds submit --project="$CLOUDSDK_CORE_PROJECT" --substitutions _REGISTRY="$GCR_REGISTRY",_IMAGE_VERSION="$GIT_COMMIT" --timeout=$TIMEOUT_SECONDS
           fi
