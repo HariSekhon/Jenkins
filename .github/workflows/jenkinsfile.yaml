@@ -25,6 +25,11 @@ on:
       - main
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+    working-directory: /var/jenkins_home
+
 jobs:
   validate:
     name: Jenkinsfile Validate
@@ -32,10 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     container: jenkins/jenkins:lts
     steps:
-      - run: cd /var/jenkins_home
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
+        working-dir:
       - uses: actions/checkout@v2
         with:
           name: HariSekhon/DevOps-Bash-tools
