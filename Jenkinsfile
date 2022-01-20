@@ -19,6 +19,12 @@
 
 // https://jenkins.io/doc/book/pipeline/syntax/
 
+// Validated on Jenkins 2.303
+//
+//    see check_jenkinsfile.sh in my DevOps Bash tools repo:
+//
+//      https://github.com/HariSekhon/DevOps-Bash-tools/
+
 
 // ========================================================================== //
 //                        S h a r e d   L i b r a r i e s
@@ -151,7 +157,7 @@ pipeline {
     parallelsAlwaysFailFast()
 
     // only keep last 100 pipeline logs and artifacts
-    buildDiscarder(logRotator(numToKeepStr: '100')) }
+    buildDiscarder(logRotator(numToKeepStr: '100'))
 
     // https://www.jenkins.io/doc/pipeline/steps/gitlab-plugin/
     // enable build status feedback to GitLab
@@ -166,18 +172,18 @@ pipeline {
   triggers {
     // replace 0 with H (hash) to randomize starts to spread load and avoid spikes
     // the time is consistent for each job though as it's based on the hash of the job name
-    pollSCM('H/2 * * * *')  // run every 2 mins, at a consistent offset time within that 2 min interval
+    //
     // XXX: GitHub Jenkins webhooks are more instant and efficient than this frequent polling
-
+    //
     // XXX: Jenkins webhook bug - occasionally fails (rare), so poll GitHub / SCM as a backup to trigger
     //
     //      https://issues.jenkins.io/browse/JENKINS-50154
     //
-    pollSCM('H/10 * * * *')  // run every 2 mins, at a consistent offset time within that 2 min interval
+    pollSCM('H/10 * * * *')  // run every 10 mins, at a consistent offset time within that 10 min interval
 
     cron('H 10 * * 1-5')  // run at 10:XX:XX am every weekday morning, ie. some job fixed time between 10-11am
-    cron('@hourly')       // same as cron('H * * * *')
-    cron('@daily')        // same as cron('H H * * *')
+    //cron('@hourly')       // same as cron('H * * * *')
+    //cron('@daily')        // same as cron('H H * * *')
   }
 
   // need to specify at least one env var if enabling
@@ -257,11 +263,11 @@ pipeline {
     GITHUB_TOKEN           = credentials('github-token')  // user/token credential, will create env vars $GITHUB_TOKEN_USR and $GITHUB_TOKEN_PSW
 
     AWS_ACCOUNT_ID = 123456789012
-    AWS_DEFAULT_REGION = eu-west-2
+    AWS_DEFAULT_REGION = 'eu-west-2'
     AWS_ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-    //AWS_DEFAULT_OUTPUT = json
+    //AWS_DEFAULT_OUTPUT = 'json'
     //AWS_MAX_ATTEMPTS = 3
-    AWS_EKS_CLUSTER = mycluster
+    AWS_EKS_CLUSTER = 'mycluster'
 
     // https://cloud.google.com/sdk/gcloud/reference/config
     CLOUDSDK_CORE_PROJECT = 'mycompany-dev'
@@ -276,10 +282,10 @@ pipeline {
     // AWS
     DOCKER_IMAGE = "$AWS_ECR_REGISTRY/$APP"
     // GCR
-    DOCKER_IMAGE = "$GCR_REGISTRY/$CLOUDSDK_CORE_PROJECT/$APP"
+    //DOCKER_IMAGE = "$GCR_REGISTRY/$CLOUDSDK_CORE_PROJECT/$APP"
     // GitHub Container Registry
     GHCR_REGISTRY = 'ghcr.io/harisekhon'
-    DOCKER_IMAGE = "$GHCR_REGISTRY/$APP"
+    //DOCKER_IMAGE = "$GHCR_REGISTRY/$APP"
     // DockerHub
     //DOCKER_IMAGE = "harisekhon/$APP"
     DOCKER_TAG = "$GIT_COMMIT" // or "$GIT_BRANCH" which can be set to a semver git tag
@@ -510,9 +516,11 @@ pipeline {
         expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
         beforeAgent true
       }
-      container('semgrep'){
-        steps {
-          sh 'git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent'
+      steps {
+        container('semgrep'){
+          steps {
+            sh 'git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent'
+          }
         }
       }
     }
@@ -543,20 +551,19 @@ pipeline {
     }
 
     // ========================================================================== //
-    stage('Run Tests in Serial') {
-      stage('Run Desktop Tests') {
-        steps {
-          // continue to Mobile tests regardless of whether this stage fails, will still mark the build to failed though
-          catchError (buildResult: 'FAILURE', stageResult: 'FAILURE') {  // set stage to failed too, not just build
-            sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
-          }
+    // Run Tests in Serial - continue to Mobile tests regardless of whether Desktop tests pass so that we can get full Allure Report
+    stage('Run Desktop Tests') {
+      steps {
+        // continue to Mobile tests regardless of whether this stage fails, will still mark the build to failed though
+        catchError (buildResult: 'FAILURE', stageResult: 'FAILURE') {  // set stage to failed too, not just build
+          sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
         }
       }
+    }
 
-      stage('Run Mobile Tests') {
-        steps {
-          sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
-        }
+    stage('Run Mobile Tests') {
+      steps {
+        sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
       }
     }
 
@@ -703,10 +710,14 @@ pipeline {
       }
       stages {
         stage('one') {
-          sh '...'
+          steps {
+            sh '...'
+          }
         }
         stage('two') {
-          sh '...'
+          steps {
+            sh '...'
+          }
         }
       }
     }
@@ -890,8 +901,8 @@ This prompt will time out after 1 hour''',
       // discard other deploys once this one has been chosen
       // use Lockable Resources plugin to limit deploy concurrency to 1
       // inversePrecedence: true makes Jenkins use the most recent deployment first, which when combined with Milestone, discards older deploys
-      lock(resource: "Deploy - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
-        steps {
+      steps {
+        lock(resource: "Deploy - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
           // forbids older deploys from starting
           milestone(ordinal: 100, label: "Milestone: Deploy")
           echo 'Deploying...'
@@ -917,10 +928,12 @@ This prompt will time out after 1 hour''',
       //  branch pattern: '^.*/(main|master|production)$', comparator: 'REGEXP'
       //}
 
-      echo 'Deploying Canary release...'
-      // uses a Jenkins credential containing an uploaded .kube/config
-      withKubeConfig([credentialsId:kubeconfig, contextName:canary]){
-        sh 'kubectl apply -f manifests/'
+      steps {
+        echo 'Deploying Canary release...'
+        // uses a Jenkins credential containing an uploaded .kube/config
+        withKubeConfig([credentialsId:kubeconfig, contextName:canary]){
+          sh 'kubectl apply -f manifests/'
+        }
       }
     }
 
@@ -935,15 +948,17 @@ This prompt will time out after 1 hour''',
       //  branch pattern: '^.*/(main|master|production)$', comparator: 'REGEXP'
       //}
 
-      echo 'Deploying Production release...'
-      // EITHER
-      withKubeConfig([credentialsId:kubeconfig, contextName:prod]){
-        sh 'kubectl apply -f manifests/'
+      steps {
+        echo 'Deploying Production release...'
+        // EITHER
+        withKubeConfig([credentialsId:kubeconfig, contextName:prod]){
+          sh 'kubectl apply -f manifests/'
+        }
+        // OR - using external scripts ties this to the source repo
+        sh 'path/to/gcp_ci_deploy_k8s.sh'  // https://github.com/HariSekhon/DevOps-Bash-tools
+        // OR
+        argoDeploy()  // func in vars/ shared library
       }
-      // OR - using external scripts ties this to the source repo
-      sh 'path/to/gcp_ci_deploy_k8s.sh'  // https://github.com/HariSekhon/DevOps-Bash-tools
-      // OR
-      argoDeploy()  // func in vars/ shared library
     }
 
     stage('Cloudflare Cache Purge') {
@@ -1020,6 +1035,10 @@ This prompt will time out after 1 hour''',
       //  //message: "Build Fixed - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"        // Classic UI
       //  //message: "Build Fixed - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|Open>)"  // Blue Ocean
       //  message: "Build FAILED - ${env.SLACK_MESSAGE}"  // unified message with better links to Pipeline, Build # logs and even Allure Report
+
+      //slackSend color: 'good',
+      //  message: "Git Merge Fixed - ${env.SLACK_MESSAGE}" //,
+      //  //botUser: true  // needs to match the credential - so if Jenkins -> System Configuration -> Slack is using it, needs this or message won't come through
     }
     failure {
       echo 'FAILURE!'
@@ -1050,13 +1069,8 @@ This prompt will time out after 1 hour''',
       //  //message: "Build FAILED - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"        // Classic UI
       //  //message: "Build FAILED - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|Open>)"  // Blue Ocean
     }
-    fixed {
-      slackSend color: 'good',
-        message: "Git Merge Fixed - ${env.SLACK_MESSAGE}" //,
-        //botUser: true  // needs to match the credential - so if Jenkins -> System Configuration -> Slack is using it, needs this or message won't come through
-    }
-    unsuccessful {
-    }
+    //unsuccessful {
+    //}
     unstable {
       echo 'UNSTABLE!'
     }
@@ -1064,8 +1078,8 @@ This prompt will time out after 1 hour''',
     changed {
       echo 'Pipeline state change! (success vs failure)'
     }
-    cleanup {
-    }
+    //cleanup {
+    //}
   }
 }
 
