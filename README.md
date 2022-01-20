@@ -14,7 +14,7 @@
 
 Advanced Jenkinsfile & Jenkins Shared Library.
 
-- [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline config
+- [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline master config
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library directory - structured so you can use this repo straight from Jenkins
 
 See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for how to load and use this library directly from Jenkins.
