@@ -12,7 +12,7 @@
 #
 
 ---
-name: Jenkinsfile Validation
+name: Jenkinsfile
 
 on:
   push:
