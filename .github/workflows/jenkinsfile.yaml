@@ -52,13 +52,13 @@ jobs:
         run: |
           git --version
           cd "$JENKINS_HOME"
-          git clone "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}" repo
+          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" repo
           cd repo
-          git checkout -f ${{ env.GITHUB_SHA }}
+          git checkout -f "$GITHUB_SHA"
       - name: Git Checkout Bash Tools
         run: |
           cd "$JENKINS_HOME"
-          git clone "${{ env.GITHUB_SERVER_URL }}/HariSekhon/DevOps-Bash-tools" bash-tools
+          git clone "$GITHUB_SERVER_URL/HariSekhon/DevOps-Bash-tools" bash-tools
       - name: Validate Jenkinsfiles
         run: |
           cd "$JENKINS_HOME/repo"
