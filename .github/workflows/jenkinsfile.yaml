@@ -73,7 +73,7 @@ jobs:
         run: while ! [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ]; do sleep 1; done
         timeout-minutes: 5
       - name: Wait for Jenkins to initialize
-        run: while ! curl -sSf localhost:8080 | grep -q -i jenkins; do sleep 1; done
+        run: while ! curl -sSf http://localhost:8080/login | grep -qi jenkins; do sleep 1; done
         timeout-minutes: 5
       - name: Validate Jenkinsfiles
         run: |
