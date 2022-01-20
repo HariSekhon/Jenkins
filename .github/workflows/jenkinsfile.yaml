@@ -68,7 +68,9 @@ jobs:
       - name: Start Jenkins
         run: /usr/local/bin/jenkins.sh &
       - name: Wait for Jenkins Initial Password
-        run: while true; do [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ] && break; sleep 1; done
+        run: while ! [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ]; do sleep 1; done
+      - name: Wait for Jenkins to initialize
+        run: while ! curl -sSf localhost:8080 | grep -q -i jenkins; do sleep 1; done
         timeout-minutes: 10
       - name: Validate Jenkinsfiles
         run: |
