@@ -32,9 +32,9 @@ on:
 jobs:
   validate:
     name: Jenkinsfile Validate
-    timeout-minutes: 30
+    timeout-minutes: 20
     runs-on: ubuntu-latest
-    container: jenkins/jenkins:lts
+    container: harisekhon/jenkins:latest
     steps:
       # can't set GITHUB_WORKSPACE to path: /var/_jenkins_home outside of it due to actions/checkout validation
       #- uses: actions/checkout@v2
@@ -66,7 +66,7 @@ jobs:
         #run: /bin/jenkins-plugin-cli --plugins workflow-aggregator:2.6
       - name: Wait for Jenkins Initial Password
         run: while true; do [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ] && break; sleep 1; done
-        timeout-minutes: 20
+        timeout-minutes: 10
       - name: Validate Jenkinsfiles
         run: |
           cd "$JENKINS_HOME/repo"
