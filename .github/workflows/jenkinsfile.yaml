@@ -60,11 +60,19 @@ jobs:
         run: |
           cd "$JENKINS_HOME"
           git clone "$GITHUB_SERVER_URL/HariSekhon/DevOps-Bash-tools" bash-tools
-      - name: Jenkins Install Pipeline Plugin
+      - name: Jenkins Install Plugins
         # deprecated
         #run: /usr/local/bin/install-plugins.sh workflow-aggregator:2.6
         # new
-        run: /bin/jenkins-plugin-cli --plugins workflow-aggregator:2.6
+        run: |
+          /bin/jenkins-plugin-cli --plugins \
+            ansicolor:1.0.1 \
+            lockable-resources:2.13 \
+            ssh-agent:1.23 \
+            timestamper:1.16 \
+            workflow-aggregator:2.6 \
+            ;
+            #kubernetes:1.31.2 \
         timeout-minutes: 3
       - name: Start Jenkins
         run: /usr/local/bin/jenkins.sh &
