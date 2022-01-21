@@ -27,7 +27,7 @@ on:
 
 jobs:
   groovyc:
-    name: Groovy Compile
+    name: Groovy Shared Library
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
     permissions:
       contents: read
