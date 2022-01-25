@@ -279,6 +279,10 @@ pipeline {
     // use to purge Cloudflare Cache
     CLOUDFLARE_API_KEY = credentials('cloudflare-api-key')
 
+    // if creating docker images on agents, this enables BuildKit which automatically creates images layers in parallel where possible (especially useful for multi-stage builds)
+    // also add '--build-arg BUILDKIT_INLINE_CACHE=1' to the docker build command
+    DOCKER_BUILDKIT = 1
+
     // AWS
     DOCKER_IMAGE = "$AWS_ECR_REGISTRY/$APP"
     // GCR
