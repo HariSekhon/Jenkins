@@ -30,7 +30,7 @@ on:
 jobs:
   url_links:
     name: URL Links
-    uses: HariSekhon/GitHub-Actions/url_links.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
     with:
       url_links_ignored: |
         https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
