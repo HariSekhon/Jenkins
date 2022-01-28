@@ -13,7 +13,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(from_branch, to_branch){
+def call(fromBranch, toBranch){
   echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
   timeout(time: 1, unit: 'MINUTES') {
     sh script: 'env | sort', label: 'Environment'
@@ -26,28 +26,35 @@ def call(from_branch, to_branch){
       // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
       sshagent (credentials: ['github-ssh-key']) {
         retry(2) {
-          sh """#!/bin/bash
-                set -euxo pipefail
+          withEnv(["FROM_BRANCH=$fromBranch", "TO_BRANCH=$toBranch"]) {
+            sh '''#!/bin/bash
+              set -euxo pipefail
 
-                # needed to check in
-                git config user.name "Jenkins"
-                git config user.email "platform-engineering@mydomain.co.uk"  # XXX: set this
+              if [ -z "${JENKINS_COMMIT_EMAIL:-}" ]; then
+                echo "JENKINS_COMMIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
+                exit 1
+              fi
 
-                git status
+              # needed to check in
+              git config user.name "Jenkins"
+              git config user.email "$JENKINS_COMMIT_EMAIL"
 
-                mkdir -pv ~/.ssh
+              git status
 
-                # needed for git pull to work
-                ssh-keyscan github.com >> ~/.ssh/known_hosts
+              mkdir -pv ~/.ssh
 
-                git fetch
+              # needed for git pull to work - hardcode this for security
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-                git checkout "$to_branch" --force
-                git pull --no-edit
-                git merge "origin/$from_branch" --no-edit
+              git fetch
 
-                git push
-            """
+              git checkout "$TO_BRANCH" --force
+              git pull --no-edit
+              git merge "origin/$FROM_BRANCH" --no-edit
+
+              git push
+            '''
+          }
         }
       }
     }
