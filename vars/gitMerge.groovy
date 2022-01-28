@@ -4,7 +4,7 @@
 //
 //  vim:ts=2:sts=2:sw=2:et
 //
-//  https://github.com/HariSekhon/Templates
+//  https://github.com/HariSekhon/Jenkins
 //
 //  License: see accompanying Hari Sekhon LICENSE file
 //
@@ -27,24 +27,11 @@ def call(fromBranch, toBranch){
       sshagent (credentials: ['github-ssh-key']) {
         retry(2) {
           withEnv(["FROM_BRANCH=$fromBranch", "TO_BRANCH=$toBranch"]) {
+            gitSetup()
             sh '''#!/bin/bash
               set -euxo pipefail
 
-              if [ -z "${GIT_EMAIL:-}" ]; then
-                echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
-                exit 1
-              fi
-
-              # needed to check in
-              git config user.name "${GIT_USERNAME:-Jenkins}"
-              git config user.email "$GIT_EMAIL"
-
               git status
-
-              mkdir -pv ~/.ssh
-
-              # needed for git pull to work - hardcode this for security
-              ssh-keyscan github.com >> ~/.ssh/known_hosts
 
               git fetch
 
