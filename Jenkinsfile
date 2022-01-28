@@ -254,6 +254,21 @@ pipeline {
     // used by Git branch auto-merges and GitOps K8s image version updates
     GIT_USERNAME = 'Jenkins'
     GIT_EMAIL = 'platform-engineering@MYCOMPANY.CO.UK'
+    // general git command debugging
+    //GIT_TRACE=1
+    //GIT_TRACE_SETUP=1
+    // should store these in Git for security and auditing purposes before loading to Jenkins credentials
+    GITHUB_SSH_KNOWN_HOSTS = credentials('github-ssh-known-hosts')              // eg. 'ssh-keyscan github.com'
+    GITLAB_SSH_KNOWN_HOSTS = credentials('gitlab-ssh-known-hosts')              // eg. 'ssh-keyscan gitlab.com'
+    AZURE_DEVOPS_SSH_KNOWN_HOSTS = credentials('azure-devops-ssh-known-hosts')  // eg. 'ssh-keyscan ssh.dev.azure.com'
+    BITBUCKET_SSH_KNOWN_HOSTS = credentials('bitbucket-ssh-known-hosts')        // eg. 'ssh-keyscan bitbucket.org'
+    // appended to ephemeral k8s agents >> ~/.ssh/known_hosts by some shared libraries eg. gitMergePipeline.groovy, gitOpsK8sUpdate.groovy
+    SSH_KNOWN_HOSTS = """
+      $GITHUB_SSH_KNOWN_HOSTS
+      $GITLAB_SSH_KNOWN_HOSTS
+      $AZURE_DEVOPS_SSH_KNOWN_HOSTS
+      $BITBUCKET_SSH_KNOWN_HOSTS
+    """
 
     // XXX: CAREFUL who can create CI/CD commits or PRs with this credentialled pipeline as they could obtain these credentials
     // create these credentials as Secret Text in Jenkins UI -> Manage Jenkins -> Manage Credentials -> Jenkins -> Global Credentials -> Add Credentials
