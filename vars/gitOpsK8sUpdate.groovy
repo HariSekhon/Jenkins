@@ -44,12 +44,12 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
         sh """#!/bin/bash
           set -euxo pipefail
           export SSH_AUTH_SOCK="${env.SSH_AUTH_SOCK}"  # workaround for https://issues.jenkins.io/browse/JENKINS-42582
-          git config --global user.name  "$GIT_USERNAME"
+          git config --global user.name  "${GIT_USERNAME:-Jenkins}"
           git config --global user.email "$GIT_EMAIL"
           mkdir -pv ~/.ssh
           #ssh-add -l || :
 
-          # convenient but not secure
+          # convenient but not secure - instead record the known hosts and make them a Jenkins secret, then source via an environment variable
           #ssh-keyscan github.com >> ~/.ssh/known_hosts
           #ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
           #ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
@@ -64,8 +64,11 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
 #EOF
           #
           # copy from ssh-keyscan above and then hardcode here for better security:
-          #echo "[ssh.github.com]:443 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
-          echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
+          #echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
+
+          if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
+            echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          fi
 
           #export GIT_TRACE=1
           #export GIT_TRACE_SETUP=1
