@@ -24,7 +24,7 @@ def call(timeoutMinutes=2){
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
         sh '''#!/bin/bash
           set -euxo pipefail
-          echo "$GCP_SERVICEACCOUNT_KEY" | base64 --decode > credentials.json
+          base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
           rm -f credentials.json
         '''
