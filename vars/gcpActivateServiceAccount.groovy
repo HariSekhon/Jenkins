@@ -17,7 +17,6 @@
 
 def call(timeoutMinutes=2){
   echo "Activating GCP Service Account credential for Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-  int timeoutSeconds = timeoutMinutes * 60
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       echo 'Activating GCP Service Account credential'
