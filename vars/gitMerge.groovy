@@ -30,14 +30,14 @@ def call(fromBranch, toBranch){
             sh '''#!/bin/bash
               set -euxo pipefail
 
-              if [ -z "${JENKINS_COMMIT_EMAIL:-}" ]; then
-                echo "JENKINS_COMMIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
+              if [ -z "${GIT_EMAIL:-}" ]; then
+                echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
                 exit 1
               fi
 
               # needed to check in
-              git config user.name "Jenkins"
-              git config user.email "$JENKINS_COMMIT_EMAIL"
+              git config user.name "${GIT_USER:-Jenkins}"
+              git config user.email "$GIT_EMAIL"
 
               git status
 
