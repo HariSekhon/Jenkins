@@ -21,7 +21,7 @@
 //    DOCKER_IMAGE
 //    GIT_COMMIT - provided automatically by Jenkins
 
-def call(timeoutMinutes=60){
+def call(substitutions="""_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=$GIT_BRANCH""", timeoutMinutes=60){
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
   milestone ordinal: 10, label: "Milestone: Build"
   echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
@@ -30,11 +30,11 @@ def call(timeoutMinutes=60){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       gcpActivateServiceAccount()
       echo 'Running GCP CloudBuild'
-      withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
+      withEnv(["TIMEOUT_SECONDS=$timeoutSeconds", "SUBSTITUTIONS=$subtitutions"]) {
         sh '''#!/bin/bash
           set -euxo pipefail
           if [ -z "$(gcloud container images list-tags "$DOCKER_IMAGE" --filter="tags:$GIT_COMMIT" --format=text)" ]; then
-            gcloud builds submit --project="$CLOUDSDK_CORE_PROJECT" --substitutions _REGISTRY="$GCR_REGISTRY",_IMAGE_VERSION="$GIT_COMMIT",_GIT_BRANCH="${GIT_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}" --timeout="$TIMEOUT_SECONDS"
+            gcloud builds submit --project "$CLOUDSDK_CORE_PROJECT" --substitutions "$SUBSTITUTIONS" --timeout "$TIMEOUT_SECONDS"
           fi
         '''
       }
