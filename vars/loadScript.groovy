@@ -2,9 +2,9 @@
 //  Author: Hari Sekhon
 //  Date: 2022-01-11 16:23:33 +0000 (Tue, 11 Jan 2022)
 //
-//  vim:ts=4:sts=4:sw=4:noet
+//  vim:ts=2:sts=2:sw=2:noet
 //
-//  https://github.com/HariSekhon/templates
+//  https://github.com/HariSekhon/Jenkins
 //
 //  License: see accompanying Hari Sekhon LICENSE file
 //
@@ -25,9 +25,11 @@
 // Alternatively, do what I do for my GitHub repos and use a git submodule or clone another repo locally to use its tools
 
 def call(file, dir = '.') {
+  withEnv(["FILE=$file"]){
     def scriptContents = libraryResource "$dir/$file"
     writeFile file: "$file",
               text: scriptContents
               //encoding: "Base64"  # if the file is Base 64 encoded to decode it before writing (eg. for binaries)
-    sh "chmod a+x ./$file"
+    sh 'chmod a+x "./$FILE"'
+  }
 }
