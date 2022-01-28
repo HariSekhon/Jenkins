@@ -36,7 +36,7 @@ def call(fromBranch, toBranch){
               fi
 
               # needed to check in
-              git config user.name "${GIT_USER:-Jenkins}"
+              git config user.name "${GIT_USERNAME:-Jenkins}"
               git config user.email "$GIT_EMAIL"
 
               git status
