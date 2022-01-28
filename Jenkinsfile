@@ -4,13 +4,13 @@
 //  Author: Hari Sekhon
 //  Date: [% DATE # 2017-06-28 12:39:02 +0200 (Wed, 28 Jun 2017) ]
 //
-//  [% URL %]
+//  [% URL  # https://github.com/HariSekhon/Jenkins %]
 //
 //  [% LICENSE %]
 //
 //  [% MESSAGE %]
 //
-//  [% LINKEDIN %]
+//  https://www.linkedin.com/in/HariSekhon
 //
 
 // ========================================================================== //
