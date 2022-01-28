@@ -20,7 +20,9 @@ def call(target, timeoutMinutes=10){
   container('grype') {
     timeout(time: timeoutMinuntes, unit: 'MINUTES') {
       ansiColor('xterm') {
-          sh "grype '$target' --fail-on high --scope AllLayers"
+        withEnv(["TARGET=$target"]) {
+          sh '''grype '$TARGET' --fail-on high --scope AllLayers'''
+        }
       }
     }
   }
