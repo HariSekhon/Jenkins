@@ -51,6 +51,8 @@ def call (project, environ, credential) {
               timeout(time: 40, unit: 'MINUTES') {
                 // script from DevOps Bash tools repo
                 // external script needs to exist in the source repo, not the shared library repo
+                //
+                // obsoleted by gcpCloudBuild.groovy which doesn't need a script to be available in the user repo
                 sh 'gcp_ci_build.sh'
               }
             }
@@ -65,6 +67,8 @@ def call (project, environ, credential) {
                 timeout(time: 20, unit: 'MINUTES') {
                   // script from DevOps Bash tools repo
                   // external script needs to exist in the source repo, not the shared library repo
+                  //
+                  // obsoleted by argoDeploy.groovy which doesn't need a script to be available in the user repo
                   sh 'gcp_ci_k8s_deploy.sh'
                 }
               }
