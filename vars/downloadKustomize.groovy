@@ -19,13 +19,15 @@
 
 def call(version='4.3.0'){
   timeout(time: 2, unit: 'MINUTES') {
-    sh script: """#!/bin/bash
-        set -euxo pipefail
-        echo "Downloading Kustomize version $version"
-        curl -sSL -o /tmp/kustomize.\$\$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_amd64.tar.gz
-        tar zxvf /tmp/kustomize.\$\$.tgz kustomize -O > /tmp/kustomize.\$\$
-        chmod +x /tmp/kustomize.\$\$
-        mv -iv /tmp/kustomize.\$\$ /usr/local/bin/kustomize
-    """
+    withEnv(["VERSION=$version"]) {
+      sh script: '''#!/bin/bash
+          set -euxo pipefail
+          echo "Downloading Kustomize version $VERSION"
+          curl -sSL -o /tmp/kustomize.$$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz
+          tar zxvf /tmp/kustomize.$$.tgz kustomize -O > /tmp/kustomize.$$
+          chmod +x /tmp/kustomize.$$
+          mv -iv /tmp/kustomize.$$ /usr/local/bin/kustomize
+      '''
+    }
   }
 }
