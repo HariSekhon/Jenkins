@@ -13,7 +13,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-// Whole Pipeline parameterized
+// Whole Pipeline parameterized - superceded, left here as an example
 
 def call (project, environ, credential) {
 
