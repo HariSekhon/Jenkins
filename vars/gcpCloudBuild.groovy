@@ -34,7 +34,7 @@ def call(timeoutMinutes=60){
         sh '''#!/bin/bash
           set -euxo pipefail
           if [ -z "$(gcloud container images list-tags "$DOCKER_IMAGE" --filter="tags:$GIT_COMMIT" --format=text)" ]; then
-            gcloud builds submit --project="$CLOUDSDK_CORE_PROJECT" --substitutions _REGISTRY="$GCR_REGISTRY",_IMAGE_VERSION="$GIT_COMMIT",_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)" --timeout="$TIMEOUT_SECONDS"
+            gcloud builds submit --project="$CLOUDSDK_CORE_PROJECT" --substitutions _REGISTRY="$GCR_REGISTRY",_IMAGE_VERSION="$GIT_COMMIT",_GIT_BRANCH="${GIT_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}" --timeout="$TIMEOUT_SECONDS"
           fi
         '''
       }
