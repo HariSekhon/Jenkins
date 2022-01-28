@@ -15,14 +15,18 @@
 
 // Requires DOCKER_IMAGE and DOCKER_TAG to be set in environment{} section of pipeline
 
-def call(timeoutMinutes=10){
+def call(target="$DOCKER_IMAGE:$DOCKER_TAG", timeoutMinutes=10){
   label 'Trivy'
   container('trivy') {
     timeout(time: timeoutMinuntes, unit: 'MINUTES') {
       ansiColor('xterm') {
-          sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL '$DOCKER_IMAGE':'$DOCKER_TAG'"
+        withEnv(["TARGET=$target"]){
           // informational to see all issues
-          sh "trivy image --no-progress '$DOCKER_IMAGE':'$DOCKER_TAG'"
+          sh ' trivy image --no-progress "$TARGET" '
+
+          // fail the pipeline if any of the issues are High / Critical
+          sh ' trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET" '
+        }
       }
     }
   }
