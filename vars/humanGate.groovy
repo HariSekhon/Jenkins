@@ -13,7 +13,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(){
+def call(submitter="$SUBMITTER"){
   milestone ordinal: 20, label: "Milestone: Human Gate"
   // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
   timeout(time: 1, unit: 'HOURS') {
@@ -23,7 +23,8 @@ def call(){
 This prompt will time out after 1 hour""",
       ok: "Deploy",
       // only allow people in this group to approve deployments to production
-      submitter: "platform-engineering@mydomain.co.uk",  // XXX: set this
+      //submitter: "platform-engineering@mydomain.co.uk"
+      submitter: "$submitter"
     )
   }
 }
