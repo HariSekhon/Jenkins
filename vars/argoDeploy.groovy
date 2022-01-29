@@ -30,12 +30,14 @@ def call(timeoutMinutes=10){
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
-          sh label: "ArgoCD deploy app '$APP'",
-             script: '''#!/bin/bash
-               set -euxo pipefail
-               argocd app sync "$APP" --grpc-web --force
-               argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS"
-             '''
+          sh (
+            label: "ArgoCD deploy app '$APP'",
+            script: '''#!/bin/bash
+              set -euxo pipefail
+              argocd app sync "$APP" --grpc-web --force
+              argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS"
+            '''
+          )
         }
       }
     }
