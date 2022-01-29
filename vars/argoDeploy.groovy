@@ -25,6 +25,7 @@ def call(timeoutMinutes=10){
   milestone ordinal: 100, label: "Milestone: Argo Deploy"
   String deploymentLock = "Deploying ArgoCD - App '$APP', Environment: " + "$ENVIRONMENT".capitalize()
   int timeoutSeconds = timeoutMinutes * 60
+  echo "Acquiring Lock: $deploymentLock"
   lock(resource: deploymentLock, inversePrecedence: true){
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
