@@ -38,7 +38,6 @@ def call(args, timeoutMinutes=60){
   int timeoutSeconds = timeoutMinutes * 60
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
-      gcpActivateServiceAccount()
       echo 'Running GCP CloudBuild'
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
         sh """#!/bin/bash
