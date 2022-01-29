@@ -19,7 +19,7 @@
 
 // https://jenkins.io/doc/book/pipeline/syntax/
 
-// Validated on Jenkins 2.303
+// Validated on Jenkins LTS 2.263.x, 2.277.x, 2.289.x, 2.303.x, 2.319.x
 //
 //    see check_jenkinsfile.sh in my DevOps Bash tools repo:
 //
