@@ -19,29 +19,29 @@
 def call() {
   sshKnownHosts()
   sh label: 'Set up Git',
-		 script: '''#!/bin/bash
-		set -euxo pipefail
+    script: '''#!/bin/bash
+      set -euxo pipefail
 
-    if [ -z "${GIT_EMAIL:-}" ]; then
-      echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
-      exit 1
-    fi
+      if [ -z "${GIT_EMAIL:-}" ]; then
+        echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
+        exit 1
+      fi
 
-    # needed for 'git commit'
-    git config --global user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
-    git config --global user.email "$GIT_EMAIL"
+      # needed for 'git commit'
+      git config --global user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
+      git config --global user.email "$GIT_EMAIL"
 
-    mkdir -pv ~/.ssh
+      mkdir -pv ~/.ssh
 
-    if [ -n "${DEBUG:-}" ]; then
-        ssh-add -l || :
-    fi
+      if [ -n "${DEBUG:-}" ]; then
+          ssh-add -l || :
+      fi
 
-    # use sshKnownHosts instead to make the real tracked host keys available in K8s agents
-    #export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
+      # use sshKnownHosts instead to make the real tracked host keys available in K8s agents
+      #export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
 
-    # better defined in Jenkinsfile environment{} section
-    #export GIT_TRACE=1
-    #export GIT_TRACE_SETUP=1
+      # better defined in Jenkinsfile environment{} section
+      #export GIT_TRACE=1
+      #export GIT_TRACE_SETUP=1
   '''
 }
