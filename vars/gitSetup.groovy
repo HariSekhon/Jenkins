@@ -29,8 +29,8 @@ def call() {
       fi
 
       # needed for 'git commit'
-      git config --global user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
-      git config --global user.email "$GIT_EMAIL"
+      git config user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
+      git config user.email "$GIT_EMAIL"
 
       if [ -n "${DEBUG:-}" ]; then
           ssh-add -l || :
