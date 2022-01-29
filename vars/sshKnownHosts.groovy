@@ -18,10 +18,10 @@
 //
 // Can read from environment{} variable SSH_KNOWN_HOSTS or passed as an arg
 
-def call(known_hosts='') {
+def call(known_hosts='', name='') {
   withEnv(["SSH_KNOWN_HOSTS=$known_hosts"]){
     sh (
-      label: 'Adding SSH Known Hosts',
+      label: "Adding SSH Known Hosts: $name",
       script: '''#!/bin/bash
         set -euxo pipefail
 
