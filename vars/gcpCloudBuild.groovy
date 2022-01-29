@@ -27,7 +27,9 @@
 // You may want to set them like this in the environment{} section of your Jenkinsfile:
 //
 //    DOCKER_IMAGE = "$GCR_REGISTRY/$GCR_PROJECT/$APP"
-//    DOCKER_TAG = "${env.GIT_COMMIT.split('/')[-1]}"
+//    DOCKER_TAG = "$GIT_COMMIT"
+//    // or
+//    DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
 
 def call(args, timeoutMinutes=60){
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
