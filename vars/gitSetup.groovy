@@ -18,7 +18,8 @@
 
 def call() {
   sshKnownHosts()
-  sh label: 'Set up Git',
+  sh (
+    label: 'Set up Git',
     script: '''#!/bin/bash
       set -euxo pipefail
 
@@ -41,5 +42,6 @@ def call() {
       # better defined in Jenkinsfile environment{} section
       #export GIT_TRACE=1
       #export GIT_TRACE_SETUP=1
-  '''
+    '''
+  )
 }
