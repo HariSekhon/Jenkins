@@ -16,16 +16,15 @@
 // Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 
 def call(timeoutMinutes=2){
-  echo "Activating GCP Service Account credential for Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
-      echo 'Activating GCP Service Account credential'
-      sh '''#!/bin/bash
-        set -euxo pipefail
-        base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json
-        gcloud auth activate-service-account --key-file=credentials.json
-        rm -f credentials.json
-        gcloud auth list
+      sh label: 'Activating GCP Service Account credential',
+         script: '''#!/bin/bash
+           set -euxo pipefail
+           base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json
+           gcloud auth activate-service-account --key-file=credentials.json
+           rm -f credentials.json
+           gcloud auth list
       '''
     }
   }
