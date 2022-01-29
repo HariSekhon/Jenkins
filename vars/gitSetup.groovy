@@ -17,8 +17,8 @@
 // Sets up Git username and email for comitting, appends SSH_KNOWN_HOSTS if set in environment{}
 
 def call() {
-  echo "Setting up Git"
-  sh '''#!/bin/bash
+  sh label: 'Set up Git',
+	   script: '''#!/bin/bash
 		set -euxo pipefail
 
     if [ -z "${GIT_EMAIL:-}" ]; then
