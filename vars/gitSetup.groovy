@@ -26,7 +26,7 @@ def call() {
     fi
 
     # needed to check in
-    git config --global user.name  "${GIT_USERNAME:-Jenkins}"
+    git config --global user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
     git config --global user.email "$GIT_EMAIL"
 
     mkdir -pv ~/.ssh
