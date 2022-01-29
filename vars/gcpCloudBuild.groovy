@@ -32,25 +32,25 @@
 //    DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
 
 def call(args, timeoutMinutes=60){
-  echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
   milestone ordinal: 10, label: "Milestone: Build"
-  echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+  echo "Building from branch '$GIT_BRANCH'"
   int timeoutSeconds = timeoutMinutes * 60
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       echo 'Running GCP CloudBuild'
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
-        sh """#!/bin/bash
-          set -euxo pipefail
-          gcloud auth list
-          if [ -n "\${DOCKER_IMAGE:-}" ] &&
-             [ -n "\${DOCKER_TAG:-}" ] &&
-             [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-             :
-          else
-            gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
-          fi
-        """
+        sh label: 'Running CloudBuild',
+           script: """#!/bin/bash
+             set -euxo pipefail
+             gcloud auth list
+             if [ -n "\${DOCKER_IMAGE:-}" ] &&
+                [ -n "\${DOCKER_TAG:-}" ] &&
+                [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+                :
+             else
+               gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
+             fi
+           """
       }
     }
   }
