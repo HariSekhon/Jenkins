@@ -17,7 +17,7 @@
 //
 // Example call:
 //
-//    gcpCloudBuild("--project mycompany-shared --substitutions=\"_REGISTRY=\$GCR_REGISTRY,_IMAGE_VERSION=\$GIT_COMMIT,_GIT_BRANCH=\${GIT_BRANCH##*/}\"")
+//    gcpCloudBuild('--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"')
 //
 // If the following are set then will check GCR for an existing image to skip building entirely
 //
