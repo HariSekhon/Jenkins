@@ -20,6 +20,9 @@
 
 def call(known_hosts='', name='') {
   withEnv(["SSH_KNOWN_HOSTS=$known_hosts"]){
+    when {
+      not { environment name: 'SSH_KNOWN_HOSTS', value: '' }
+    }
     sh (
       label: "Adding SSH Known Hosts: $name",
       script: '''#!/bin/bash
