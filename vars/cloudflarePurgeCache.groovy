@@ -35,7 +35,7 @@ def call(){
                      -H "Content-Type: application/json" \
                      --data '{"purge_everything":true}'
             )"
-            echo "$output"
+            #echo "$output"
             grep -q '"success": true' <<< "$output"
         '''
       }
