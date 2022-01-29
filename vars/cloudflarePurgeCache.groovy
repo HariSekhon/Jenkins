@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// Requires environment variables to be defined in environment{} section of Jenkinsfile:
+//
+//    CLOUDFLARE_EMAIL
+//    CLOUDFLARE_ZONE_ID
+//    CLOUDFLARE_API_KEY  // see master ../Jenkinsfile for how to load this from a Jenkins secret
+
 def call(){
   String cloudflareCachePurgeLock = "Cloudflare Purge Cache - '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
   echo "Acquiring Cloudflare Cache Purge Lock: $cloudflareCachePurgeLock"
@@ -20,9 +26,18 @@ def call(){
     milestone ordinal: 110, label: "Milestone: Cloudflare Purge Cache"
     retry(2){
       timeout(time: 1, unit: 'MINUTES') {
-        // script from DevOps Bash tools repo
-        // external script needs to exist in the source repo, not the shared library repo
-        sh 'cloudflare_purge_cache.sh'
+        sh '''#!/bin/bash
+            set -euxo pipefail
+            output="$(
+                curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
+                     -H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
+                     -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
+                     -H "Content-Type: application/json" \
+                     --data '{"purge_everything":true}'
+            )"
+            echo "$output"
+            grep -q '"success": true' <<< "$output"
+        '''
       }
     }
   }
