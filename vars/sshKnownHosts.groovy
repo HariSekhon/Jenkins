@@ -25,12 +25,21 @@ def call(known_hosts='') {
       script: '''#!/bin/bash
         set -euxo pipefail
 
-        # convenient but not secure - instead record the known hosts one-time and load them to dynamic K8s agents via an arg or environment variable from Jenkins secret
+        # convenient and dynamic but not secure - instead load them from revision controlled adjacent functions:
+        #
+        #   sshKnownHostsGitHub()
+        #   sshKnownHostsGitLab()
+        #   sshKnownHostsBitbucket()
+        #   sshKnownHostsAzureDevOps()
+        #
+        # or if you want them more dynamic you can load them via an arg to this function or environment variable 'SSH_KNOWN_HOSTS' from a Jenkins secret to share across all pipelines
+        #
         #ssh-keyscan github.com >> ~/.ssh/known_hosts
         #ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
         #ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
         #ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-        # or
+
+        # don't do this either
         #cat >> ~/.ssh/config <<EOF
 #Host *
 #  LogLevel DEBUG3
