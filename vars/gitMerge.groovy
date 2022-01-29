@@ -24,20 +24,22 @@ def call(fromBranch, toBranch){
         retry(2) {
           withEnv(["FROM_BRANCH=$fromBranch", "TO_BRANCH=$toBranch"]) {
             gitSetup()
-            sh label: 'Git Merge',
-               script: '''#!/bin/bash
-                 set -euxo pipefail
+            sh (
+              label: 'Git Merge',
+              script: '''#!/bin/bash
+                set -euxo pipefail
 
-                 git status
+                git status
 
-                 git fetch
+                git fetch
 
-                 git checkout "$TO_BRANCH" --force
-                 git pull --no-edit
-                 git merge "origin/$FROM_BRANCH" --no-edit
+                git checkout "$TO_BRANCH" --force
+                git pull --no-edit
+                git merge "origin/$FROM_BRANCH" --no-edit
 
-                 git push
-               '''
+                git push
+              '''
+            )
           }
         }
       }
