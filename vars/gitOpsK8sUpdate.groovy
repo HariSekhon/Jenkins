@@ -42,16 +42,22 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
     timeout(time: timeoutMinutes, unit: 'MINUTES'){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
-        gitSetup()
         retry(2){
           sh (
             label: 'gitOpsK8sUpdate',
             script: """#!/bin/bash
               set -euxo pipefail
 
+              # copy local repo's user and email setting from this pipeline to the cloned repo
+              GIT_USERNAME="\$(git config user.name)"
+              GIT_EMAIL="\$(git config user.email)"
+
               git clone --branch "\$ENVIRONMENT" "\$GITOPS_REPO" repo
 
               cd "repo/\$APP/\$ENVIRONMENT"
+
+              git config user.name "\$GIT_USERNAME"
+              git config user.email "\$GIT_EMAIL"
 
               #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$GIT_COMMIT"
               #kustomize edit set image "\$DOCKER_IMAGE:\$GIT_COMMIT"
