@@ -15,7 +15,9 @@
 
 // There is now a harisekhon/git-kustomize docker image to avoid re-downloading kustomize for every pipeline run and reuse docker image caching
 //
-// See top-level Jenkinsfile and adjacent gitOpsK8sUpdate.groovy
+// See top-level Jenkinsfile, adjacent gitOpsK8sUpdate.groovy and jenkins-agent-pod.yaml in:
+//
+//    https://github.com/harisekhon/kubernetes-configs
 
 def call(version='4.3.0'){
   timeout(time: 2, unit: 'MINUTES') {
