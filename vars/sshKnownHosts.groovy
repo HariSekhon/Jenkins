@@ -21,33 +21,33 @@
 def call(known_hosts='') {
   withEnv(["SSH_KNOWN_HOSTS=$known_hosts"]){
     sh label: 'Adding SSH Known Hosts',
-      script: '''#!/bin/bash
-        set -euxo pipefail
+       script: '''#!/bin/bash
+         set -euxo pipefail
 
-        # convenient but not secure - instead record the known hosts one-time and load them to dynamic K8s agents via an arg or environment variable from Jenkins secret
-        #ssh-keyscan github.com >> ~/.ssh/known_hosts
-        #ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-        #ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
-        #ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-        # or
-        #cat >> ~/.ssh/config <<EOF
+         # convenient but not secure - instead record the known hosts one-time and load them to dynamic K8s agents via an arg or environment variable from Jenkins secret
+         #ssh-keyscan github.com >> ~/.ssh/known_hosts
+         #ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+         #ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
+         #ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
+         # or
+         #cat >> ~/.ssh/config <<EOF
 #Host *
 #  LogLevel DEBUG3
 #  #CheckHostIP no  # used ssh-keyscan instead
 #EOF
 
-        SSH_KNOWN_HOSTS_FILE="${SSH_KNOWN_HOSTS_FILE:-~/.ssh/known_hosts}"
+         SSH_KNOWN_HOSTS_FILE="${SSH_KNOWN_HOSTS_FILE:-~/.ssh/known_hosts}"
 
-        # if defined in Jenkinsfile environment() section
-        if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
-          mkdir -pv "${SSH_KNOWN_HOSTS_FILE%/*}"
-          touch "$SSH_KNOWN_HOSTS_FILE"
-          while read -r line; do
-            if ! grep -Fxq "$line" "$SSH_KNOWN_HOSTS_FILE"; then
-              echo "$line" >> "$SSH_KNOWN_HOSTS_FILE"
-            fi
-          done <<< "$SSH_KNOWN_HOSTS"
-        fi
+         # if defined in Jenkinsfile environment() section
+         if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
+           mkdir -pv "${SSH_KNOWN_HOSTS_FILE%/*}"
+           touch "$SSH_KNOWN_HOSTS_FILE"
+           while read -r line; do
+             if ! grep -Fxq "$line" "$SSH_KNOWN_HOSTS_FILE"; then
+               echo "$line" >> "$SSH_KNOWN_HOSTS_FILE"
+             fi
+           done <<< "$SSH_KNOWN_HOSTS"
+         fi
     '''
   }
 }
