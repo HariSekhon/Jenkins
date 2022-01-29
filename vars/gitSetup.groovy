@@ -19,6 +19,7 @@
 def call() {
   echo "Setting up Git"
   sh '''#!/bin/bash
+		set -euxo pipefail
 
     if [ -z "${GIT_EMAIL:-}" ]; then
       echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
