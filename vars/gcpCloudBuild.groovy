@@ -13,13 +13,16 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-// Required Environment Variables to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
+// must run gcpActiveServiceAccount() first to authenticate
 //
-//    CLOUDSDK_CORE_PROJECT
-//    GCP_SERVICEACCOUNT_KEY
-//    GCR_REGISTRY
+// Example call:
+//
+//    gcpCloudBuild("--project mycompany-shared --substitutions=\"_REGISTRY=\$GCR_REGISTRY,_IMAGE_VERSION=\$GIT_COMMIT,_GIT_BRANCH=\${GIT_BRANCH##*/}\"")
+//
+// If the following are set then will check GCR for an existing image to skip building entirely
+//
 //    DOCKER_IMAGE
-//    GIT_COMMIT - provided automatically by Jenkins
+//    DOCKER_TAG
 
 def call(args, timeoutMinutes=60){
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
@@ -39,7 +42,7 @@ def call(args, timeoutMinutes=60){
              [ -z "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
              :
           else
-            gcloud builds submit --project "\$CLOUDSDK_CORE_PROJECT" --timeout "\$TIMEOUT_SECONDS" $args
+            gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
           fi
         """
       }
