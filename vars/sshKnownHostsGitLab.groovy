@@ -15,6 +15,8 @@
 //
 
 // Loads GitLab.com SSH Known Hosts
+//
+//    ssh-keyscan gitlab.com
 
 def call() {
   sshKnownHosts("""
