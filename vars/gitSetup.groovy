@@ -17,7 +17,6 @@
 // Sets up Git username and email for comitting, appends SSH_KNOWN_HOSTS if set in environment{}
 
 def call() {
-  sshKnownHosts()
   sh (
     label: 'Set up Git',
     script: '''#!/bin/bash
