@@ -38,18 +38,20 @@ def call(args, timeoutMinutes=60){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
-        sh label: 'Running GCP CloudBuild',
-           script: """#!/bin/bash
-             set -euxo pipefail
-             gcloud auth list
-             if [ -n "\${DOCKER_IMAGE:-}" ] &&
-                [ -n "\${DOCKER_TAG:-}" ] &&
-                [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-                :
-             else
-               gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
-             fi
-           """
+        sh (
+          label: 'Running GCP CloudBuild',
+          script: """#!/bin/bash
+            set -euxo pipefail
+            gcloud auth list
+            if [ -n "\${DOCKER_IMAGE:-}" ] &&
+               [ -n "\${DOCKER_TAG:-}" ] &&
+               [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+               :
+            else
+              gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
+            fi
+          """
+        )
       }
     }
   }
