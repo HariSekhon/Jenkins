@@ -46,7 +46,7 @@ def call(known_hosts='', name='') {
 #  #CheckHostIP no  # used ssh-keyscan instead
 #EOF
 
-        SSH_KNOWN_HOSTS_FILE="${SSH_KNOWN_HOSTS_FILE:-~/.ssh/known_hosts}"
+        SSH_KNOWN_HOSTS_FILE="${SSH_KNOWN_HOSTS_FILE:-${HOME:-$(cd && pwd)}/.ssh/known_hosts}"
 
         # if defined in Jenkinsfile environment() section
         if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
