@@ -21,9 +21,8 @@ def call(){
     milestone ordinal: 30, label: "Milestone: Deploy"
     retry(2){
       timeout(time: 20, unit: 'MINUTES') {
-        // script from DevOps Bash tools repo
-        // external script needs to exist in the source repo, not the shared library repo
-        sh 'gcp_ci_k8s_deploy.sh'
+        // script in local repo
+        sh 'deploy.sh'
       }
     }
   }
