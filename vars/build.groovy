@@ -14,17 +14,13 @@
 //
 
 def call(){
+  echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
   milestone ordinal: 10, label: "Milestone: Build"
-  echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-  timeout(time: 1, unit: 'MINUTES') {
-    sh script: 'env | sort', label: 'Environment'
-  }
   retry(2){
     timeout(time: 40, unit: 'MINUTES') {
-      // script from DevOps Bash tools repo
-      // external script needs to exist in the source repo, not the shared library repo
-      sh 'gcp_ci_build.sh'
+      // script in local repo
+      sh 'build.sh'
     }
   }
 }
