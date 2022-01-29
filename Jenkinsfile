@@ -302,12 +302,14 @@ pipeline {
     DOCKER_IMAGE = "$AWS_ECR_REGISTRY/$APP"
     // GCR
     //DOCKER_IMAGE = "$GCR_REGISTRY/$CLOUDSDK_CORE_PROJECT/$APP"
+    //DOCKER_IMAGE = "$GCR_REGISTRY/$GCR_PROJECT/$APP"  // if using a shared project for image promotion across environments
     // GitHub Container Registry
     GHCR_REGISTRY = 'ghcr.io/harisekhon'
     //DOCKER_IMAGE = "$GHCR_REGISTRY/$APP"
     // DockerHub
     //DOCKER_IMAGE = "harisekhon/$APP"
     DOCKER_TAG = "$GIT_COMMIT" // or "$GIT_BRANCH" which can be set to a semver git tag
+    //DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
 
     ARTIFACTORY_URL = 'http://x.x.x.x:8082/artifactory/'
     ARTIFACTORY_ACCESS_TOKEN = credentials('artifactory-access-token')
