@@ -21,9 +21,9 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 
 See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for how to load and use this library directly from Jenkins.
 
-You can fork this repo and create environment branches to have full control over all updates via pull requests all the way through to production.
+Fork this repo to have full control over all updates via Pull Requests. Create environment branches to stage updates across dev/staging/production.
 
-Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
+Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
 
 ### See Also
 
