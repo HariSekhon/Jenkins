@@ -56,6 +56,7 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
               #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$GIT_COMMIT"
               #kustomize edit set image "\$DOCKER_IMAGE:\$GIT_COMMIT"
 
+              # needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
               ${ dockerImages.collect{ "kustomize edit set image $it:$GIT_COMMIT" }.join("\n") }
 
               git diff
