@@ -16,9 +16,9 @@
 def call(){
   timeout(time: 1, unit: 'MINUTES') {
     sh label: 'Environment',
-      script: '''#!/bin/bash
-        set -euxo pipefail
-        env | sort
-      '''
+       script: '''#!/bin/bash
+         set -euxo pipefail
+         env | sort
+       '''
   }
 }
