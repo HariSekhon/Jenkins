@@ -46,7 +46,7 @@ def call(args, timeoutMinutes=60){
           gcloud auth list
           if [ -n "\${DOCKER_IMAGE:-}" ] &&
              [ -n "\${DOCKER_TAG:-}" ] &&
-             [ -z "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+             [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
              :
           else
             gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
