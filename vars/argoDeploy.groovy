@@ -20,6 +20,7 @@
 //    ARGOCD_SERVER
 //    ARGOCD_AUTH_TOKEN
 //
+// The ArgoCD app must be set up with a name of $APP-$ENVIRONMENT
 
 def call(timeoutMinutes=10){
   milestone ordinal: 100, label: "Milestone: Argo Deploy"
@@ -34,8 +35,8 @@ def call(timeoutMinutes=10){
             label: "ArgoCD deploy app '$APP'",
             script: '''#!/bin/bash
               set -euxo pipefail
-              argocd app sync "$APP" --grpc-web --force
-              argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS"
+              argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
+              argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS"
             '''
           )
         }
