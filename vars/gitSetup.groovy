@@ -19,7 +19,7 @@
 def call() {
   known_hosts: {
     when {
-      not environment name: 'SSH_KNOWN_HOSTS', value: ''
+      not { environment name: 'SSH_KNOWN_HOSTS', value: '' }
       sshKnownHosts()
     }
   }
