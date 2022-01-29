@@ -26,7 +26,7 @@
 //
 // You may want to set them like this in the environment{} section of your Jenkinsfile:
 //
-//    DOCKER_IMAGE = "$GCR_REGISTRY/$GCR_PROJECT/myapp"
+//    DOCKER_IMAGE = "$GCR_REGISTRY/$GCR_PROJECT/$APP"
 //    DOCKER_TAG = "${env.GIT_COMMIT.split('/')[-1]}"
 
 def call(args, timeoutMinutes=60){
