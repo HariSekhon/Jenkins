@@ -39,11 +39,11 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
   String gitOpsLock = "GitOps Kubernetes Image Update - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
   echo "Acquiring Lock: $gitOpsLock"
   lock(resource: gitOpsLock, inversePrecedence: true){
-    retry(2){
-      timeout(time: timeoutMinutes, unit: 'MINUTES'){
-        // workaround for https://issues.jenkins.io/browse/JENKINS-42582
-        withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
-          gitSetup()
+    timeout(time: timeoutMinutes, unit: 'MINUTES'){
+      // workaround for https://issues.jenkins.io/browse/JENKINS-42582
+      withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
+        gitSetup()
+        retry(2){
           sh (
             label: 'gitOpsK8sUpdate',
             script: '''#!/bin/bash
