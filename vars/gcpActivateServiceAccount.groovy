@@ -18,14 +18,16 @@
 def call(timeoutMinutes=2){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
-      sh label: 'Activating GCP Service Account credential',
-         script: '''#!/bin/bash
-           set -euxo pipefail
-           base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json
-           gcloud auth activate-service-account --key-file=credentials.json
-           rm -f credentials.json
-           gcloud auth list
-      '''
+      sh (
+        label: 'Activating GCP Service Account credential',
+        script: '''#!/bin/bash
+          set -euxo pipefail
+          base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json
+          gcloud auth activate-service-account --key-file=credentials.json
+          rm -f credentials.json
+          gcloud auth list
+        '''
+      )
     }
   }
 }
