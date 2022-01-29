@@ -14,10 +14,6 @@
 //
 
 def call(fromBranch, toBranch){
-  echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-  timeout(time: 1, unit: 'MINUTES') {
-    sh script: 'env | sort', label: 'Environment'
-  }
   String gitMergeLock = "Git Merge '$from_branch' to '$to_branch'"
   echo "Acquiring Git Merge Lock: $gitMergeLock"
   lock(resource: gitMergeLock, inversePrecedence: true) {
@@ -28,19 +24,20 @@ def call(fromBranch, toBranch){
         retry(2) {
           withEnv(["FROM_BRANCH=$fromBranch", "TO_BRANCH=$toBranch"]) {
             gitSetup()
-            sh '''#!/bin/bash
-              set -euxo pipefail
+            sh label: 'Git Merge',
+               script: '''#!/bin/bash
+                 set -euxo pipefail
 
-              git status
+                 git status
 
-              git fetch
+                 git fetch
 
-              git checkout "$TO_BRANCH" --force
-              git pull --no-edit
-              git merge "origin/$FROM_BRANCH" --no-edit
+                 git checkout "$TO_BRANCH" --force
+                 git pull --no-edit
+                 git merge "origin/$FROM_BRANCH" --no-edit
 
-              git push
-            '''
+                 git push
+               '''
           }
         }
       }
