@@ -31,8 +31,6 @@ def call() {
       git config --global user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
       git config --global user.email "$GIT_EMAIL"
 
-      mkdir -pv ~/.ssh
-
       if [ -n "${DEBUG:-}" ]; then
           ssh-add -l || :
       fi
