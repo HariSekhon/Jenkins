@@ -2,7 +2,7 @@
 //  Author: Hari Sekhon
 //  Date: 2022-01-19 17:54:02 +0000 (Wed, 19 Jan 2022)
 //
-//  vim:ts=2:sts=2:sw=2:noet
+//  vim:ts=2:sts=2:sw=2:et
 //
 //  https://github.com/HariSekhon/jenkins
 //
