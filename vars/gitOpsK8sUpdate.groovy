@@ -44,21 +44,22 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
         // workaround for https://issues.jenkins.io/browse/JENKINS-42582
         withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
           gitSetup()
-          sh '''#!/bin/bash
-            set -euxo pipefail
+          sh label: 'gitOpsK8sUpdate',
+             script: '''#!/bin/bash
+               set -euxo pipefail
 
-            git clone --branch "$ENVIRONMENT" "$GITOPS_REPO" repo
-            cd "repo/$APP/$ENVIRONMENT"
-            #kustomize edit set image "$GCR_REGISTRY/$GCR_PROJECT/$APP:$GIT_COMMIT"
-            #kustomize edit set image "$DOCKER_IMAGE:$GIT_COMMIT"
-            ${ dockerImages.collect{ "kustomize edit set image $it:$GIT_COMMIT" }.join("\n") }
-            git diff
-            git add -A
-            if ! git diff-index --quiet HEAD; then
-              git commit -m "updated $APP $ENVIRONMENT app image version to build $GIT_COMMIT"
-            fi
-            git push
-          '''
+               git clone --branch "$ENVIRONMENT" "$GITOPS_REPO" repo
+               cd "repo/$APP/$ENVIRONMENT"
+               #kustomize edit set image "$GCR_REGISTRY/$GCR_PROJECT/$APP:$GIT_COMMIT"
+               #kustomize edit set image "$DOCKER_IMAGE:$GIT_COMMIT"
+               ${ dockerImages.collect{ "kustomize edit set image $it:$GIT_COMMIT" }.join("\n") }
+               git diff
+               git add -A
+               if ! git diff-index --quiet HEAD; then
+                 git commit -m "updated $APP $ENVIRONMENT app image version to build $GIT_COMMIT"
+               fi
+               git push
+             '''
         }
       }
     }
