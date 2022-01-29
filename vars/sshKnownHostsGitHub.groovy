@@ -15,6 +15,8 @@
 //
 
 // Loads GitHub.com SSH Known Hosts
+//
+//    ssh-keyscan github.com
 
 def call() {
   sshKnownHosts("""
