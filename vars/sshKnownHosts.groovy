@@ -40,6 +40,7 @@ def call(known_hosts='') {
 
         # if defined in Jenkinsfile environment() section
         if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
+          mkdir -pv "${SSH_KNOWN_HOSTS_FILE%/*}"
           touch "$SSH_KNOWN_HOSTS_FILE"
           while read -r line; do
             if ! grep -Fxq "$line" "$SSH_KNOWN_HOSTS_FILE"; then
