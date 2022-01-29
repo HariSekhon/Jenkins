@@ -41,6 +41,7 @@ def call(from_branch, to_branch){
 
         stage('Git Merge') {
           steps {
+            printEnv()
             gitMerge("$from_branch", "$to_branch")
           }
         }
