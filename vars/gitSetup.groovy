@@ -18,6 +18,7 @@
 
 def call() {
   String label = 'Set up Git'
+  L: {
   echo "$label"
   sh (
     label: "$label",
@@ -45,4 +46,5 @@ def call() {
       #export GIT_TRACE_SETUP=1
     '''
   )
+  }
 }
