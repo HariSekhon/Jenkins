@@ -36,7 +36,7 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
   if (!dockerImages){
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
   }
-  String label = "GitOps Kubernetes Image Update - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
+  String label = "Git Kustomize Image Version - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     timeout(time: timeoutMinutes, unit: 'MINUTES'){
