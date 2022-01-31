@@ -677,7 +677,7 @@ pipeline {
       steps {
         milestone(ordinal: 61, label: "Milestone: Docker Build")
         timeout(time: 60, unit: 'MINUTES') {
-          sh "docker build -t '$DOCKER_IMAGE':'$DOCKER_TAG'"
+          sh "docker build -t '$DOCKER_IMAGE':'$DOCKER_TAG' --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from '$DOCKER_IMAGE':'$DOCKER_TAG' ."
         }
       }
     }
