@@ -17,8 +17,9 @@
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 
 def call() {
-  String label = 'Set up Git'
-  L: {
+  String label = "Set up Git"
+  // didn't work for force label evaluation in Blue Ocean
+  //L: {
   echo "$label"
   sh (
     label: "$label",
@@ -46,5 +47,4 @@ def call() {
       #export GIT_TRACE_SETUP=1
     '''
   )
-  }
 }
