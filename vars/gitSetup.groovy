@@ -14,7 +14,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-// Sets up Git username and email for comitting, appends SSH_KNOWN_HOSTS if set in environment{}
+// Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 
 def call() {
   String label = 'Set up Git'
