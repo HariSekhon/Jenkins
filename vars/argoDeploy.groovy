@@ -24,15 +24,16 @@
 
 def call(timeoutMinutes=10){
   milestone ordinal: 100, label: "Milestone: Argo Deploy"
-  String deploymentLock = "Deploying ArgoCD - App '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+  String label = "Deploying ArgoCD - App '$APP', Environment: " + "$ENVIRONMENT".capitalize()
   int timeoutSeconds = timeoutMinutes * 60
-  echo "Acquiring Lock: $deploymentLock"
+  echo "Acquiring Lock: $label"
   lock(resource: deploymentLock, inversePrecedence: true){
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
+          echo "$label"
           sh (
-            label: "ArgoCD deploy app '$APP'",
+            label: "$label",
             script: '''#!/bin/bash
               set -euxo pipefail
               argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
