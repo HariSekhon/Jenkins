@@ -262,7 +262,7 @@ pipeline {
     GITLAB_SSH_KNOWN_HOSTS = credentials('gitlab-ssh-known-hosts')              // eg. 'ssh-keyscan gitlab.com'
     AZURE_DEVOPS_SSH_KNOWN_HOSTS = credentials('azure-devops-ssh-known-hosts')  // eg. 'ssh-keyscan ssh.dev.azure.com'
     BITBUCKET_SSH_KNOWN_HOSTS = credentials('bitbucket-ssh-known-hosts')        // eg. 'ssh-keyscan bitbucket.org'
-    // appended to ephemeral k8s agents >> ~/.ssh/known_hosts by some shared libraries eg. gitMergePipeline.groovy, gitOpsK8sUpdate.groovy
+    // appended to ephemeral k8s agents >> ~/.ssh/known_hosts by some shared libraries eg. gitMergePipeline.groovy, gitKustomizeImage.groovy
     SSH_KNOWN_HOSTS = """
       $GITHUB_SSH_KNOWN_HOSTS
       $GITLAB_SSH_KNOWN_HOSTS
@@ -888,7 +888,7 @@ This prompt will time out after 1 hour''',
             // credential needs to match the ID field, not the name, otherwise it'll fail with "FATAL: [ssh-agent] Could not find specified credentials" but continue with a blank ssh agent loaded in the environment causing SSH / Git clone failures later on
             // ignoreMissing: false (default) doesn't work and there is no issue tracker on the github project page to report this :-/
             sshagent (credentials: ['my-ssh-key'], ignoreMissing: false) {
-              gitOpsK8sUpdate(['mydockerimage'])  // func in vars/ shared library
+              gitKustomizeImage(['mydockerimage'])  // func in vars/ shared library
             }
           }
 
