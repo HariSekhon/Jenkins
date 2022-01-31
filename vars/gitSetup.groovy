@@ -17,6 +17,7 @@
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 
 def call() {
+  withEnv(){
   String label = "Setting up Git for Jenkins <$GIT_EMAIL>"
   label: label
   // didn't work for force label evaluation in Blue Ocean
@@ -48,4 +49,5 @@ def call() {
       #export GIT_TRACE_SETUP=1
     '''
   )
+  }
 }
