@@ -14,11 +14,13 @@
 //
 
 def call(timeoutMinutes=10){
-  label 'Terragrunt Plan'
+  String label = "Terragrunt Plan - App: $APP, Environment: $ENVIRONMENT"
+  // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
+  String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
   // plan still locks on normal backends outside Terraform Cloud
-  lock(resource: "Terraform - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
+  lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
-    milestone(ordinal: 50, label: "Milestone: Terragrunt Plan")  // protects duplication by reusing the same milestone between Terraform / Terragrunt in case you leave both in
+    milestone(ordinal: 50, label: "Milestone: $label")
 
     // XXX: set Terragrunt version in the docker image tag in jenkins-agent-pod.yaml
     container('terragrunt') {
@@ -28,10 +30,16 @@ def call(timeoutMinutes=10){
           // alpine/terragrunt docker image doesn't have bash
           //sh '''#/usr/bin/env bash -euxo pipefail
           //sh '''#/bin/sh -eux
-          sh label: 'Workspace List',
-             script: 'terragrunt workspace list || :'  // # 'workspaces not supported' if using Terraform Cloud as a backend
-          sh label: 'Terragrunt Plan',
-             script: 'terragrunt plan --terragrunt-non-interactive -out=plan.zip -input=false'  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
+          echo 'Terragrunt Workspace List'
+          sh (
+            label: 'Workspace List',
+            script: 'terragrunt workspace list || :'  // # 'workspaces not supported' if using Terraform Cloud as a backend
+          )
+          echo "$label"
+          sh (
+            label: "$label",
+            script: 'terragrunt plan --terragrunt-non-interactive -out=plan.zip -input=false'  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
+          )
         }
       }
     }

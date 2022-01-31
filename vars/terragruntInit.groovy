@@ -14,9 +14,10 @@
 //
 
 def call(timeoutMinutes=10){
-  label 'Terragrunt Init'
+  String label = 'Terragrunt Init'
+
   // forbids older inits from starting
-  milestone(ordinal: 10, label: "Milestone: Terragrunt Init")  // protects duplication by reusing the same milestone between Terraform / Terragrunt in case you leave both in
+  milestone(ordinal: 10, label: "Milestone: $label")
 
   // XXX: set Terragrunt version in the docker image tag in jenkins-agent-pod.yaml
   container('terragrunt') {
@@ -28,6 +29,7 @@ def call(timeoutMinutes=10){
         //
         // alpine/terragrunt docker image doesn't have bash
         //sh '''#/usr/bin/env bash -euxo pipefail
+        echo 'Terragrunt Workspace Select'
         sh (
           label: 'Workspace Select',
           script: '''#/bin/sh -eux
@@ -37,7 +39,8 @@ def call(timeoutMinutes=10){
             fi
           '''
         )
-        sh label: 'Terragrunt Init',
+        echo "$label"
+        sh label: "$label",
            script: 'terragrunt init --terragrunt-non-interactive -input=false'  // # -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf"
       }
     }

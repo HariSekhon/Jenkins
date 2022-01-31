@@ -18,10 +18,12 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=59){
-  label 'Terraform Refresh State'
-  lock(resource: "Terraform - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
+  String label = "Terraform Refresh State - App: $APP, Environment: $ENVIRONMENT"
+  // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
+  String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
+  lock(resource: lock, inversePrecedence: true) {
     // forbids older runs from starting
-    milestone(ordinal: 100, label: "Milestone: Terraform Refresh State")
+    milestone(ordinal: 100, label: "Milestone: $label")
 
     // XXX: set Terraform version in the docker image tag in jenkins-agent-pod.yaml
     container('terraform') {
@@ -29,8 +31,11 @@ def call(timeoutMinutes=59){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          sh label: 'Terraform Refresh State',
-             script: 'terraform apply -refresh-only -input=false'
+          echo "$label"
+          sh (
+            label: "$label",
+            script: 'terraform apply -refresh-only -input=false'
+          )
         }
       }
     }

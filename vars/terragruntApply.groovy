@@ -16,10 +16,12 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=30){
-  label 'Terragrunt Apply'
-  lock(resource: "Terraform - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {  // use same lock between Terraform / Terragrunt for safety
+  String label = "Terragrunt Apply - App: $APP, Environment: $ENVIRONMENT"
+  // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
+  String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
+  lock(resource: lock, inversePrecedence: true) {  // use same lock between Terraform / Terragrunt for safety
     // forbids older applys from starting
-    milestone(ordinal: 100, label: "Milestone: Terragrunt Apply")
+    milestone(ordinal: 100, label: "Milestone: $label")
 
     // XXX: set Terragrunt version in the docker image tag in jenkins-agent-pod.yaml
     container('terragrunt') {
@@ -27,8 +29,11 @@ def call(timeoutMinutes=30){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          sh label: 'Terragrunt Apply',
-             script: 'terragrunt apply plan.zip --terragrunt-non-interactive -input=false -auto-approve'
+          echo "$label"
+          sh (
+            label: "$label",
+            script: 'terragrunt apply plan.zip --terragrunt-non-interactive -input=false -auto-approve'
+          )
         }
       }
     }

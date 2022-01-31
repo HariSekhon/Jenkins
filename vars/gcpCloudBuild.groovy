@@ -38,8 +38,10 @@ def call(args, timeoutMinutes=60){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
+        String label = 'Running GCP CloudBuild'
+        echo "$label"
         sh (
-          label: 'Running GCP CloudBuild',
+          label: "$label",
           script: """#!/bin/bash
             set -euxo pipefail
             gcloud auth list

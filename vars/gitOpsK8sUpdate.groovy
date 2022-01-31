@@ -36,16 +36,17 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
   if (!dockerImages){
     throw new IllegalArgumentException("first arg of gitOpsK8sUpdate (dockerImages) is null or empty, please define in the calling pipeline")
   }
-  String gitOpsLock = "GitOps Kubernetes Image Update - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
-  echo "Acquiring Lock: $gitOpsLock"
-  lock(resource: gitOpsLock, inversePrecedence: true){
+  String label = "GitOps Kubernetes Image Update - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
+  echo "Acquiring gitOpsK8sUpdate Lock: $label"
+  lock(resource: label, inversePrecedence: true){
     timeout(time: timeoutMinutes, unit: 'MINUTES'){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
         gitSetup()
+        echo "$label"
         retry(2){
           sh (
-            label: 'gitOpsK8sUpdate',
+            label: "$label",
             script: """#!/bin/bash
               set -euxo pipefail
 

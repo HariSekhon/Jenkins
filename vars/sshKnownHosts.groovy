@@ -24,8 +24,10 @@ def call(known_hosts='', name='') {
     //when {
     //  not { environment name: 'SSH_KNOWN_HOSTS', value: '' }
     //}
+    String label = "Adding SSH Known Hosts: $name"
+    echo "$label"
     sh (
-      label: "Adding SSH Known Hosts: $name",
+      label: "$label",
       script: '''#!/bin/bash
         set -euxo pipefail
 

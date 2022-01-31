@@ -22,8 +22,10 @@
 def call(version='4.3.0'){
   timeout(time: 2, unit: 'MINUTES') {
     withEnv(["VERSION=$version"]) {
+      String label = "Download Kustomize version $version"
+      echo "$label"
       sh (
-        label: "Download Kustomize version $version",
+        label: "$label",
         script: '''#!/bin/bash
           set -euxo pipefail
           echo "Downloading Kustomize version $VERSION"

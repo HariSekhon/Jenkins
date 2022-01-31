@@ -20,13 +20,16 @@
 //    CLOUDFLARE_API_KEY  // see master ../Jenkinsfile for how to load this from a Jenkins secret
 
 def call(){
-  String cloudflareCachePurgeLock = "Cloudflare Purge Cache - '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
-  echo "Acquiring Cloudflare Cache Purge Lock: $cloudflareCachePurgeLock"
-  lock(resource: cloudflareCachePurgeLock, inversePrecedence: true){
-    milestone ordinal: 110, label: "Milestone: Cloudflare Purge Cache"
+  String label = "Cloudflare Purge Cache - '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
+  echo "Acquiring Cloudflare Lock: $label"
+  lock(resource: label, inversePrecedence: true){
+    milestone ordinal: 110, label: "Milestone: $label"
     retry(2){
       timeout(time: 1, unit: 'MINUTES') {
-        sh '''#!/bin/bash
+        echo "$label"
+        sh (
+          label: "$label",
+          script: '''#!/bin/bash
             set -euxo pipefail
             output="$(
                 curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
@@ -37,7 +40,8 @@ def call(){
             )"
             #echo "$output"
             grep -q '"success": true' <<< "$output"
-        '''
+          '''
+        )
       }
     }
   }

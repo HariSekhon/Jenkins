@@ -16,10 +16,13 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=30){
-  label 'Terraform Apply'
-  lock(resource: "Terraform - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
+  String label = "Terraform Apply - App: $APP, Environment: $ENVIRONMENT"
+  // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
+  String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
+  echo "Acquiring Terraform Apply Lock: $lock"
+  lock(resource: lock, inversePrecedence: true) {
     // forbids older applys from starting
-    milestone(ordinal: 100, label: "Milestone: Terraform Apply")
+    milestone(ordinal: 100, label: "Milestone: $label")
 
     // XXX: set Terraform version in the docker image tag in jenkins-agent-pod.yaml
     container('terraform') {
@@ -27,8 +30,11 @@ def call(timeoutMinutes=30){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          sh label: 'Terraform Apply',
-             script: 'terraform apply plan.zip -input=false -auto-approve'
+          echo "$label"
+          sh (
+            label: "$label",
+            script: 'terraform apply plan.zip -input=false -auto-approve'
+          )
         }
       }
     }

@@ -15,11 +15,14 @@
 
 // Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 
+// TODO: if you're not calling this on dynamic short-lived K8s agents, you'll need to add a unique cache for each build to prevent race conditions if using different credentials between pipelines
 def call(timeoutMinutes=2){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
+      String label = 'Activating GCP Service Account credential'
+      echo "$label"
       sh (
-        label: 'Activating GCP Service Account credential',
+        label: "$label",
         script: '''#!/bin/bash
           set -euxo pipefail
           base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > credentials.json

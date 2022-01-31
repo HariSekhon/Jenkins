@@ -15,8 +15,10 @@
 
 def call(){
   timeout(time: 1, unit: 'MINUTES') {
+    String label = 'Environment'
+    echo "$label"
     sh (
-      label: 'Environment',
+      label: "$label",
       script: '''#!/bin/bash
         set -euxo pipefail
         env | sort

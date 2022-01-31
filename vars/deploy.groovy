@@ -14,11 +14,10 @@
 //
 
 def call(){
-  echo "Deploying '" + "${env.ENVIRONMENT}".capitalize() + "' from branch '${env.GIT_BRANCH}'"
-  String deploymentLock = "Deploy K8s Apps - " + "${env.ENVIRONMENT}".capitalize() + " Environment"
-  echo "Acquiring Deployment Lock: $deploymentLock"
-  lock(resource: deploymentLock, inversePrecedence: true){
-    milestone ordinal: 30, label: "Milestone: Deploy"
+  String label = "Deploy App, Environment: " + "${env.ENVIRONMENT}".capitalize()
+  echo "Acquiring Deployment Lock: $label"
+  lock(resource: label, inversePrecedence: true){
+    milestone ordinal: 30, label: "Milestone: $label"
     retry(2){
       timeout(time: 20, unit: 'MINUTES') {
         // script in local repo

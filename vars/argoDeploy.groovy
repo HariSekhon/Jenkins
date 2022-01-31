@@ -23,11 +23,11 @@
 // The ArgoCD app must be set up with a name of $APP-$ENVIRONMENT
 
 def call(timeoutMinutes=10){
-  milestone ordinal: 100, label: "Milestone: Argo Deploy"
   String label = "Deploying ArgoCD - App '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+  milestone ordinal: 100, label: "Milestone: $label"
   int timeoutSeconds = timeoutMinutes * 60
-  echo "Acquiring Lock: $label"
-  lock(resource: deploymentLock, inversePrecedence: true){
+  echo "Acquiring ArgoCD Lock: $label"
+  lock(resource: label, inversePrecedence: true){
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
