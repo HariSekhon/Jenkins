@@ -25,7 +25,6 @@ def call(known_hosts='', name='') {
     //  not { environment name: 'SSH_KNOWN_HOSTS', value: '' }
     //}
     String label = "Adding SSH Known Hosts: $name"
-    echo "$label"
     sh (
       label: "$label",
       script: '''#!/bin/bash

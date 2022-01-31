@@ -43,7 +43,6 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
         gitSetup()
-        echo "$label"
         retry(2){
           sh (
             label: "$label",
