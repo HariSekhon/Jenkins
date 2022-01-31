@@ -17,10 +17,7 @@
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 
 def call() {
-  String label = "Setting up Git for Jenkins <$GIT_EMAIL>"
-  label: label
-  // didn't work for force label evaluation in Blue Ocean
-  //L: {
+  String label = "Setting up local Git repo for Jenkins <$GIT_EMAIL>"
   echo "$label"
   sh (
     label: "$label",
@@ -40,7 +37,7 @@ def call() {
           ssh-add -l || :
       fi
 
-      # use sshKnownHosts instead to make the real tracked host keys available in K8s agents
+      # use sshKnownHosts() functions instead to make the real tracked host keys available in K8s agents
       #export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
 
       # better defined in Jenkinsfile environment{} section
