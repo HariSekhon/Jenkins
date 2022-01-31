@@ -18,6 +18,7 @@
 
 def call() {
   String label = "Set up Git"
+  label: label
   // didn't work for force label evaluation in Blue Ocean
   //L: {
   echo "$label"
