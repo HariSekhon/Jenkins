@@ -19,21 +19,23 @@ def call() {
     label: 'Download KICS',
     script: '''#!/bin/bash
       set -euxo pipefail
-      curl -sSf https://api.github.com/repos/Checkmarx/kics/releases/latest |
-      jq -r '
-        .assets[] |
-        select(
-          .browser_download_url |
-          test("linux_x64.tar.gz")
-        ) |
-        .browser_download_url
-      ' |
-      head -n1 |
-      while read -r url; do
-          wget -qc "$url" -O /tmp/kics.tar.gz
-          tar zxvf /tmp/kics.tar.gz -C /usr/local/bin
-          rm -fv /tmp/kics.tar.gz
-      done
+      if ! command -v /usr/local/bin/kics; then
+        curl -sSf https://api.github.com/repos/Checkmarx/kics/releases/latest |
+        jq -r '
+          .assets[] |
+          select(
+            .browser_download_url |
+            test("linux_x64.tar.gz")
+          ) |
+          .browser_download_url
+        ' |
+        head -n1 |
+        while read -r url; do
+            wget -qc "$url" -O /tmp/kics.tar.gz
+            tar zxvf /tmp/kics.tar.gz -C /usr/local/bin
+            rm -fv /tmp/kics.tar.gz
+        done
+      fi
       /usr/local/bin/kics version
     '''
   )
