@@ -637,13 +637,32 @@ pipeline {
     }
 
     // ========================================================================== //
+    //                                    K I C S
+    // ========================================================================== //
+
+    stage('KICS') {
+      steps {
+        container('kics'){
+          steps {
+            installKICS()  // func in vars/ shared library
+            sh "mkdir -p results"
+            sh(script: '/usr/bin/kics scan --ci --no-color -p ${WORKSPACE} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"')
+            archiveArtifacts(artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true)
+          }
+        }
+      }
+    }
+
+    // ========================================================================== //
     //                              M e g a L i n t e r
     // ========================================================================== //
 
     stage('MegaLinter'){
-      container('megalinter'){
-        steps {
-          sh '/entrypoint.sh'
+      steps {
+        container('megalinter'){
+          steps {
+            sh '/entrypoint.sh'
+          }
         }
       }
     }
