@@ -388,6 +388,9 @@ pipeline {
     }
 
     // ========================================================================== //
+    //              G i t   M e r g e   B r a n c h   B a c k p o r t s
+    // ========================================================================== //
+
     // auto-backport hotfixes to upstream environments
     stage('Git Merge') {
       // applied before stage { agent{} }
@@ -438,6 +441,9 @@ pipeline {
     }
 
     // ========================================================================== //
+    //                                   S e t u p
+    // ========================================================================== //
+
     stage('Setup') {
       steps {
         milestone(ordinal: 30, label: "Milestone: Setup")
@@ -472,14 +478,6 @@ pipeline {
       }
     }
 
-    // ========================================================================== //
-    stage('Wait for Selenium Grid to be up') {
-      steps {
-        sh script: "./selenium_hub_wait_ready.sh '$SELENIUM_HUB_URL' 60"
-      }
-    }
-
-    // not needed for Kubernetes / Docker agents as they start clean
     stage('Groovy version') {
       steps {
         // first install the Groovy plugin, then in Global Tool Configuration set up a Groovy version with this name '3.0.9' to select here - if already installed, just untick "Install automatically" and point GROOVY_HOME to the installation path
@@ -501,51 +499,47 @@ pipeline {
     }
 
     // ========================================================================== //
-    // SonarQube
-    stage('SonarQube Scan'){
+    //                                    T e s t
+    // ========================================================================== //
+
+    stage('Wait for Selenium Grid to be up') {
       steps {
-        withSonarQubeEnv(installationName: 'mysonar'){  // configure with details of SonarQube installation
-          sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar'
+        sh script: "./selenium_hub_wait_ready.sh '$SELENIUM_HUB_URL' 60"  // script available in DevOps-Bash-tools repo
+      }
+    }
+
+    stage('Test') {
+      //options {
+      //  retry(2)
+      //}
+      steps {
+        milestone(ordinal: 70, label: "Milestone: Test")
+        echo 'Testing...'
+        timeout(time: 60, unit: 'MINUTES') {
+          sh 'make test'
+          // junit '**/target/*.xml'
         }
       }
     }
 
-    stage('SonarQube Quality Gate'){
-      steps {
-        timeout(time: 2, unit: 'MINUTES'){
-          waitForQualtityGate abortPipeline: true
-        }
+    // lock multiple stages into 1 concurrent execution using a parent stage
+    stage('Parent') {
+      options {
+        lock('something')
       }
-    }
-
-    // ========================================================================== //
-    stage('Checkov') {
-      when {
-        // Scan changed files in PRs, block on new issues only (existing issues ignored)
-        expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
-        beforeAgent true
-      }
-      steps {
-        checkov()
-      }
-    }
-
-    // ========================================================================== //
-    stage('Semgrep') {
-      when {
-        // Scan changed files in PRs, block on new issues only (existing issues ignored)
-        expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
-        beforeAgent true
-      }
-      steps {
-        container('semgrep'){
+      stages {
+        stage('one') {
           steps {
-            sh 'git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent'
+            sh '...'
+          }
+        }
+        stage('two') {
+          steps {
+            sh '...'
           }
         }
       }
     }
-    // ========================================================================== //
 
     // alternative quick Pipeline to run just a single package of tests for quicker debugging and testing
     stage('Run Single Package Tests') {
@@ -585,6 +579,72 @@ pipeline {
     stage('Run Mobile Tests') {
       steps {
         sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
+      }
+    }
+
+    // ========================================================================== //
+    //                               S o n a r Q u b e
+    // ========================================================================== //
+
+    stage('SonarQube Scan'){
+      steps {
+        withSonarQubeEnv(installationName: 'mysonar'){  // configure with details of SonarQube installation
+          sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar'
+        }
+      }
+    }
+
+    stage('SonarQube Quality Gate'){
+      steps {
+        timeout(time: 2, unit: 'MINUTES'){
+          waitForQualtityGate abortPipeline: true
+        }
+      }
+    }
+
+    // ========================================================================== //
+    //                                 C h e c k o v
+    // ========================================================================== //
+
+    stage('Checkov') {
+      when {
+        // Scan changed files in PRs, block on new issues only (existing issues ignored)
+        expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
+        beforeAgent true
+      }
+      steps {
+        checkov()
+      }
+    }
+
+    // ========================================================================== //
+    //                                 S e m g r e p
+    // ========================================================================== //
+
+    stage('Semgrep') {
+      when {
+        // Scan changed files in PRs, block on new issues only (existing issues ignored)
+        expression { env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-") }
+        beforeAgent true
+      }
+      steps {
+        container('semgrep'){
+          steps {
+            sh 'git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent'
+          }
+        }
+      }
+    }
+
+    // ========================================================================== //
+    //                              M e g a L i n t e r
+    // ========================================================================== //
+
+    stage('MegaLinter'){
+      container('megalinter'){
+        steps {
+          sh '/entrypoint.sh'
+        }
       }
     }
 
@@ -682,9 +742,15 @@ pipeline {
         }
       }
     }
+
     // ========================================================================== //
-    // Container Vulnerability Scanning before Docker Push
-    //
+    //            Container Vulnerability Scanning before Docker Push
+    // ========================================================================== //
+
+    // ========================================================================== //
+    //                                   T r i v y
+    // ========================================================================== //
+
     stage('Trivy') {
       steps {
         milestone(ordinal: 62, label: "Milestone: Trivy")
@@ -692,6 +758,11 @@ pipeline {
         trivy()  // func in vars/ shared library
       }
     }
+
+    // ========================================================================== //
+    //                                   G r y p e
+    // ========================================================================== //
+
     stage('Grype') {
       steps {
         milestone(ordinal: 63, label: "Milestone: Grype")
@@ -700,6 +771,11 @@ pipeline {
         grype("dir:.")
       }
     }
+
+    // ========================================================================== //
+    //                  D o c k e r   P u s h   A f t e r   S c a n
+    // ========================================================================== //
+
     stage('Docker Push') {
       agent { label 'docker-builder' }
       steps {
@@ -709,54 +785,14 @@ pipeline {
         }
       }
     }
-    // ========================================================================== //
-
-    stage('Test') {
-      //options {
-      //  retry(2)
-      //}
-      steps {
-        milestone(ordinal: 70, label: "Milestone: Test")
-        echo 'Testing...'
-        timeout(time: 60, unit: 'MINUTES') {
-          sh 'make test'
-          // junit '**/target/*.xml'
-        }
-      }
-    }
-
-    // lock multiple stages into 1 concurrent execution using a parent stage
-    stage('Parent') {
-      options {
-        lock('something')
-      }
-      stages {
-        stage('one') {
-          steps {
-            sh '...'
-          }
-        }
-        stage('two') {
-          steps {
-            sh '...'
-          }
-        }
-      }
-    }
-
-
-    // no longer needed if pulling git-kustomize docker image in jenkins-pod.yaml
-    //stage('Download Kustomize') {
-    //  steps {
-    //    downloadKustomize()  // func in vars/ shared library
-    //  }
-    //}
 
     // Jenkins Deploys are further down after Human Gate - for ArgoCD GitOps human gate doesn't apply
 
   // ========================================================================== //
   //           T e r r a f o r m   /   T e r r a g r u n t   S t a g e s
   // ========================================================================== //
+
+  // Terraform / Terragrunt Apply is further down after Human Gate
 
     stage('Terraform Init') {
       steps {
@@ -788,19 +824,17 @@ pipeline {
       }
     }
 
-    // Terraform / Terragrunt Apply is further down after Human Gate
-
   // ========================================================================== //
   //                             L i q u i b a s e
   // ========================================================================== //
+
+  // Liquibase Update is further down after Human Gate
 
     stage('Liquibase Status'){
       steps {
         liquibaseStatus()  // func in vars/ shared library
       }
     }
-
-    // Liquibase Update is further down after Human Gate
 
   // ========================================================================== //
   //                            H u m a n   G a t e
@@ -872,22 +906,17 @@ This prompt will time out after 1 hour''',
     }
 
   // ========================================================================== //
-  //                              M e g a L i n t e r
-  // ========================================================================== //
-
-    stage('MegaLinter'){
-      container('megalinter'){
-        steps {
-          sh '/entrypoint.sh'
-        }
-      }
-    }
-
-  // ========================================================================== //
   //                               D e p l o y s
   // ========================================================================== //
 
   // Deploys are intentionally below Human Gate
+
+    // no longer needed if pulling git-kustomize docker image in jenkins-pod.yaml
+    //stage('Download Kustomize') {
+    //  steps {
+    //    downloadKustomize()  // func in vars/ shared library
+    //  }
+    //}
 
     // ArgoCD GitOps Deployment
     stage('ArgoCD Deploy') {
