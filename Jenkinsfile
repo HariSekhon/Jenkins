@@ -642,13 +642,11 @@ pipeline {
 
     stage('KICS') {
       steps {
+        //downloadKICS()  // func in vars/ shared library
         container('kics'){
-          steps {
-            installKICS()  // func in vars/ shared library
-            sh "mkdir -p results"
-            sh(script: '/usr/bin/kics scan --ci --no-color -p ${WORKSPACE} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"')
-            archiveArtifacts(artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true)
-          }
+          sh 'mkdir -p results'
+          sh 'kics scan --ci --no-color -p ${WORKSPACE} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"'
+          archiveArtifacts(artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true)
         }
       }
     }
