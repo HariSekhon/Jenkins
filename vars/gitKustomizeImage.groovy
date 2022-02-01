@@ -15,6 +15,9 @@
 
 // Updates the Kubernetes GitOps repo (which ArgoCD watches) when new builds are created
 //
+//  XXX: the first argument should be a list of Docker Images including any repo prefix, eg. 'eu.gcr.io/$CLOUDSDK_CORE_PROJECT/myapp' for Kustomize to be able to update the right image reference in the K8s yaml
+//
+//
 // Requires the following environment variables to be already set in the pipeline environment{} section:
 //
 //    APP
