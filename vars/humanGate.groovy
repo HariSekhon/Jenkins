@@ -13,7 +13,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(submitter="$SUBMITTER"){
+def call(submitter=''){
   milestone ordinal: 20, label: "Milestone: Human Gate"
   // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
   timeout(time: 1, unit: 'HOURS') {
