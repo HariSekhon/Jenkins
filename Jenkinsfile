@@ -1062,6 +1062,36 @@ This prompt will time out after 1 hour''',
       }
     }
 
+    // release entire environment by triggering all the Pipelines for the apps in that environment
+    stage("Trigger Deployments"){
+      parallel {
+        stage('Trigger WWW Deployment'){
+          steps {
+            build (
+              job: "WWW $ENVIRONMENT",
+              wait: false
+            )
+          }
+        }
+        stage('Trigger APP1 Deployment'){
+          steps {
+            build (
+              job: "APP1 $ENVIRONMENT",
+              wait: false
+            )
+          }
+        }
+        stage('Trigger APP2 Deployment'){
+          steps {
+            build (
+              job: "APP2 $ENVIRONMENT",
+              wait: false
+            )
+          }
+        }
+      }
+    }
+
   }
 
   // ========================================================================== //
