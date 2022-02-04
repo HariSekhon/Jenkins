@@ -41,7 +41,7 @@ concurrency:
 
 defaults:
   run:
-    shell: bash -euxo pipefail
+    shell: bash -euxo pipefail {0}
 
 jobs:
   create_pr:
