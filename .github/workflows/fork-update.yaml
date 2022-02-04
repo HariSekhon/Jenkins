@@ -36,7 +36,7 @@ env:
     staging
 
 concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 
 defaults:
@@ -60,7 +60,7 @@ jobs:
         run: env | sort
 
       - name: GH CLI auth login
-        run: gh auth login --with-token <<< "$GITHUB_TOKEN"
+        run: gh auth login --with-token <<< "${{ github.token }}"
 
       - name: GH API User
         run: gh api /user
