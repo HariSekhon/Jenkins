@@ -77,19 +77,19 @@ jobs:
         run: echo "IS_FORK=$(gh api /repos/{owner?/{repo} -q .fork)" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_OWNER
-        if: ${{ env.IS_FORK == "true" }}
+        if: ${{ env.IS_FORK == 'true' }}
         run: echo "FORK_SOURCE_OWNER=$(gh api /repos/{owner}/{repo} -q .source.owner.login)" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_DEFAULT_BRANCH
-        if: ${{ env.IS_FORK == "true" }}
+        if: ${{ env.IS_FORK == 'true' }}
         run: echo "FORK_SOURCE_DEFAULT_BRANCH=$(gh api /repos/{owner}/{repo} -q .source.default_branch )" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_REPO
-        if: ${{ env.IS_FORK == "true" }}
+        if: ${{ env.IS_FORK == 'true' }}
         run: echo "FORK_SOURCE_REPO=$(gh api /repos/{owner}/{repo} -q .source.full_name )" >> "$GITHUB_ENV"
 
       - name: Create PRs & Automerge
-        if: ${{ env.IS_FORK == "true" }}
+        if: ${{ env.IS_FORK == 'true' }}
         run: |
           set -euxo pipefail
           for branch in ${{ env.BRANCHES_TO_PR }}; do
