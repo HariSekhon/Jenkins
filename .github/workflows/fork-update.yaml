@@ -15,98 +15,11 @@
 name: Fork Update
 
 on:
-  workflow_call:
-  workflow_dispatch:
   schedule:
     #- cron: '0 10 * * 2'
     - cron: '*/10 * * * *'
 
-env:
-  BRANCHES_TO_PR: |
-    master
-    main
-    develop
-    dev
-    staging
-    production
-  BRANCHES_TO_AUTOMERGE: |
-    master
-    main
-    dev
-    staging
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
-defaults:
-  run:
-    shell: bash -euxo pipefail {0}
-
 jobs:
-  create_pr:
-    name: Create Fork Update PRs
-    timeout-minutes: 10
-    if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
-    permissions:
-      contents: read
-      pull-requests: write
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Environment
-        run: env | sort
-
-      - name: GH CLI auth login
-        run: gh auth login --with-token <<< "${{ github.token }}"
-
-      # gh: Resource not accessible by integration (HTTP 403)
-      # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
-      #- name: GH API User
-      #  run: gh api /user
-
-      - name: Generate environment variable IS_FORK
-        run: |
-          IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
-          echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable FORK_SOURCE_OWNER
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_OWNER="$(gh api /repos/{owner}/{repo} -q .source.owner.login)"
-          echo "FORK_SOURCE_OWNER=$FORK_SOURCE_OWNER" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable FORK_SOURCE_DEFAULT_BRANCH
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_DEFAULT_BRANCH="$(gh api /repos/{owner}/{repo} -q .source.default_branch )"
-          echo "FORK_SOURCE_DEFAULT_BRANCH=$FORK_SOURCE_DEFAULT_BRANCH" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable FORK_SOURCE_REPO
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_REPO="$(gh api /repos/{owner}/{repo} -q .source.full_name )"
-          echo "FORK_SOURCE_REPO=$FORK_SOURCE_REPO">> "$GITHUB_ENV"
-
-      - name: Environment
-        run: env | sort
-
-      - name: Create PRs & Automerge
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          set -euxo pipefail
-          for branch in ${{ env.BRANCHES_TO_PR }}; do
-            if gh api "/repos/$FORK_SOURCE_REPO/branches" -q '.[].name' | grep -Fxq "$branch"; then
-              fork_source_branch="$branch"
-            else
-              fork_source_branch="FORK_SOURCE_DEFAULT_BRANCH"
-            fi
-            echo "Creating Pull Request from upstream repo"
-            output="$(gh pr create -R "$GITHUB_REPOSITORY" --base "$branch" --head "$FORK_SOURCE_OWNER":"$fork_source_branch" --title "Merge upstream source branch '$fork_source_branch'" --body "Created automatically by GitHub Workflow: $GITHUB_WORKFLOW")"
-            pr_url="$(grep '/pull' <<< "$output")"
-            if grep -Fxq "$branch" <<< "${{ env.BRANCHES_TO_AUTOMERGE }}"; then
-              gh pr merge --merge "$pr_url"
-            fi
-          done
+  fork_update:
+    name: Fork Update
+    uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
