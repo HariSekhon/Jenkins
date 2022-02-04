@@ -2,7 +2,7 @@
 //  vim:ts=2:sts=2:sw=2:et:filetype=groovy:syntax=groovy
 //
 //  Author: Hari Sekhon
-//  Date: [% DATE # 2017-06-28 12:39:02 +0200 (Wed, 28 Jun 2017) ]
+//  Date: [% DATE # 2017-06-28 12:39:02 +0200 (Wed, 28 Jun 2017) %]
 //
 //  [% URL  # https://github.com/HariSekhon/Jenkins %]
 //
