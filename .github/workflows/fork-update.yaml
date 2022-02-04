@@ -59,26 +59,34 @@ jobs:
       - name: Environment
         run: env | sort
 
-      #- name: GH CLI auth login
-      #  run: gh auth login --with-token <<< "$GITHUB_TOKEN"
+      - name: GH CLI auth login
+        run: gh auth login --with-token <<< "$GITHUB_TOKEN"
 
       - name: GH API User
-        run: echo $(gh api /user)
+        run: gh api /user
 
       - name: Generate environment variable IS_FORK
-        run: IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"; echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
+        run: |
+          IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
+          echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_OWNER
         if: ${{ env.IS_FORK == 'true' }}
-        run: echo "FORK_SOURCE_OWNER=$(gh api /repos/{owner}/{repo} -q .source.owner.login)" >> "$GITHUB_ENV"
+        run: |
+          FORK_SOURCE_OWNER="$(gh api /repos/{owner}/{repo} -q .source.owner.login)"
+          echo "FORK_SOURCE_OWNER=$FORK_SOURCE_OWNER" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_DEFAULT_BRANCH
         if: ${{ env.IS_FORK == 'true' }}
-        run: echo "FORK_SOURCE_DEFAULT_BRANCH=$(gh api /repos/{owner}/{repo} -q .source.default_branch )" >> "$GITHUB_ENV"
+        run: |
+          FORK_SOURCE_DEFAULT_BRANCH="$(gh api /repos/{owner}/{repo} -q .source.default_branch )"
+          echo "FORK_SOURCE_DEFAULT_BRANCH=$FORK_SOURCE_DEFAULT_BRANCH" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_REPO
         if: ${{ env.IS_FORK == 'true' }}
-        run: echo "FORK_SOURCE_REPO=$(gh api /repos/{owner}/{repo} -q .source.full_name )" >> "$GITHUB_ENV"
+        run: |
+          FORK_SOURCE_REPO="$(gh api /repos/{owner}/{repo} -q .source.full_name )"
+          echo "FORK_SOURCE_REPO=$FORK_SOURCE_REPO">> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
