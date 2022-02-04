@@ -62,8 +62,11 @@ jobs:
       #- name: GH CLI auth login
       #  run: gh auth login --with-token <<< "$GITHUB_TOKEN"
 
+      - name: GH API User
+        run: gh api /user
+
       - name: Generate environment variable IS_FORK
-        run: echo "IS_FORK=$(gh api /repos/{owner?/{repo} -q .fork)" >> "$GITHUB_ENV"
+        run: echo "IS_FORK=$(gh api /repos/{owner}/{repo} -q .fork)" >> "$GITHUB_ENV"
 
       - name: Generate environment variable FORK_SOURCE_OWNER
         if: ${{ env.IS_FORK == 'true' }}
