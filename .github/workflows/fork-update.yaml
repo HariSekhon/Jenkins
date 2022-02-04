@@ -52,26 +52,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Dump GitHub context
-        run: echo '${{ toJSON(github) }}'
-
-      - name: Dump job context
-        run: echo '${{ toJSON(job) }}'
-
-      - name: Dump steps context
-        run: echo '${{ toJSON(steps) }}'
-
-      - name: Dump runner context
-        run: echo '${{ toJSON(runner) }}'
-
-      - name: Dump strategy context
-        run: echo '${{ toJSON(strategy) }}'
-
-      - name: Dump matrix context
-        run: echo '${{ toJSON(matrix) }}'
-
       - name: Environment
         run: env | sort
+
+      #- name: GH CLI auth login
+      #  run: gh auth login --with-token <<< "$GITHUB_TOKEN"
 
       - name: Generate environment variable IS_FORK
         run: echo "IS_FORK=$(gh api /repos/{owner?/{repo} -q .fork)" >> "$GITHUB_ENV"
@@ -87,6 +72,9 @@ jobs:
       - name: Generate environment variable FORK_SOURCE_REPO
         if: ${{ env.IS_FORK == 'true' }}
         run: echo "FORK_SOURCE_REPO=$(gh api /repos/{owner}/{repo} -q .source.full_name )" >> "$GITHUB_ENV"
+
+      - name: Environment
+        run: env | sort
 
       - name: Create PRs & Automerge
         if: ${{ env.IS_FORK == 'true' }}
