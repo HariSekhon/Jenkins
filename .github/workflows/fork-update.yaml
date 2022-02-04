@@ -62,8 +62,10 @@ jobs:
       - name: GH CLI auth login
         run: gh auth login --with-token <<< "${{ github.token }}"
 
-      - name: GH API User
-        run: gh api /user
+      # gh: Resource not accessible by integration (HTTP 403)
+      # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
+      #- name: GH API User
+      #  run: gh api /user
 
       - name: Generate environment variable IS_FORK
         run: |
