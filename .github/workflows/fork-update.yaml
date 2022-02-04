@@ -39,6 +39,10 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash -euxo pipefail
+
 jobs:
   create_pr:
     name: Create Fork Update PRs
