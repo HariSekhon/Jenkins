@@ -17,8 +17,7 @@ name: Fork Update
 on:
   workflow_dispatch:
   schedule:
-    #- cron: '0 10 * * 2'
-    - cron: '*/10 * * * *'
+    - cron: '0 10 * * 2'
 
 jobs:
   fork_update:
