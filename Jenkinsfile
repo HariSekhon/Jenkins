@@ -276,7 +276,7 @@ pipeline {
     GCP_SERVICEACCOUNT_KEY = credentials('gcp-serviceaccount-key')
     GITHUB_TOKEN           = credentials('github-token')  // user/token credential, will create env vars $GITHUB_TOKEN_USR and $GITHUB_TOKEN_PSW
 
-    AWS_ACCOUNT_ID = 123456789012
+    AWS_ACCOUNT_ID = credentials('aws-account-id') // or better yet just generate it from access keys via 'aws sts get-caller-identity | jq -r .Account'
     AWS_DEFAULT_REGION = 'eu-west-2'
     AWS_ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     //AWS_DEFAULT_OUTPUT = 'json'
@@ -474,6 +474,14 @@ pipeline {
             fi;
           done;
         '''
+      }
+    }
+
+    stage("Generate environment variable AWS_ACCOUNT_ID") {
+      steps {
+        script {
+          env.AWS_ACCOUNT_ID = sh(script:'aws sts get-caller-identity | jq -r .Account', returnStdout: true).trim()
+        }
       }
     }
 
