@@ -23,3 +23,6 @@ jobs:
   fork_update:
     name: Fork Update
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
+    permission:
+      contents: write
+      pull-requests: write
