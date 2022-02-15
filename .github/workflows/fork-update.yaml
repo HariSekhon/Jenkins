@@ -23,6 +23,8 @@ jobs:
   fork_update:
     name: Fork Update
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
+    secrets:
+      PAT_FORK_UPDATE: ${{ secrets.PAT_FORK_UPDATE }}
     permissions:
       contents: write
       pull-requests: write
