@@ -21,7 +21,8 @@ on:
         type: string
         required: false
   schedule:
-    - cron: '0 10 * * 2'
+    # fork-sync happens for default branch every hour, so just after that, run PRs for branches
+    - cron: '2 10 * * 2'
 
 jobs:
   fork_update:
