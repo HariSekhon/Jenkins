@@ -12,7 +12,7 @@
 #
 
 ---
-name: Fork Update
+name: Fork Update PR
 
 on:
   workflow_dispatch:
@@ -25,9 +25,9 @@ on:
     - cron: '2 10 * * 2'
 
 jobs:
-  fork_update:
-    name: Fork Update
-    uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
+  fork_update_pr:
+    name: Fork Update PR
+    uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update-pr.yaml@master
     with:
       debug: ${{ github.event.inputs.debug }}
     permissions:
