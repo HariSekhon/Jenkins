@@ -26,6 +26,7 @@ on:
 
 jobs:
   fork_update_pr:
+    if: github.repository_owner != 'HariSekhon'
     name: Fork Update PR
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update-pr.yaml@master
     with:
