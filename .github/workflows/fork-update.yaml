@@ -16,6 +16,10 @@ name: Fork Update
 
 on:
   workflow_dispatch:
+    inputs:
+      debug:
+        type: string
+        required: false
   schedule:
     - cron: '0 10 * * 2'
 
@@ -23,6 +27,8 @@ jobs:
   fork_update:
     name: Fork Update
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
+    with:
+      debug: ${{ github.event.inputs.debug }}
     permissions:
       contents: write
       pull-requests: write
