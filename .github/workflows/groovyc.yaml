@@ -27,6 +27,7 @@ on:
 
 jobs:
   groovyc:
+    if: github.repository_owner == 'HariSekhon'
     name: Groovy Shared Library
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
     permissions:
