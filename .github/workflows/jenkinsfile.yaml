@@ -27,6 +27,7 @@ on:
 
 jobs:
   jenkinsfile:
+    if: github.repository == 'HariSekhon/Jenkins'
     name: Jenkinsfile
     uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
     permissions:
