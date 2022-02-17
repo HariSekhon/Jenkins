@@ -25,6 +25,7 @@ on:
 
 jobs:
   fork_sync:
+    if: github.repository_owner != 'HariSekhon'
     name: Fork Sync
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-sync.yaml@master
     with:
