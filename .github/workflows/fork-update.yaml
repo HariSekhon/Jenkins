@@ -23,8 +23,8 @@ jobs:
   fork_update:
     name: Fork Update
     uses: HariSekhon/GitHub-Actions/.github/workflows/fork-update.yaml@master
-    #secrets:
-    #  TOKEN: ${{ secrets.TOKEN_FORK_UPDATE }}
+    secrets:
+      TOKEN: ${{ secrets.TOKEN_FORK_UPDATE }}
     # forks silently downgrade permissions to read only but this is still necessary for the workflow call to work
     permissions:
       contents: read
