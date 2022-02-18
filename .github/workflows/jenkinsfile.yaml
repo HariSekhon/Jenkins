@@ -27,7 +27,7 @@ on:
 
 jobs:
   jenkinsfile:
-    if: github.repository_owner == 'HariSekhon'
+    if: github.event.repository.fork == false
     name: Jenkinsfile
     uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
     permissions:
