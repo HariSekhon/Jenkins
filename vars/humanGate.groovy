@@ -22,8 +22,8 @@ def call(submitter='', timeout=60){
 
 This prompt will time out after $timeout minutes""",
       ok: "Deploy",
-      // only allow people in this group to approve deployments to production
-      //submitter: "platform-engineering@mydomain.co.uk"
+      // only allow people in these 2 groups to approve this human gate before deployments, useful for production
+      //submitter: "platform-engineering@mydomain.co.uk,Deployers"
       submitter: submitter
     )
   }
