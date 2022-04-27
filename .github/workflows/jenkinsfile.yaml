@@ -19,10 +19,14 @@ on:
     branches:
       - master
       - main
+    paths:
+      - Jenkinsfile
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - Jenkinsfile
   workflow_dispatch:
 
 jobs:
