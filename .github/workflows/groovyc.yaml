@@ -19,10 +19,14 @@ on:
     branches:
       - master
       - main
+    paths:
+      - vars/*.groovy
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - vars/*.groovy
   workflow_dispatch:
 
 jobs:
