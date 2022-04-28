@@ -34,14 +34,16 @@ def call(timeoutMinutes=10){
           echo "$label"
           sh (
             label: "$label",
+            // hard refresh prevents a rare cache problem:
+            //
+            //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
+            //
             script: '''#!/bin/bash
               set -euxo pipefail
 
-              # hard refresh prevents a rare cache problem:
-              #
-              #   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
-              #
               argocd app get  "$APP-$ENVIRONMENT" --grpc-web --hard-refresh
+
+              argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS"
 
               argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
 
