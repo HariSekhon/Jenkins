@@ -37,6 +37,8 @@
 //@Library(value="name@version", changelog=true|false) _ // changelog will not only include lib changes in changeset but also trigger new builds when the library changes, not very scalable to auto-re-run all your pipelines
 //@Library(value='harisekhon@master', changelog=false) _
 //@Library('namedlibrary@master') _
+// // import 2 libraries
+//@Library(['namedlibrary', 'otherlib@tag']) _
 //
 // load directly from this GitHub repo without having to configure a Named Shared Library in the Jenkins global configuration
 @Library('github.com/harisekhon/jenkins@master') _
