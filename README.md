@@ -37,12 +37,14 @@ pipeline {
   stages {
 
     stage('Test'){
-      // call any function from this libary by its filename under vars/... without the .groovy extension
-      //
-      // see each var/<function>.groovy file for any arguments
-      //
-      // calls vars/printEnv.groovy
-      printEnv()
+      steps {
+        // call any function from this libary by its filename under vars/... without the .groovy extension
+        //
+        // see each var/<function>.groovy file for any arguments
+        //
+        // calls vars/printEnv.groovy
+        printEnv()
+      }
     }
 
   }
