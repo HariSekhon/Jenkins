@@ -36,6 +36,7 @@ def call(timeoutMinutes=10){
             label: "$label",
             script: '''#!/bin/bash
               set -euxo pipefail
+              argocd app get  "$APP-$ENVIRONMENT" --grpc-web --hard-refresh
               argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
               argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS"
             '''
