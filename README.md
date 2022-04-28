@@ -33,7 +33,6 @@ Jenkinsfile:
 @Library('github.com/harisekhon/jenkins@master') _
 
 pipeline {
-
   stages {
 
     stage('Test'){
@@ -48,7 +47,6 @@ pipeline {
     }
 
   }
-
 }
 ```
 
