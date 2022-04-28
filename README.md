@@ -23,13 +23,39 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 - [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline master config
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library functions
 
-See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for how to load and use this library directly from Jenkins.
+Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
-Fork this repo to have full control over all updates via Pull Requests. Create environment branches to stage updates across dev/staging/production.
+## QuickStart
 
-Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours and the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) workflow to raise PRs for your environment branches weekly to audit, authorize & control updates.
+Jenkinsfile:
+```groovy
+// load the library straight from github
+@Library('github.com/harisekhon/jenkins@master') _
 
-Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
+pipeline {
+
+  stages {
+
+    stage('Test'){
+      printEnv()  // call any function from this libary by its filename under vars/ ... without the .groovy extension
+    }
+
+  }
+
+}
+```
+
+See this [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details on how to load and use this library directly from Jenkins.
+
+## Production
+
+Fork this repo to have full control over all updates.
+
+Create environment branches to stage updates across dev/staging/production.
+
+Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
+
+Enable the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
 
 ### See Also
 
