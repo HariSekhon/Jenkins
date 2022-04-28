@@ -20,12 +20,14 @@ on:
       - master
       - main
     paths:
+      - src/**/*.groovy
       - vars/*.groovy
   pull_request:
     branches:
       - master
       - main
     paths:
+      - src/**/*.groovy
       - vars/*.groovy
   workflow_dispatch:
 
