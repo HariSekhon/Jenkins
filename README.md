@@ -29,7 +29,7 @@ Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), fo
 
 Jenkinsfile:
 ```groovy
-// load the library straight from github
+// load this library straight from github - the '_' at the end imports all functions
 @Library('github.com/harisekhon/jenkins@master') _
 
 pipeline {
@@ -37,7 +37,13 @@ pipeline {
   stages {
 
     stage('Test'){
-      printEnv()  // call any function from this libary by its filename under vars/ ... without the .groovy extension
+      // call any function from this libary by its filename under vars/ ... without the .groovy extension
+      //
+      // eg. printEnv() -> vars/printEnv.groovy
+      //
+      // see each var/<function>.groovy file for any arguments
+      //
+      printEnv()
     }
 
   }
