@@ -20,7 +20,7 @@ def call(submitter='', timeout=60){
     input (
       message: """Are you sure you want to release this build?
 
-This prompt will time out after $timeout minutes""",
+This prompt will time out""",
       ok: "Deploy",
       // only allow people in these 2 groups to approve this human gate before deployments, useful for production
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
