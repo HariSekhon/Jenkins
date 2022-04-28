@@ -27,6 +27,8 @@ See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#u
 
 Fork this repo to have full control over all updates via Pull Requests. Create environment branches to stage updates across dev/staging/production.
 
+Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours and the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) workflow to raise PRs for your environment branches weekly to audit, authorize & control updates.
+
 Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
 
 ### See Also
