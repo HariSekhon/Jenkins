@@ -50,7 +50,7 @@ pipeline {
 }
 ```
 
-See this [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details on how to load and use this library directly from Jenkins.
+See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details.
 
 ## Production
 
