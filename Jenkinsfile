@@ -387,7 +387,7 @@ pipeline {
     stage ('Checkout') {
       steps {
         milestone(ordinal: 10, label: "Milestone: Checkout")
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/harisekhon/devops-bash-tools']]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/HariSekhon/DevOps-Bash-tools']]])
       }
     }
 

@@ -17,7 +17,7 @@
 //
 // See top-level Jenkinsfile, adjacent gitKustomizeImage.groovy and jenkins-agent-pod.yaml in:
 //
-//    https://github.com/harisekhon/kubernetes-configs
+//    https://github.com/HariSekhon/Kubernetes-configs
 
 def call(version='4.3.0'){
   timeout(time: 2, unit: 'MINUTES') {

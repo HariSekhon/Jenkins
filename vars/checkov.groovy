@@ -4,7 +4,7 @@
 //
 //  vim:ts=2:sts=2:sw=2:et
 //
-//  https://github.com/HariSekhon/jenkins
+//  https://github.com/HariSekhon/Jenkins
 //
 //  License: see accompanying Hari Sekhon LICENSE file
 //
