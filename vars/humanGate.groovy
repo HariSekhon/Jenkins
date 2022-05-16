@@ -27,7 +27,7 @@ This prompt will time out""",
       ok: "Deploy",
       // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
-      submitter: submitter
+      //submitter: submitter
     )
   }
 }
