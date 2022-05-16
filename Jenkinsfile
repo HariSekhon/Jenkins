@@ -41,6 +41,7 @@
 //@Library(['namedlibrary', 'otherlib@tag']) _
 //
 // load directly from this GitHub repo without having to configure a Named Shared Library in the Jenkins global configuration
+// XXX: implicitly causes "Include @Library changes in job recent changes" behaviour and triggering when the library changes
 @Library('github.com/harisekhon/jenkins@master') _
 
 // more dynamic but $BRANCH_NAME is only available in a Jenkins MultiBranch Pipeline
