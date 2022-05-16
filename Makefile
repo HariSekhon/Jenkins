@@ -25,7 +25,7 @@ default: test clean
 	@:
 
 test:
-	@# script is in DevOps Bash tools repo, clone whole repo for dependency lib and put it in the \$PATH
+	@# script is in DevOps Bash tools repo, clone whole repo for dependency lib and put it in the $PATH
 	check_groovyc.sh
 
 clean:
