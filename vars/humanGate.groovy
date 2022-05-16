@@ -15,10 +15,10 @@
 
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 
-def call(String submitter='', int timeout=60){
+def call(Map args = [submitter:'', timeout:60]){
   milestone ordinal: 20, label: "Milestone: Human Gate"
   // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
-  timeout(time: 5, unit: 'MINUTES') {
+  timeout(time: args.timeout, unit: 'MINUTES') {
     input (
       message: """Are you sure you want to release this build?
 
@@ -26,7 +26,7 @@ This prompt will time out""",
       ok: "Deploy",
       // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
-      //submitter: submitter
+      //submitter: args.submitter
     )
   }
 }
