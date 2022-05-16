@@ -15,10 +15,11 @@
 
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 
-def call(String submitter='', int timeout=60){
+//def call(String submitter='', int timeout=60){
+def call(){
   milestone ordinal: 20, label: "Milestone: Human Gate"
   // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
-  timeout(time: 3, unit: 'MINUTES') {
+  timeout(time: 4, unit: 'MINUTES') {
     input (
       message: """Are you sure you want to release this build?
 
