@@ -13,12 +13,15 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// Usage:
+//
+//    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
+//
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 
-def call(Map args = [submitter:'', timeout:60]){
+def call(Map args = [submitter:'', timeoutMinutes:60]){
   milestone ordinal: 20, label: "Milestone: Human Gate"
-  // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
-  timeout(time: args.timeout, unit: 'MINUTES') {
+  timeout(time: args.timeoutMinutes, unit: 'MINUTES') {
     input (
       message: """Are you sure you want to release this build?
 
