@@ -30,3 +30,6 @@ test:
 
 clean:
 	find . -name '*.class' -exec rm {} \;
+
+wc:
+	git ls-files Jenkinsfile vars/ | xargs wc -l
