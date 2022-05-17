@@ -18,6 +18,7 @@
 //    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
 //
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
+// ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
 def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
   milestone ordinal: 20, label: "Milestone: Human Gate"
@@ -26,7 +27,6 @@ def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
       message: """Are you sure you want to release this build?
 
 This prompt will time out in ${args.timeoutMinutes} minutes""",
-      //ok: "Deploy",
       ok: args.ok,
       // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
