@@ -25,7 +25,7 @@ def call() {
       set -euxo pipefail
 
       GIT_USERNAME="${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
-      GIT_EMAIL="${GIT_EMAIL:-devops@noreply}"
+      GIT_EMAIL="${GIT_EMAIL:-jenkins@noreply}"
 
       #if [ -z "${GIT_EMAIL:-}" ]; then
       #  echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
