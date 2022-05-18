@@ -24,14 +24,17 @@ def call() {
     script: '''#!/bin/bash
       set -euxo pipefail
 
-      if [ -z "${GIT_EMAIL:-}" ]; then
-        echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
-        exit 1
-      fi
+      GIT_USERNAME="${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
+      GIT_EMAIL="${GIT_EMAIL:-devops@noreply}"
+
+      #if [ -z "${GIT_EMAIL:-}" ]; then
+      #  echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
+      #  exit 1
+      #fi
 
       # needed for 'git commit'
-      git config user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
-      git config user.email "${GIT_EMAIL:-devops@noreply"
+      git config user.name  "$GIT_USERNAME"
+      git config user.email "$GIT_EMAIL"
 
       if [ -n "${DEBUG:-}" ]; then
           ssh-add -l || :
