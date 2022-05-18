@@ -14,7 +14,7 @@
 //
 
 def call(fromBranch, toBranch){
-  String label = "Git Merge from branch '$from_branch' to branch '$to_branch'"
+  String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
   lock(resource: label, inversePrecedence: true) {
     milestone ordinal: 1, label: "Milestone: $label"
