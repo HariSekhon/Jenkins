@@ -31,7 +31,7 @@ def call() {
 
       # needed for 'git commit'
       git config user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
-      git config user.email "$GIT_EMAIL"
+      git config user.email "${GIT_EMAIL:-devops@noreply"
 
       if [ -n "${DEBUG:-}" ]; then
           ssh-add -l || :
