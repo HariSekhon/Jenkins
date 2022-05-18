@@ -17,7 +17,7 @@
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 
 def call() {
-  String label = "Setting up local Git repo for Jenkins <$GIT_EMAIL>"
+  String label = "Setting up local Git repo for Jenkins <${GIT_EMAIL:-}>"
   echo "$label"
   sh (
     label: "$label",
