@@ -41,9 +41,9 @@ def call(timeoutMinutes=10){
             script: '''#!/bin/bash
               set -euxo pipefail
 
-              argocd app get  "$APP-$ENVIRONMENT" --grpc-web --hard-refresh
-
-              argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
+              # might cause performance issues and 504 timeouts
+              #argocd app get  "$APP-$ENVIRONMENT" --grpc-web --hard-refresh
+              #argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
               argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
 
