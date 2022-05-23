@@ -15,22 +15,29 @@
 //
 
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
+//
+// Recommended to set an Environment variable of GIT_EMAIL=your-team@your-company.com - consider doing this at the global Jenkins level:
+//
+//    Manage Jenkins -> Configure System -> Global properties -> Environment Variables -> Add -> GIT_EMAIL
 
 def call() {
-  String label = "Setting up local Git repo for Jenkins <$GIT_EMAIL>"
+  String label = "Setting up local Git repo for Jenkins"
   echo "$label"
   sh (
     label: "$label",
     script: '''#!/bin/bash
       set -euxo pipefail
 
-      if [ -z "${GIT_EMAIL:-}" ]; then
-        echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
-        exit 1
-      fi
+      GIT_USERNAME="${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
+      GIT_EMAIL="${GIT_EMAIL:-jenkins@noreply}"
+
+      #if [ -z "${GIT_EMAIL:-}" ]; then
+      #  echo "GIT_EMAIL is not defined, please set this in Jenkinsfile environment{} section"
+      #  exit 1
+      #fi
 
       # needed for 'git commit'
-      git config user.name  "${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
+      git config user.name  "$GIT_USERNAME"
       git config user.email "$GIT_EMAIL"
 
       if [ -n "${DEBUG:-}" ]; then

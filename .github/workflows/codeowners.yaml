@@ -11,28 +11,24 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
-# ============================================================================ #
-#                  S e m g r e p   C l o u d   W o r k f l o w
-# ============================================================================ #
-
-# Logs results to https://semgrep.dev/
-
 ---
-name: Semgrep Cloud
+name: Codeowners
 
 on:
   push:
     branches:
       - master
       - main
-    paths-ignore:
-      - '**/*.md'
+    paths:
+      - CODEOWNERS
+      - .github/CODEOWNERS
   pull_request:
     branches:
       - master
       - main
-    paths-ignore:
-      - '**/*.md'
+    paths:
+      - CODEOWNERS
+      - .github/CODEOWNERS
   workflow_dispatch:
     inputs:
       debug:
@@ -50,11 +46,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  semgrep:
+  validate:
     # github.event.repository context not available in scheduled workflows
     #if: github.event.repository.fork == false
     if: github.repository_owner == 'HariSekhon'
-    name: Semgrep Cloud
-    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
-    secrets:
-      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    name: Validate CODEOWNERS
+    uses: HariSekhon/GitHub-Actions/.github/workflows/codeowners.yaml@master

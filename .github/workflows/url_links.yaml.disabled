@@ -24,11 +24,26 @@ on:
       - master
       - main
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   url_links:
+    # github.event.repository context not available in scheduled workflows
+    #if: github.event.repository.fork == false
+    if: github.repository_owner == 'HariSekhon'
     name: URL Links
     uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
     with:

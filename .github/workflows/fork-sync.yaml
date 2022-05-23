@@ -12,21 +12,9 @@
 #
 
 ---
-name: Validation
+name: Fork Sync
 
 on:
-  push:
-    branches:
-      - master
-      - main
-    paths-ignore:
-      - '**/*.md'
-  pull_request:
-    branches:
-      - master
-      - main
-    paths-ignore:
-      - '**/*.md'
   workflow_dispatch:
     inputs:
       debug:
@@ -34,19 +22,21 @@ on:
         required: false
         default: false
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 */3 * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  validate:
+  fork_sync:
     # github.event.repository context not available in scheduled workflows
-    #if: github.event.repository.fork == false
-    if: github.repository_owner == 'HariSekhon'
-    name: Validate
-    uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
+    #if: github.event.repository.fork == true
+    if: github.repository_owner != 'HariSekhon'
+    name: Fork Sync
+    uses: HariSekhon/GitHub-Actions/.github/workflows/fork-sync.yaml@master
+    with:
+      debug: ${{ github.event.inputs.debug }}

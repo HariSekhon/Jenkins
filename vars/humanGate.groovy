@@ -13,18 +13,24 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(submitter=''){
-  milestone ordinal: 20, label: "Milestone: Human Gate"
-  // only wait for 1 hour because we don't want to approve release but not give it enough time to succeed, better to retry the build from start
-  timeout(time: 1, unit: 'HOURS') {
-    input (
-      message: """Are you sure you want to release this build to production?
+// Usage:
+//
+//    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
+//
+// submitter = comma separated list of users/groups by name or email address that are permitted to authorize
+// ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
-This prompt will time out after 1 hour""",
-      ok: "Deploy",
-      // only allow people in this group to approve deployments to production
-      //submitter: "platform-engineering@mydomain.co.uk"
-      submitter: "$submitter"
+def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
+  milestone ordinal: 20, label: "Milestone: Human Gate"
+  timeout(time: args.timeoutMinutes, unit: 'MINUTES') {
+    input (
+      message: """Are you sure you want to release this build?
+
+This prompt will time out in ${args.timeoutMinutes} minutes""",
+      ok: args.ok,
+      // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
+      //submitter: "platform-engineering@mydomain.co.uk,Deployers"
+      submitter: args.submitter
     )
   }
 }

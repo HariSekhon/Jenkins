@@ -31,12 +31,18 @@
 
 // https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 
-// XXX: see vars/ directory in this repo for Shared Libary code
+// XXX: see vars/ directory in this repo for Shared Libary functions
 
 // import a preconfigured shared library to use its functions for code reuse
-//@Library(value="name@version", changelog=true|false)  // changelog will not only include lib changes in changeset but also trigger new builds when the library changes, not very scalable to auto-re-run all your pipelines
+//@Library(value="name@version", changelog=true|false) _ // changelog will not only include lib changes in changeset but also trigger new builds when the library changes, not very scalable to auto-re-run all your pipelines
+//@Library(value='harisekhon@master', changelog=false) _
 //@Library('namedlibrary@master') _
-@Library(value='harisekhon@master', changelog=false) _
+// // import 2 libraries
+//@Library(['namedlibrary', 'otherlib@tag']) _
+//
+// load directly from this GitHub repo without having to configure a Named Shared Library in the Jenkins global configuration
+// XXX: implicitly causes "Include @Library changes in job recent changes" behaviour and triggering when the library changes
+@Library('github.com/harisekhon/jenkins@master') _
 
 // more dynamic but $BRANCH_NAME is only available in a Jenkins MultiBranch Pipeline
 //library "namedlibrary@$BRANCH_NAME"
@@ -382,7 +388,7 @@ pipeline {
     stage ('Checkout') {
       steps {
         milestone(ordinal: 10, label: "Milestone: Checkout")
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/harisekhon/devops-bash-tools']]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/HariSekhon/DevOps-Bash-tools']]])
       }
     }
 

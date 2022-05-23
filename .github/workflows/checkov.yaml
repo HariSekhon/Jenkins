@@ -4,11 +4,11 @@
 #
 #  vim:ts=2:sts=2:sw=2:et
 #
-#  https://github.com/harisekhon/templates
+#  https://github.com/HariSekhon/Jenkins
 #
 #  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
 #
-#  https://www.linkedin.com/in/harisekhon
+#  https://www.linkedin.com/in/HariSekhon
 #
 
 # ============================================================================ #
@@ -27,19 +27,34 @@ on:
     branches:
       - master
       - main
+    paths-ignore:
+      - '**/*.md'
   pull_request:
     branches:
       - master
       - main
+    paths-ignore:
+      - '**/*.md'
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   checkov:
+    # github.event.repository context not available in scheduled workflows
+    #if: github.event.repository.fork == false
+    if: github.repository_owner == 'HariSekhon'
     name: Checkov
     uses: HariSekhon/GitHub-Actions/.github/workflows/checkov.yaml@master
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+    with:
+      debug: ${{ github.event.inputs.debug }}
