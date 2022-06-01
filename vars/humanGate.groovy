@@ -17,6 +17,14 @@
 //
 //    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
 //
+// or better to DRY between pipelines
+//
+//    humanGate(submitter: "$DEPLOYERS", timeout: 10)
+//
+// then configure $DEPLOYERS environment variable at the global Jenkins level:
+//
+//    Manage Jenkins -> Configure System -> Global properties -> Environment Variables -> Add -> DEPLOYERS
+//
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 // ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
