@@ -22,8 +22,7 @@ def call(String scriptPath, List<String> locks, int timeoutMinutes=60){
     extraLocks.append([resource: lock])
   }
   lock(extra: extraLocks, inversePrecedence: true){
-    // can't really milestone in here as won't be flexible enough
-    //milestone ordinal: 50, label: "Milestone: Running script: $scriptPath"
+    milestone label: "Milestone: Running script: $scriptPath"
     retry(2){
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         // external script needs to exist in the source repo, not the shared library repo
