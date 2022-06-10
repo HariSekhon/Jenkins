@@ -13,7 +13,7 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(){
+def call(String scriptPath){
   echo "Solr Re-Indexing '" + "${env.ENVIRONMENT}".capitalize() + "' from branch '${env.GIT_BRANCH}'"
   String deploymentLock = "Deploy Apps - " + "${env.ENVIRONMENT}".capitalize() + " Environment"
   String indexingLock = "Solr Re-Indexing - " + "${env.ENVIRONMENT}".capitalize() + " Environment"
@@ -26,7 +26,7 @@ def call(){
       retry(2){
         timeout(time: 90, unit: 'MINUTES') {
           // external script needs to exist in the source repo, not the shared library repo
-          sh 'path/to/solr-reindex.sh'
+          sh "$scriptPath"
         }
       }
     }
