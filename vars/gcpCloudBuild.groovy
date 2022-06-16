@@ -36,25 +36,23 @@ def call(Map args = [args:'', timeoutMinutes:60]){
   echo "Building from branch '$GIT_BRANCH'"
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
-      withEnv(["ARGS=${args.args}", "TIMEOUT_MINUTES=${args.timeoutMinutes}"]) {
-        String label = 'Running GCP CloudBuild'
-        echo "$label"
-        sh (
-          label: "$label",
-          script: """#!/bin/bash
-            set -euxo pipefail
-            export CLOUDSDK_CORE_DISABLE_PROMPTS=1
-            gcloud auth list
-            if [ -n "\${DOCKER_IMAGE:-}" ] &&
-               [ -n "\${DOCKER_TAG:-}" ] &&
-               [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-               :
-            else
-              gcloud builds submit --timeout "${TIMEOUT_MINUTES}m" $ARGS
-            fi
-          """
-        )
-      }
+      String label = 'Running GCP CloudBuild'
+      echo "$label"
+      sh (
+        label: "$label",
+        script: """#!/bin/bash
+          set -euxo pipefail
+          export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+          gcloud auth list
+          if [ -n "\${DOCKER_IMAGE:-}" ] &&
+             [ -n "\${DOCKER_TAG:-}" ] &&
+             [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+             :
+          else
+            gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
+          fi
+        """
+      )
     }
   }
 }
