@@ -34,7 +34,6 @@
 def call(args, timeoutMinutes=60){
   milestone ordinal: 10, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
-  int timeoutSeconds = timeoutMinutes * 60
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
@@ -51,7 +50,7 @@ def call(args, timeoutMinutes=60){
                [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
                :
             else
-              gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
+              gcloud builds submit --timeout "${timeoutMinutes}m" $args
             fi
           """
         )
