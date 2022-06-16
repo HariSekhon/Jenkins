@@ -29,6 +29,7 @@ test:
 	check_groovyc.sh
 
 clean:
+	@#echo "Removing .class files"
 	find . -name '*.class' -exec rm {} \;
 
 wc:
