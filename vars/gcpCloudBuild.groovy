@@ -34,6 +34,12 @@
 def call(Map args = [args:'', timeoutMinutes:60]){
   milestone ordinal: 10, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
+  if(args.args == null){
+    args.args = ''
+  }
+  if(args.timeoutMinutes == null){
+    args.timeoutMinutes = 60
+  }
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       String label = 'Running GCP CloudBuild'
