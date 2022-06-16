@@ -44,6 +44,7 @@ def call(args, timeoutMinutes=60){
           label: "$label",
           script: """#!/bin/bash
             set -euxo pipefail
+            export CLOUDSDK_CORE_DISABLE_PROMPTS=1
             gcloud auth list
             if [ -n "\${DOCKER_IMAGE:-}" ] &&
                [ -n "\${DOCKER_TAG:-}" ] &&
