@@ -31,12 +31,12 @@
 //    // or
 //    DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
 
-def call(args, timeoutMinutes=60){
+def call(Map args = [args:'', timeoutMinutes:60]){
   milestone ordinal: 10, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
   retry(2){
-    timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
-      withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
+    timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
+      withEnv(["ARGS=${args.args}", "TIMEOUT_MINUTES=${args.timeoutMinutes}"]) {
         String label = 'Running GCP CloudBuild'
         echo "$label"
         sh (
@@ -50,7 +50,7 @@ def call(args, timeoutMinutes=60){
                [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
                :
             else
-              gcloud builds submit --timeout "${timeoutMinutes}m" $args
+              gcloud builds submit --timeout "${TIMEOUT_MINUTES}m" $ARGS
             fi
           """
         )
