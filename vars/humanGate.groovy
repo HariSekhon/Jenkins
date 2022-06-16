@@ -19,7 +19,7 @@
 //
 // or better to DRY between pipelines
 //
-//    humanGate(submitter: "$DEPLOYERS", timeout: 10)
+//    humanGate(submitter: "$DEPLOYERS", timeoutMinutes: 10)
 //
 // then configure $DEPLOYERS environment variable at the global Jenkins level:
 //
@@ -30,6 +30,9 @@
 
 def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
   milestone ordinal: 20, label: "Milestone: Human Gate"
+  if(args.timeoutMinutes == null){
+    args.timeoutMinutes = 60
+  }
   timeout(time: args.timeoutMinutes, unit: 'MINUTES') {
     input (
       message: """Are you sure you want to release this build?
