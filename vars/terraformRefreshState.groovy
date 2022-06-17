@@ -31,11 +31,13 @@ def call(timeoutMinutes=59){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          echo "$label"
-          sh (
-            label: "$label",
-            script: 'terraform apply -refresh-only -input=false'
-          )
+          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+            echo "$label"
+            sh (
+              label: "$label",
+              script: 'terraform apply -refresh-only -input=false'
+            )
+          }
         }
       }
     }
