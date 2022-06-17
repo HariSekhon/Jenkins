@@ -16,7 +16,7 @@
 def call(String scriptPath, List<String> locks, int timeoutMinutes=60){
   // generate a list in this format
   //lock(extra: [[resource: 'lock1'], [resource: 'lock2']])
-  List extraLocks
+  List extraLocks = []
   for (lock in locks){
     echo "Acquiring Lock: $lock"
     extraLocks.append([resource: lock])
