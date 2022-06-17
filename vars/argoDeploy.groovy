@@ -23,7 +23,7 @@
 // The ArgoCD app must be set up with a name of $APP-$ENVIRONMENT
 
 def call(timeoutMinutes=10){
-  String label = "Deploying ArgoCD - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+  String label = "ArgoCD Deploy - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
   milestone ordinal: 100, label: "Milestone: $label"
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
