@@ -34,10 +34,13 @@ def call(timeoutMinutes=10){
           echo "$label"
           sh (
             label: "$label",
-            // hard refresh prevents a rare cache problem:
+            // tried hard refresh to work around this problem:
             //
             //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
             //
+            // it seemed to work initially when run as a one off in the UI,
+            // but when applied in CI/CD and run every time to try to patch over that problem,
+            // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
             script: '''#!/bin/bash
               set -euxo pipefail
 
