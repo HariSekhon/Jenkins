@@ -34,3 +34,6 @@ clean:
 
 wc:
 	git ls-files Jenkinsfile vars/ | xargs wc -l
+
+sync:
+	. .envrc; github_repo_fork_sync.sh
