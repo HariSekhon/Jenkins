@@ -28,14 +28,15 @@ def call(timeoutMinutes=59){
     // XXX: set Terragrunt version in the docker image tag in jenkins-agent-pod.yaml
     container('terragrunt') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
-        //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
-          // for test environments, add a param to trigger -destroy switch
-          echo "$label"
-          sh (
-            label: "$label",
-            script: 'terragrunt apply -refresh-only --terragrunt-non-interactive -input=false'
-          )
+          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+            // for test environments, add a param to trigger -destroy switch
+            echo "$label"
+            sh (
+              label: "$label",
+              script: 'terragrunt apply -refresh-only --terragrunt-non-interactive -input=false'
+            )
+          }
         }
       }
     }
