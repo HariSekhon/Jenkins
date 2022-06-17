@@ -13,22 +13,15 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call(String scriptPath){
-  echo "Solr Re-Indexing '" + "${env.ENVIRONMENT}".capitalize() + "' from branch '${env.GIT_BRANCH}'"
-  String deploymentLock = "Deploy Apps - " + "${env.ENVIRONMENT}".capitalize() + " Environment"
-  String indexingLock = "Solr Re-Indexing - " + "${env.ENVIRONMENT}".capitalize() + " Environment"
-  echo "Acquiring Deployment Lock: $deploymentLock"
-  // prevents running a deployment while reindexing
-  lock(resource: deploymentLock, inversePrecedence: true){
-    echo "Acquiring Indexing Lock: $indexingLock"
-    lock(resource: indexingLock, inversePrecedence: true){
-      milestone ordinal: 50, label: "Milestone: Solr Reindexing"
-      retry(2){
-        timeout(time: 90, unit: 'MINUTES') {
-          // external script needs to exist in the source repo, not the shared library repo
-          sh "$scriptPath"
-        }
-      }
-    }
-  }
+// Required Environment Variables to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
+//
+//    APP
+//    ENVIRONMENT
+
+def call(String scriptPath, int timeoutMinutes=60){
+  echo "Solr Re-Indexing App '$APP' '" + "$ENVIRONMENT".capitalize() + "' from branch '$GIT_BRANCH'"
+  String deploymentLock = "Deploying ArgoCD - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+  String indexingLock   = "Solr Re-Indexing - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+
+  stringLockExecute(scriptPath, [deploymentLock, indexingLock], timeoutMinutes)
 }
