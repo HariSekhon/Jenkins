@@ -30,11 +30,13 @@ def call(timeoutMinutes=30){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          echo "$label"
-          sh (
-            label: "$label",
-            script: 'terraform apply plan.zip -input=false -auto-approve'
-          )
+          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+            echo "$label"
+            sh (
+              label: "$label",
+              script: 'terraform apply plan.zip -input=false -auto-approve'
+            )
+          }
         }
       }
     }
