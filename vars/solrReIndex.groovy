@@ -23,5 +23,5 @@ def call(String scriptPath, int timeoutMinutes=60){
   String deploymentLock = "Deploying ArgoCD - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
   String indexingLock   = "Solr Re-Indexing - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
 
-  stringLockExecute(scriptPath, [deploymentLock, indexingLock], timeoutMinutes)
+  scriptLockExecute(scriptPath, [deploymentLock, indexingLock], timeoutMinutes)
 }
