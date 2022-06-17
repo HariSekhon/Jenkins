@@ -24,10 +24,10 @@
 
 def call(timeoutMinutes=10){
   String label = "ArgoCD Deploy - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
-  milestone ordinal: 100, label: "Milestone: $label"
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
   lock(resource: label, inversePrecedence: true){
+    milestone ordinal: 100, label: "Milestone: $label"
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
