@@ -103,9 +103,9 @@ pipeline {
 //      //  apiVersion: v1
 //      //  kind: Pod
 //      //  metadata:
-//      //  namespace: jenkins
-//      //  #  labels:
-//      //  #  app: gcloud-sdk
+//      //    namespace: jenkins
+//      //    labels:
+//      //      app: gcloud-sdk
 //      //  spec:
 //      //    containers:
 //      //      - name: gcloud-sdk  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
