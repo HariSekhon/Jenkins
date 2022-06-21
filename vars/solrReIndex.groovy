@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                           S o l r   R e - I n d e x
+// ========================================================================== //
+
+// Run the given script to do a Solr re-index, locking it so that no other script or deployment will clash with it
+
 // Required Environment Variables to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 //
 //    APP
