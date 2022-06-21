@@ -32,7 +32,9 @@ def call(timeoutMinutes=1){
         label: "$label",
         script: '''#!/bin/bash
           set -euxo pipefail
-          rm -f "$HOME/.gcloud/application-credentials.json.${GIT_COMMIT:-}"
+          # XXX: must match gcpSetupApplicationCredentials.groovy
+          keyfile="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
+          rm -fv "$keyfile"
         '''
       )
     }
