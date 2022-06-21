@@ -16,9 +16,9 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=30){
-  String label = "Terraform Apply - Dir: $TERRAFORM_DIR"
+  String label = "Terraform Apply - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
-  String lock  = "Terraform - Dir: $TERRAFORM_DIR"
+  String lock  = "Terraform - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   echo "Acquiring Terraform Apply Lock: $lock"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older applys from starting
