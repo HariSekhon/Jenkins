@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                   S c r i p t   L o c k   +   E x e c u t e
+// ========================================================================== //
+
+// Runs a given script with one or more given locks to prevent more than 1 copy of the script ever executing or to prevent a script from running during a deployment, or deployments starting while a script is running
+
 def call(String scriptPath, List<String> locks, int timeoutMinutes=60){
   // generate a list in this format
   //lock(extra: [[resource: 'lock1'], [resource: 'lock2']])
