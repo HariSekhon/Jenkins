@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                                P i p e l i n e
+// ========================================================================== //
+
 // Whole Pipeline parameterized - superceded, left here as an example
 
 def call (project, environ, credential) {
