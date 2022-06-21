@@ -13,6 +13,16 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                        T e r r a f o r m   F o r m a t
+// ========================================================================== //
+
+// Find out if your Terraform code conforms to formatting guidelines
+//
+// You can set this to optional, see adjacent:
+//
+//    terraformPipeline.groovy
+
 def call(timeoutMinutes=1){
   String label = 'Terraform Fmt'
 
@@ -28,7 +38,7 @@ def call(timeoutMinutes=1){
           echo "$label"
           sh (
             label: "$label",
-            script: 'terraform fmt'
+            script: 'terraform fmt -check -diff'
           )
         }
       }
