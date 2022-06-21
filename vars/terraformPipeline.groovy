@@ -158,18 +158,22 @@ def call(Map args = [
       //}
 
       stage('Logins') {
-        stages {
-          stage('GCP Activate Service Account') {
-            when {
-              not {
-                // must match the env var used in the gcpActivateServiceAccount() function
-                environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
-              }
-            }
-            steps {
-              gcpActivateServiceAccount()
-            }
-          }
+        // can't inject the passed in env var before this is evaluated, ends up skipping stage
+        //stages {
+        //  stage('GCP Activate Service Account') {
+        //    when {
+        //      not {
+        //        // must match the env var used in the gcpActivateServiceAccount() function
+        //        environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
+        //      }
+        //    }
+        //    steps {
+        //      gcpActivateServiceAccount()
+        //    }
+        //  }
+        //}
+        steps {
+          logins()
         }
       }
 
