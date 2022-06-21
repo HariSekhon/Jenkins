@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                      T e r r a f o r m   P i p e l i n e
+// ========================================================================== //
+
+// Generic re-usable parameterized pipeline for running Terraform across environments
+
 // Usage in Jenkinsfile:
 //
 //    // import this library directly from github:
