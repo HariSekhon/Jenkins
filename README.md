@@ -69,7 +69,8 @@ pipeline {
 
 ## Terraform
 
-Generalized reusable Terraform parameterized pipeline -  handles all logins, Terraform fmt, validate, plan, approval, apply etc.
+Run the `terraformPipeline` for a reusable parameterized Terraform CI/CD -  handles all logins, Terraform fmt, validate, plan, approval, apply etc.
+
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 terraformPipeline(version: '1.1.7',
@@ -82,8 +83,9 @@ terraformPipeline(version: '1.1.7',
 ## Git Merges & Backports
 
 Run the `gitMergePipeline` to automatically merge one branch into another, for example to automatically backport between environment branches such as any hotfixes in Staging to Dev:
+
 ```groovy
-@Library('jenkins@staging') _
+@Library('github.com/harisekhon/jenkins@master') _
 gitMergePipeline('staging', 'dev')
 ```
 
