@@ -44,7 +44,7 @@ def call() {
         echo "GCP_SERVICEACCOUNT_KEY environment variable not set!"
         exit 1
       fi
-      docker login "$GAR_REGISTRY" -u _json_key -p "$GCP_SERVICEACCOUNT_KEY"
+      docker login "$GAR_REGISTRY" -u _json_key -p "$(echo "$GCP_SERVICEACCOUNT_KEY" | base64 --decode)"
     fi
   '''
 }
