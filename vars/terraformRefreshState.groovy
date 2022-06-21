@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                T e r r a f o r m   R e f r e s h   S t a t e s
+// ========================================================================== //
+
 // For large estates to run a separate refresh-only job periodically to keep the state file up to date
 //
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
