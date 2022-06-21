@@ -3,7 +3,7 @@
 //  Author: Hari Sekhon
 //  Date: 2022-02-01 18:56:45 +0000 (Tue, 01 Feb 2022)
 //
-//  vim:ts=2:sts=2:sw=2:et
+//  vim:ts=4:sts=4:sw=4:et
 //
 //  https://github.com/HariSekhon/Jenkins
 //
@@ -14,29 +14,26 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-def call() {
-  sh (
-    label: 'Download KICS',
-    script: '''#!/bin/bash
-      set -euxo pipefail
-      if ! command -v /usr/local/bin/kics; then
-        curl -sSf https://api.github.com/repos/Checkmarx/kics/releases/latest |
-        jq -r '
-          .assets[] |
-          select(
-            .browser_download_url |
-            test("linux_x64.tar.gz")
-          ) |
-          .browser_download_url
-        ' |
-        head -n1 |
-        while read -r url; do
-            wget -qc "$url" -O /tmp/kics.tar.gz
-            tar zxvf /tmp/kics.tar.gz -C /usr/local/bin
-            rm -fv /tmp/kics.tar.gz
-        done
-      fi
-      /usr/local/bin/kics version
-    '''
-  )
+// obsolete - Kics doesn't support downloadable binaries after 1.5.1
+def call(version = '1.5.1') {
+    withEnv(["VERSION=${version}"]){
+        sh (
+            label: 'Download KICS',
+            script: '''
+                set -eux
+
+                mkdir -p ~/bin
+
+                cd ~/bin
+
+                export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
+                export NO_MAKE=1
+
+                # downloads the DevOps Bash tools repo which contains install_binary.sh
+                curl -L https://git.io/bash-bootstrap | sh
+
+                bash-tools/setup/install_kics.sh
+            '''
+        )
+    }
 }
