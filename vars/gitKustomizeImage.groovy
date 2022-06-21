@@ -24,13 +24,20 @@
 //
 // Requires the following environment variables to be already set in the pipeline environment{} section:
 //
-//    APP
-//    ENVIRONMENT
+//    GITOPS_REPO
 //    GIT_USERNAME
 //    GIT_EMAIL
-//    GITOPS_REPO
-//    DOCKER_IMAGE
+//
 //    GIT_COMMIT - provided automatically by Jenkins
+//
+//  If dockerImages list isn't passed as first argument:
+//
+//    DOCKER_IMAGE
+//
+//  Only if dir is not passed, infers by convention <$APP>/<$ENVIRONMENT>/ as the directory path in the repo to update
+//
+//    APP
+//    ENVIRONMENT
 //
 // Should be wrapped in an sshagent block like this:
 //
@@ -39,11 +46,11 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
+def call(dockerImages=["$DOCKER_IMAGE"], dir="$APP/$ENVIRONMENT", version="$GIT_COMMIT", timeoutMinutes=4){
   if (!dockerImages){
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
   }
-  String label = "Git Kustomize Image Version - App: '$APP', Environment: '" + "$ENVIRONMENT".capitalize() + "'"
+  String label = "Git Kustomize Image Version - Dir: '$dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: 90, label: "Milestone: $label"
@@ -63,23 +70,23 @@ def call(dockerImages=["$DOCKER_IMAGE"], timeoutMinutes=4){
 
               git clone --branch "\$ENVIRONMENT" "\$GITOPS_REPO" repo
 
-              cd "repo/\$APP/\$ENVIRONMENT"
+              cd "repo/$dir"
 
               git config user.name "\$GIT_USERNAME"
               git config user.email "\$GIT_EMAIL"
 
-              #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$GIT_COMMIT"
-              #kustomize edit set image "\$DOCKER_IMAGE:\$GIT_COMMIT"
+              #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$version"
+              #kustomize edit set image "\$DOCKER_IMAGE:\$version"
 
               # needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
-              ${ dockerImages.collect{ "kustomize edit set image $it:$GIT_COMMIT" }.join("\n") }
+              ${ dockerImages.collect{ "kustomize edit set image $it:$version" }.join("\n") }
 
               git diff
 
               git add -A
 
               if ! git diff-index --quiet HEAD; then
-                git commit -m "updated \$APP \$ENVIRONMENT app image version to build \$GIT_COMMIT"
+                git commit -m "updated app images under '$dir' to version '\$version'"
               fi
 
               git push
