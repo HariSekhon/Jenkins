@@ -21,7 +21,7 @@ def call(){
   String label = "Deploy App, Environment: " + "$ENVIRONMENT".capitalize()
   echo "Acquiring Deployment Lock: $label"
   lock(resource: label, inversePrecedence: true){
-    milestone ordinal: 30, label: "Milestone: $label"
+    milestone ordinal: null, label: "Milestone: $label"
     retry(2){
       timeout(time: 20, unit: 'MINUTES') {
         // script in local repo
