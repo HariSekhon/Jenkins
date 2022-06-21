@@ -55,7 +55,9 @@ def call(Map args = [
 
   pipeline {
 
-    agent ${args.get(agent, any)}
+    agent {
+      label args.agent == "any" ? "" : args.agent
+    }
 
     // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
     //      using terraform's official docker image seemed smart for caching but it lacks the cloud auth tooling to be effective
