@@ -30,7 +30,7 @@
 //
 //      @Library('github.com/harisekhon/jenkins@master') _
 //
-//    // run to login to any plaforms for which we have standard expected environment variables available
+//    // run to login to any platforms for which we have standard expected environment variables available
 //
 //      logins()
 
