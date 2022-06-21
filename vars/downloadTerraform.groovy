@@ -18,7 +18,7 @@
 //                      D o w n l o a d   T e r r a f o r m
 // ========================================================================== //
 
-// Downloads Terraform binary to $HOME/bin, which should be added to $PATH
+// Downloads Terraform binary to $HOME/bin if run as a user, or /usr/local/bin if run as root
 
 def call(version) {
   timeout(time: 3, unit: 'MINUTES') {
