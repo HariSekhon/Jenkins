@@ -3,7 +3,7 @@
 //  Author: Hari Sekhon
 //  Date: 2022-02-01 18:56:45 +0000 (Tue, 01 Feb 2022)
 //
-//  vim:ts=2:sts=2:sw=4:et
+//  vim:ts=2:sts=2:sw=2:et
 //
 //  https://github.com/HariSekhon/Jenkins
 //
