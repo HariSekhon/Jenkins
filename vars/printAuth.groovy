@@ -35,19 +35,25 @@ def call(){
 
   sh label: 'Auth Status',
      script: '''
-       set -eux
+       set -eu
+
+       whoami
+       echo
 
        if command -v aws >/dev/null 2>&1; then
+         echo "AWS:"
          aws sts get-caller-identity || :
          echo
        fi
 
        if command -v gcloud >/dev/null 2>&1; then
+         "GCP:"
          gcloud auth list || :
          echo
        fi
 
        if command -v az >/dev/null 2>&1; then
+         echo "Azure:"
          az ad signed-in-user show || :
          echo
        fi
