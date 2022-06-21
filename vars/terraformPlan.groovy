@@ -31,7 +31,7 @@ def call(timeoutMinutes=10){
           // terraform docker image doesn't have bash
           //sh '''#/usr/bin/env bash -euxo pipefail
           //sh '''#/bin/sh -eux
-          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+          dir(env.TERRAFORM_DIR ?: ".") {
             echo 'Terraform Workspace List'
             sh (
               label: 'Workspace List',

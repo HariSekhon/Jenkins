@@ -31,7 +31,7 @@ def call(timeoutMinutes=59){
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch
-          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+          dir(env.TERRAFORM_DIR ?: ".") {
             echo "$label"
             sh (
               label: "$label",

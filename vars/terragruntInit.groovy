@@ -24,7 +24,7 @@ def call(timeoutMinutes=10){
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
-        dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+        dir(env.TERRAFORM_DIR ?: ".") {
           // terraform workspace is not supported if using Terraform Cloud
           // TF_WORKSPACE overrides 'terraform workspace select'
           //

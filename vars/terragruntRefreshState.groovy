@@ -29,7 +29,7 @@ def call(timeoutMinutes=59){
     //container('terragrunt') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         ansiColor('xterm') {
-          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+          dir(env.TERRAFORM_DIR ?: ".") {
             // for test environments, add a param to trigger -destroy switch
             echo "$label"
             sh (

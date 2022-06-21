@@ -29,7 +29,10 @@ def call(timeoutMinutes=10){
         //
         // terraform docker image doesn't have bash
         //sh '''#/usr/bin/env bash -euxo pipefail
-        dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+        //
+        // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use staticMethod java.lang.System getenv java.lang.String
+        //dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+        dir(env.TERRAFORM_DIR ?: ".") {
           echo 'Terraform Workspace Select'
           sh label: 'Workspace Select',
              script: '''#/bin/sh -eux

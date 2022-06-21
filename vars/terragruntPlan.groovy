@@ -27,7 +27,7 @@ def call(timeoutMinutes=10){
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
-          dir(System.getenv("TERRAFORM_DIR") ?: ".") {
+          dir(env.TERRAFORM_DIR ?: ".") {
             // alpine/terragrunt docker image doesn't have bash
             //sh '''#/usr/bin/env bash -euxo pipefail
             //sh '''#/bin/sh -eux
