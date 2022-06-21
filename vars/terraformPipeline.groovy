@@ -30,7 +30,7 @@
 //      terraformPipeline(version: '1.2.3',
 //                        dir: '/path/to/dir',
 //                        apply_branch_pattern: 'master',
-//                        env: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"],
+//                        creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
 //                        container: 'gcloud-sdk',
 //                        yamlFile: 'ci/jenkins-pod.yaml')
 //
@@ -185,8 +185,10 @@ def call(Map args = [
         //  }
         //}
         steps {
-          withEnv(args.get('env', [])){
-            logins()
+          withEnv(args.env){
+            withCredentials(args.get('creds', [])){
+              logins()
+            }
           }
         }
       }
@@ -224,7 +226,9 @@ def call(Map args = [
       stage('Terraform Init') {
         steps {
           withEnv(args.get('env', [])){
-            terraformInit()
+            withCredentials(args.get('creds', [])){
+              terraformInit()
+            }
           }
         }
       }
@@ -232,7 +236,9 @@ def call(Map args = [
       stage('Terraform Plan') {
         steps {
           withEnv(args.get('env', [])){
-            terraformPlan()
+            withCredentials(args.get('creds', [])){
+              terraformPlan()
+            }
           }
         }
       }
@@ -256,8 +262,10 @@ def call(Map args = [
         }
         steps {
           withEnv(args.get('env', [])){
-            echo "Applying"
-            //terraformApply()
+            withCredentials(args.get('creds', [])){
+              echo "Applying"
+              //terraformApply()
+            }
           }
         }
       }
