@@ -45,12 +45,42 @@ pipeline {
         //
         // calls vars/printEnv.groovy
         printEnv()
+
+        // log in to GCP cloud with a service account key
+        gcpActivateServiceAccount()
+
+        // log in to DockerHub
+        dockerLogin()
+
+        // log in to AWS ECR before you build and push an image
+        dockerLoginECR()
+
+        // show all your authentications and who you're logged in as
+        printAuth()
+
+        // launch a GCP Cloud Build job, by default against your cloudbuild.yaml if no args given
+        gcpCloudBuild()
+
+
+				// see under vars/ for many more useful functions
       }
     }
 
   }
 }
 ```
+
+Run a whole Terraform parameterized pipeline, will handle all logins, Terraform fmt, validate, plan, approval, apply etc.
+```groovy
+@Library('github.com/harisekhon/jenkins@master') _
+terraformPipeline(version: '1.1.7',
+                  dir: 'deployments/dev',
+                  apply_branch_pattern: 'master',
+                  creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
+                  container: 'gcloud-sdk')
+```
+
+Read the comments at the top of each library function under `vars/<function>.groovy` for more details.
 
 If you want to prevent changes to this library re-triggering the last run of your pipelines, configure it as a a Shared Library in your global Jenkins configuration and untick "Include @Library changes in job recent changes".
 
