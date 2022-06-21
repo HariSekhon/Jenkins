@@ -3,7 +3,7 @@
 //  Author: Hari Sekhon
 //  Date: 2022-06-21 13:12:02 +0100 (Tue, 21 Jun 2022)
 //
-//  vim:ts=2:sts=2:sw=4:et
+//  vim:ts=2:sts=2:sw=2:et
 //
 //  https://github.com/HariSekhon/Jenkins
 //
@@ -21,7 +21,9 @@
 // Downloads Terraform binary to $HOME/bin, which should be added to $PATH
 
 def call(version) {
-  withEnv(["TERRAFORM_VERSION=$version"]){
-    installBinary(url: "https://releases.hashicorp.com/terraform/v$TERRAFORM_VERSION/terraform_v${TERRAFORM_VERSION}_{os}_{arch}.zip", binary: 'terraform')
+  timeout(time: 3, unit: 'MINUTES') {
+    withEnv(["TERRAFORM_VERSION=$version"]){
+      installBinary(url: "https://releases.hashicorp.com/terraform/v$TERRAFORM_VERSION/terraform_v${TERRAFORM_VERSION}_{os}_{arch}.zip", binary: 'terraform')
+    }
   }
 }
