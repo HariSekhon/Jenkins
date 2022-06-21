@@ -27,6 +27,12 @@
 //
 //      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', withEnv: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
 //
+//    // with explicit checkout settings or if tried from Jenkins without SCM
+//      terraformPipeline(version: '1.1.7',
+//                        dir: 'deployments/dev',
+//                        apply_branch_pattern: 'master',
+//                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ] )
+//
 
 def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', withEnv: [], checkout: [] ] ){
 
@@ -49,7 +55,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
               app: terraform
           spec:
             containers:
-              - name: gcloud-sdk  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
+              - name: terraform  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
                 image: hashicorp/terraform:${args.version}
                 tty: true
                 resources:
@@ -90,6 +96,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
         }
       }
 
+      // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
       stage ('Checkout') {
         when {
           beforeAgent true
