@@ -28,6 +28,10 @@ def call(timeoutMinutes=10){
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
+
+        // let's check we have the login creds we think we should (checking up on the logins() function you should have called earlier)
+        printAuth()
+
         dir(env.TERRAFORM_DIR ?: ".") {
           // terraform workspace is not supported if using Terraform Cloud
           // TF_WORKSPACE overrides 'terraform workspace select'
