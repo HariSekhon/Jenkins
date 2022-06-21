@@ -57,6 +57,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
             containers:
               - name: terraform  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
                 image: hashicorp/terraform:${args.version}
+                command: cat
                 tty: true
                 resources:
                   requests:
