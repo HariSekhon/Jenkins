@@ -22,8 +22,6 @@
 
 def call(version) {
   timeout(time: 3, unit: 'MINUTES') {
-    withEnv(["TERRAFORM_VERSION=$version"]){
-      installBinary(url: "https://releases.hashicorp.com/terraform/v$TERRAFORM_VERSION/terraform_v${TERRAFORM_VERSION}_{os}_{arch}.zip", binary: 'terraform')
-    }
+    installBinary(url: "https://releases.hashicorp.com/terraform/v${version}/terraform_v${version}_{os}_{arch}.zip", binary: 'terraform')
   }
 }
