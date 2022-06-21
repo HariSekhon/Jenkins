@@ -46,7 +46,7 @@ def call (project, environ, credential) {
 
         stage('Build') {
           steps {
-            milestone ordinal: 20, label: "Milestone: Build"
+            milestone ordinal: null, label: "Milestone: Build"
             echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
             timeout(time: 1, unit: 'MINUTES') {
               sh script: 'env | sort', label: 'Environment'
@@ -65,7 +65,7 @@ def call (project, environ, credential) {
 
         stage('Deploy') {
           steps {
-            milestone ordinal: 30, label: "Milestone: Deploy"
+            milestone ordinal: null, label: "Milestone: Deploy"
             lock(resource: "Deploy K8s Apps - '" + "${environ}".capitalize() + "' Environment", inversePrecedence: true){
               retry(2){
                 timeout(time: 20, unit: 'MINUTES') {
