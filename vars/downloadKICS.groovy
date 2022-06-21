@@ -14,6 +14,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                           D o w n l o a d   K I C S
+// ========================================================================== //
+
 // obsolete - Kics doesn't support downloadable binaries after 1.5.1
 def call(version = '1.5.1') {
   withEnv(["VERSION=${version}"]){
