@@ -165,7 +165,9 @@ def call(Map args = [
                 // must match the env var used in the gcpActivateServiceAccount() function
                 environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
               }
-              gcpActivateServiceAccount()
+              steps {
+                gcpActivateServiceAccount()
+              }
             }
           }
         }
