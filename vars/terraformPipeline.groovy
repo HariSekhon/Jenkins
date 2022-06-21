@@ -105,6 +105,8 @@ def call(Map args = [
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$args.version"
       TF_IN_AUTOMATION = 1
+      // to pick up downloaded Terraform binary version first
+      PATH = "$HOME/bin:$PATH"
       //TF_LOG = "$DEBUG"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
@@ -167,6 +169,12 @@ def call(Map args = [
       stage('Logins') {
         steps {
           logins()
+        }
+      }
+
+      stage('Download Terraform Version') {
+        steps {
+          downloadTerraform("$TERRAFORM_VERSION")
         }
       }
 
