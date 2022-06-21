@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//              G i t   M e r g e   B r a n c h e   P i p e l i n e
+// ========================================================================== //
+
 // Usage in Jenkinsfile:
 //
 //    @Library('github.com/harisekhon/jenkins@master') _
