@@ -18,7 +18,6 @@ def call(timeoutMinutes=10){
   // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
   String lock  = "Terraform - Dir: $TERRAFORM_DIR"
   echo "Acquiring Terraform Plan Lock: $lock"
-  // plan still locks on normal backends outside Terraform Cloud
   lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
     milestone(ordinal: null, label: "Milestone: $label")
