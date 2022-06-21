@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                         T e r r a g r u n t   P l a n
+// ========================================================================== //
+
 def call(timeoutMinutes=10){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String label = "Terragrunt Plan - Dir: $terraformDir"
