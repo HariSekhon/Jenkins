@@ -36,7 +36,7 @@ Jenkinsfile:
 
 pipeline {
   stages {
-    stage('Test'){
+    stage('My Example'){
       steps {
         // call any function from this libary by its filename under vars/... without the .groovy extension
         //
@@ -62,6 +62,12 @@ pipeline {
 
         // launch a GCP Cloud Build job, by default against your cloudbuild.yaml if no args given
         gcpCloudBuild()
+
+        // run a script with locks to prevent another script or deployment from happening at the same time, timeout after 30 mins
+        scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
+
+        // download and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
+        installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
 
         // see under vars/ for many more useful functions
       }
