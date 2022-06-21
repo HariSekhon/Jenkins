@@ -25,8 +25,8 @@ def call(timeoutMinutes=59){
     // forbids older runs from starting
     milestone(ordinal: 100, label: "Milestone: $label")
 
-    // XXX: set Terraform version in the docker image tag in jenkins-agent-pod.yaml
-    container('terraform') {
+    // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
+    //container('terraform') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
@@ -40,6 +40,6 @@ def call(timeoutMinutes=59){
           }
         }
       }
-    }
+    //}
   }
 }

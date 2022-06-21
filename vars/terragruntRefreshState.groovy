@@ -25,8 +25,8 @@ def call(timeoutMinutes=59){
     // forbids older runs from starting
     milestone(ordinal: 100, label: "Milestone: $label")
 
-    // XXX: set Terragrunt version in the docker image tag in jenkins-agent-pod.yaml
-    container('terragrunt') {
+    // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
+    //container('terragrunt') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         ansiColor('xterm') {
           dir(System.getenv("TERRAFORM_DIR") ?: ".") {
@@ -39,6 +39,6 @@ def call(timeoutMinutes=59){
           }
         }
       }
-    }
+    //}
   }
 }
