@@ -40,8 +40,7 @@ def call(Map args = [
                       dir: '.',
                       apply_branch_pattern: '*/(main|master)$',
                       env: [],
-                      checkout: [],
-                      agent: any
+                      checkout: []
                      ] ){
 
   pipeline {
