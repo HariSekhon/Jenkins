@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                      D o w n l o a d   K u s t o m i z e
+// ========================================================================== //
+
 // There is now a harisekhon/git-kustomize docker image to avoid re-downloading kustomize for every pipeline run and reuse docker image caching
 //
 // See top-level Jenkinsfile, adjacent gitKustomizeImage.groovy and jenkins-agent-pod.yaml in:
