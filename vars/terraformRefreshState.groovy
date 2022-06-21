@@ -22,10 +22,13 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=59){
-  String label = "Terraform Refresh State - App: $APP, Environment: $ENVIRONMENT"
-  // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
-  String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
-  lock(resource: lock, inversePrecedence: true) {
+  String terraformDir = env.TERRAFORM_DIR ?: '.'
+  String unique = "Dir: $terraformDir"
+  String label = "Terraform Refresh State - $unique"
+  // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
+  String lockString = "Terraform - $unique"
+  echo "Acquiring Terraform Refresh Lock: $lockString"
+  lock(resource: lockString, inversePrecedence: true) {
     // forbids older runs from starting
     milestone(ordinal: null, label: "Milestone: $label")
 

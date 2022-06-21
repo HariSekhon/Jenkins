@@ -19,10 +19,12 @@
 
 def call(timeoutMinutes=10){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
-  String label = "Terragrunt Plan - Dir: $terraformDir"
-  // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
-  String lock  = "Terraform - Dir: $terraformDir"
-  lock(resource: lock, inversePrecedence: true) {
+  String unique = "Dir: $terraformDir"
+  String label = "Terragrunt Plan - $unique"
+  // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
+  String lockString = "Terraform - $unique"
+  echo "Acquiring Terragrunt Plan Lock: $lockString"
+  lock(resource: lockString, inversePrecedence: true) {
     // forbids older plans from starting
     milestone(ordinal: null, label: "Milestone: $label")
 
