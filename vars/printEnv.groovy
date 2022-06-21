@@ -13,13 +13,19 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//             p r i n t   e n v i r o n m e n t   v a r i a b l e s
+// ========================================================================== //
+
+// Call this at the start of every pipeline to make debugging easier by having this info always available
+
 def call(){
   timeout(time: 1, unit: 'MINUTES') {
     String label = 'Environment'
     sh (
       label: "$label",
-      script: '''#!/bin/bash
-        set -euxo pipefail
+      script: '''
+        set -eux
         env | sort
       '''
     )
