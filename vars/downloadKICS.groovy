@@ -30,9 +30,10 @@ def call(version = '1.5.1') {
         export NO_MAKE=1
 
         if [ -d bash-tools ]; then
-          pushd bash-tools
+          # pushd not available in sh
+          cd bash-tools
           git pull
-          popd
+          cd ..
         else
           git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
         fi
