@@ -73,6 +73,7 @@ Run the `terraformPipeline` for a reusable parameterized Terraform CI/CD -  hand
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
+
 terraformPipeline(version: '1.1.7',
                   dir: 'deployments/dev',
                   apply_branch_pattern: 'master',
@@ -86,6 +87,7 @@ Run the `gitMergePipeline` to automatically merge one branch into another, for e
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
+
 gitMergePipeline('staging', 'dev')
 ```
 
