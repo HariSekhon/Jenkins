@@ -29,10 +29,10 @@
 
 def call() {
   // configures docker config with a token
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
+  sh '''
+    set -eux
 
-    if type -P gcloud &>/dev/null; then
+    if command -v gcloud &>/dev/null; then
       gcloud auth configure-docker "$GAR_REGISTRY"
     else
       echo "GCloud SDK is not installed, attempting to login with docker directly"
@@ -44,7 +44,7 @@ def call() {
         echo "GCP_SERVICEACCOUNT_KEY environment variable not set!"
         exit 1
       fi
-      docker login "$GAR_REGISTRY" -u _json_key --password-stdin <<< "$GCP_SERVICEACCOUNT_KEY"
+      docker login "$GAR_REGISTRY" -u _json_key -p "$GCP_SERVICEACCOUNT_KEY"
     fi
   '''
 }

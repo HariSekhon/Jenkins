@@ -25,12 +25,20 @@
 //		AWS_DEFAULT_REGION
 
 def call() {
-  sh """#!/usr/bin/env bash
-    set -euxo pipefail
-    if [ -z "${env.get(AWS_ACCOUNT_ID, '')}" ]; then
-      AWS_ACCOUNT_ID="\$(aws sts get-caller-identity | jq -r .Account)"
+  sh '''
+    set -eux
+    if [ -z "${AWS_ACCOUNT_ID:-}" ]; then
+      AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"
+      if [ -z "$AWS_ACCOUNT_ID" ]; then
+        echo "Failed to determine AWS_ACCOUNT_ID"
+        exit 1
+      fi
     fi
-    aws ecr get-login-password --region '\$AWS_DEFAULT_REGION' |
-    docker login '\${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com' --username AWS --password-stdin
-  """
+    TOKEN="$(aws ecr get-login-password --region '$AWS_DEFAULT_REGION')"
+    if [ -z "$TOKEN" ]; then
+      echo "Failed to get AWS ECR authentication TOKEN"
+      exit 1
+    fi
+    docker login '${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com' -u AWS -p "$TOKEN"
+  '''
 }

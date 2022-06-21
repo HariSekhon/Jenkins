@@ -21,9 +21,8 @@
 // QUAY_USER and QUAY_TOKEN must be set in the calling environment
 
 def call() {
-  //sh "docker login quay.io -u '$QUAY_USER' -p '$QUAY_TOKEN'"
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
-    docker login quay.io -u "$QUAY_USER" --password-stdin <<< "$QUAY_TOKEN"
+  sh '''
+    set -eux
+    docker login quay.io -u "$QUAY_USER" -p "$QUAY_TOKEN"
   '''
 }

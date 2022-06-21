@@ -21,9 +21,8 @@
 // GITHUB_USER and GITHUB_TOKEN must be set in the calling environment
 
 def call() {
-  //sh "docker login ghcr.io -u '$GITHUB_USER' -p '$GITHUB_TOKEN'"
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
-    docker login ghcr.io -u "$GITHUB_USER" --password-stdin <<< "$GITHUB_TOKEN"
+  sh '''
+    set -eux
+    docker login ghcr.io -u "$GITHUB_USER" -p "$GITHUB_TOKEN"
   '''
 }

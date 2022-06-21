@@ -21,9 +21,8 @@
 // GITLAB_USER and GITLAB_TOKEN must be set in the calling environment
 
 def call() {
-  //sh "docker login registry.gitlab.com -u '$GITLAB_USER' -p '$GITLAB_TOKEN'"
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
-    docker login registry.gitlab.com -u "$GITLAB_USER" --password-stdin <<< "$GITLAB_TOKEN"
+  sh '''
+    set -eux
+    docker login registry.gitlab.com -u "$GITLAB_USER" -p "$GITLAB_TOKEN"
   '''
 }

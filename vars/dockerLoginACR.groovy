@@ -24,9 +24,8 @@
 
 def call() {
 	// configures docker config with a token
-  //sh "az acr login --name '$ACR_NAME'"
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
+  sh '''
+    set -eux
     az acr login --name "$ACR_NAME"
   '''
 }

@@ -21,9 +21,8 @@
 // DOCKERHUB_USER and DOCKERHUB_TOKEN must be set in the calling environment
 
 def call() {
-  //sh "docker login -u '$DOCKERHUB_USER' -p '$DOCKERHUB_TOKEN'"
-  sh '''#!/usr/bin/env bash
-    set -euxo pipefail
-    docker login -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_TOKEN"
+  sh '''
+    set -eux
+    docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN"
 	'''
 }
