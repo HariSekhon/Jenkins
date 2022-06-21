@@ -58,4 +58,6 @@ def call(){
     bash-tools/login.sh
 
   '''
+
+  gcpSetupApplicationCredentials()
 }
