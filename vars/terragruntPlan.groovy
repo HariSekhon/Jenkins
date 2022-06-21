@@ -14,9 +14,10 @@
 //
 
 def call(timeoutMinutes=10){
-  String label = "Terragrunt Plan - Dir: ${env.TERRAFORM_DIR ?: '.'}"
+  String terraformDir = env.TERRAFORM_DIR ?: '.'
+  String label = "Terragrunt Plan - Dir: $terraformDir"
   // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
-  String lock  = "Terraform - Dir: ${env.TERRAFORM_DIR ?: '.'}"
+  String lock  = "Terraform - Dir: $terraformDir"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
     milestone(ordinal: null, label: "Milestone: $label")
@@ -26,7 +27,7 @@ def call(timeoutMinutes=10){
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
-          dir(env.TERRAFORM_DIR ?: ".") {
+          dir("$terraformDir") {
             // alpine/terragrunt docker image doesn't have bash
             //sh '''#/usr/bin/env bash -euxo pipefail
             //sh '''#/bin/sh -eux
