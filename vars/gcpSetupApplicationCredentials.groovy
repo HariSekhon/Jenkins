@@ -30,7 +30,7 @@ def call(timeoutMinutes=1){
         script: '''#!/bin/bash
           set -euxo pipefail
           # XXX: pipeline must set GOOGLE_APPLICATION_CREDENTIALS to match this to pick these up
-          keyfile="$HOME/.gcloud/application-credentials.json.${GIT_COMMIT:-}"
+          keyfile="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
           if [ -n "${GCP_SERVICEACCOUNT_KEY:-}" ]; then
             mkdir -p -v "$(dirname "$keyfile")"
             echo "Writing Google Application Credentials key file to '$keyfile'"
