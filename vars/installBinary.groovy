@@ -19,7 +19,7 @@
 // ========================================================================== //
 
 def call(Map args = [url: '', binary: '']) {
-  withEnv(["URL=${args.get(url, '')}", "BINARY=${args.get(binary, '')}"]){
+  withEnv(["URL=${args.url}", "BINARY=${args.binary}"]){
     sh '''
       set -eux
 
