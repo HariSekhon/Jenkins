@@ -22,133 +22,25 @@
 //
 //    // run to login to any plaforms for which we have standard expected environment variables available
 //
-//    login()
+//      logins()
 
-// Jenkins Shared Library function
 def call(){
   echo 'Running Logins for any platforms we have environment credentials for'
 
-  //stages {
-  //
-  //  stage('GCP Activate Service Account') {
-  steps {
-      when {
-        beforeAgent true
-        not {
-          // must match the env var used in the gcpActivateServiceAccount() function
-          environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
-        }
-      }
-      step {
-        gcpActivateServiceAccount()
-      }
-    //}
+  sh '''
+    set -eux
 
-    //stage('Docker Login DockerHub') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'DOCKERHUB_USER',  value: '' }
-          not { environment name: 'DOCKERHUB_TOKEN', value: '' }
-        }
-      }
-      step {
-        dockerLogin()
-      }
-    //}
+    mkdir -p ~/bin
 
-    //stage('Docker Login GitHub Container Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'GITHUB_USER',  value: '' }
-          not { environment name: 'GITHUB_TOKEN', value: '' }
-        }
-      }
-      step {
-        dockerLoginGHCR()
-      }
-    //}
+    cd ~/bin
 
-    //stage('Docker Login GitLab Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'GITLAB_USER',  value: '' }
-          not { environment name: 'GITLAB_TOKEN', value: '' }
-        }
-      }
-      step {
-        dockerLoginGitlab()
-      }
-    //}
+    export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
+    export NO_MAKE=1
 
-    //stage('Docker Login Azure Container Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          // XXX: add auth function and check for their env vars
-          not { environment name: 'ACR_NAME', value: '' }
-        }
-      }
-      step {
-        dockerLoginACR()
-      }
-    //}
+    # downloads the DevOps Bash tools repo which contains docker_logins.sh
+    curl -L https://git.io/bash-bootstrap | sh
 
-    //stage('Docker Login AWS Elastic Container Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'AWS_ACCESS_KEY_ID',     value: '' }
-          not { environment name: 'AWS_SECRET_ACCESS_KEY', value: '' }
-          not { environment name: 'AWS_DEFAULT_REGION',    value: '' }
-        }
-      }
-      step {
-        dockerLoginECR()
-      }
-    //}
+    bash-tools/login.sh
 
-    //stage('Docker Login AWS Google Artifact Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'GCP_SERVICEACCOUNT_KEY', value: '' }
-          not { environment name: 'GAR_REGISTRY', value: '' }
-        }
-      }
-      step {
-        dockerLoginGAR()
-      }
-    //}
-
-    //stage('Docker Login AWS Google Container Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'GCP_SERVICEACCOUNT_KEY', value: '' }
-          not { environment name: 'GCR_REGISTRY', value: '' }
-        }
-      }
-      step {
-        dockerLoginGCR()
-      }
-    //}
-
-    //stage('Docker Login AWS Quay.io Registry') {
-      when {
-        beforeAgent true
-        allOf {
-          not { environment name: 'QUAY_USER',  value: '' }
-          not { environment name: 'QUAY_TOKEN', value: '' }
-        }
-      }
-      step {
-        dockerLoginQuay()
-      }
-    //}
-
-  }
-
+  '''
 }
