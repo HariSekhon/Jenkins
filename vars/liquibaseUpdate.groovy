@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                        L i q u i b a s e   U p d a t e
+// ========================================================================== //
+
 // Requires the following environment variables to be set in pipeline:
 //
 //  JDBC_URL - full jdbc url to the DB
