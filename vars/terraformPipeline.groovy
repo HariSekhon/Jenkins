@@ -31,7 +31,7 @@
 //
 //    // with credentials to your cloud infrastructure:
 //
-//      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', withEnv: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
+//      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', env: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
 //
 //    // with explicit checkout settings or if tried from Jenkins without SCM:
 //
