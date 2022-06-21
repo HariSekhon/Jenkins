@@ -102,7 +102,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       stage ('Checkout') {
         when {
           beforeAgent true
-          expression { checkout != [] }
+          expression { args.checkout != null }
         }
         steps {
           milestone(ordinal: 10, label: "Milestone: Checkout")
