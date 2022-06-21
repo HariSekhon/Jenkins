@@ -22,6 +22,10 @@ def call(Map args = [url: '', binary: '']) {
     withEnv(["URL=${args.get(url, '')}", "BINARY=${args.get(binary, '')}"]){
         sh '''
             set -eux
+            mkdir -p ~/bin
+            cd ~/bin
+            export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
+            export NO_MAKE=1
             curl -L https://git.io/bash-bootstrap | sh
             bash-tools/install_binary.sh "$URL" "$BINARY"
         '''
