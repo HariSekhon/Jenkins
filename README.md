@@ -75,8 +75,8 @@ pipeline {
         // require human approval before proceeding to production deployment
         humanGate()
 
-        // GitOps update the versions of Kubernetes docker images in Kustomize for app1 and app2 served from GCR registry
-        gitKustomizeImage([ '$GCR_REGISTRY/$GCR_PROJECT/app1', '$GCR_REGISTRY/$GCR_PROJECT/app2',
+        // GitOps update docker image version for app1 and app2 in Kubernetes Kustomize, images served from GCR registry
+        gitKustomizeImage(['$GCR_REGISTRY/$GCR_PROJECT/app1', '$GCR_REGISTRY/$GCR_PROJECT/app2'])
 
         // deploy to Kubernetes via ArgoCD
         argoDeploy()
