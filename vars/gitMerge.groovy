@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                      G i t   M e r g e   B r a n c h e s
+// ========================================================================== //
+
 def call(fromBranch, toBranch){
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
