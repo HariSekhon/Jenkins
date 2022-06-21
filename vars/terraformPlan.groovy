@@ -14,9 +14,9 @@
 //
 
 def call(timeoutMinutes=10){
-  String label = "Terraform Plan - Dir: $TERRAFORM_DIR"
+  String label = "Terraform Plan - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
-  String lock  = "Terraform - Dir: $TERRAFORM_DIR"
+  String lock  = "Terraform - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   echo "Acquiring Terraform Plan Lock: $lock"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
