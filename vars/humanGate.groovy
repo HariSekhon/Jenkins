@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                              H u m a n   G a t e
+// ========================================================================== //
+
+// Require human approval before progressing - protect your production environments from deployments
+
 // Usage:
 //
 //    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
