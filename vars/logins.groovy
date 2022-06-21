@@ -45,7 +45,6 @@ def call(){
     cd ~/bin
 
     export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
-    export NO_MAKE=1
 
     if [ -d bash-tools ]; then
       # pushd not available in sh
