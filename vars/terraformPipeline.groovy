@@ -38,38 +38,41 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
 
   pipeline {
 
-    agent {
-      //docker {
-      //  image "hashicorp/terraform:${args.version}"
-      //}
-      kubernetes {
-        defaultContainer 'terraform'
-        idleMinutes 5
-        label 'terraform'
-        yaml """\
-          apiVersion: v1
-          kind: Pod
-          metadata:
-            namespace: jenkins
-            labels:
-              app: terraform
-          spec:
-            containers:
-              - name: terraform  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
-                image: hashicorp/terraform:${args.version}
-                command:
-                  - cat
-                tty: true
-                resources:
-                  requests:
-                    cpu: 300m
-                    memory: 300Mi
-                  limits:
-                    cpu: "1"
-                    memory: 1Gi
-            """.stripIndent()
-       }
-    }
+    agent any
+    // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
+    // this seems smart for caching but terraform docker image lacks the cloud auth tooling to be effective
+    //agent {
+    //  //docker {
+    //  //  image "hashicorp/terraform:${args.version}"
+    //  //}
+    //  kubernetes {
+    //    defaultContainer 'terraform'
+    //    idleMinutes 5
+    //    label 'terraform'
+    //    yaml """\
+    //      apiVersion: v1
+    //      kind: Pod
+    //      metadata:
+    //        namespace: jenkins
+    //        labels:
+    //          app: terraform
+    //      spec:
+    //        containers:
+    //          - name: terraform  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
+    //            image: hashicorp/terraform:${args.version}
+    //            command:
+    //              - cat
+    //            tty: true
+    //            resources:
+    //              requests:
+    //                cpu: 300m
+    //                memory: 300Mi
+    //              limits:
+    //                cpu: "1"
+    //                memory: 1Gi
+    //        """.stripIndent()
+    //   }
+    //}
 
     options {
       disableConcurrentBuilds()
