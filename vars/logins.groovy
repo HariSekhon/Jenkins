@@ -28,9 +28,9 @@
 def call(){
   echo 'Running Logins for any platforms we have environment credentials for'
 
-  stages {
-
-    stage('GCP Activate Service Account') {
+  //stages {
+  //
+  //  stage('GCP Activate Service Account') {
       when {
         beforeAgent true
         not {
@@ -38,12 +38,12 @@ def call(){
           environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
         }
       }
-      steps {
+      step {
         gcpActivateServiceAccount()
       }
-    }
+    //}
 
-    stage('Docker Login DockerHub') {
+    //stage('Docker Login DockerHub') {
       when {
         beforeAgent true
         allOf {
@@ -51,12 +51,12 @@ def call(){
           not { environment name: 'DOCKERHUB_TOKEN', value: '' }
         }
       }
-      steps {
+      step {
         dockerLogin()
       }
-    }
+    //}
 
-    stage('Docker Login GitHub Container Registry') {
+    //stage('Docker Login GitHub Container Registry') {
       when {
         beforeAgent true
         allOf {
@@ -64,12 +64,12 @@ def call(){
           not { environment name: 'GITHUB_TOKEN', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginGHCR()
       }
-    }
+    //}
 
-    stage('Docker Login GitLab Registry') {
+    //stage('Docker Login GitLab Registry') {
       when {
         beforeAgent true
         allOf {
@@ -77,12 +77,12 @@ def call(){
           not { environment name: 'GITLAB_TOKEN', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginGitlab()
       }
-    }
+    //}
 
-    stage('Docker Login Azure Container Registry') {
+    //stage('Docker Login Azure Container Registry') {
       when {
         beforeAgent true
         allOf {
@@ -90,12 +90,12 @@ def call(){
           not { environment name: 'ACR_NAME', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginACR()
       }
-    }
+    //}
 
-    stage('Docker Login AWS Elastic Container Registry') {
+    //stage('Docker Login AWS Elastic Container Registry') {
       when {
         beforeAgent true
         allOf {
@@ -104,12 +104,12 @@ def call(){
           not { environment name: 'AWS_DEFAULT_REGION',    value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginECR()
       }
-    }
+    //}
 
-    stage('Docker Login AWS Google Artifact Registry') {
+    //stage('Docker Login AWS Google Artifact Registry') {
       when {
         beforeAgent true
         allOf {
@@ -117,12 +117,12 @@ def call(){
           not { environment name: 'GAR_REGISTRY', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginGAR()
       }
-    }
+    //}
 
-    stage('Docker Login AWS Google Container Registry') {
+    //stage('Docker Login AWS Google Container Registry') {
       when {
         beforeAgent true
         allOf {
@@ -130,12 +130,12 @@ def call(){
           not { environment name: 'GCR_REGISTRY', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginGCR()
       }
-    }
+    //}
 
-    stage('Docker Login AWS Quay.io Registry') {
+    //stage('Docker Login AWS Quay.io Registry') {
       when {
         beforeAgent true
         allOf {
@@ -143,11 +143,11 @@ def call(){
           not { environment name: 'QUAY_TOKEN', value: '' }
         }
       }
-      steps {
+      step {
         dockerLoginQuay()
       }
-    }
+    //}
 
-  }
+  //}
 
 }
