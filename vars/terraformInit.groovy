@@ -29,6 +29,7 @@ def call(timeoutMinutes=10){
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
 
+        // let's check we have the login creds we think we should (checking up on the logins() function you should have called earlier)
         printAuth()
 
         // terraform workspace is not supported if using Terraform Cloud
