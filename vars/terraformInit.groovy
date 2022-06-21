@@ -46,7 +46,7 @@ def call(timeoutMinutes=10){
           sh label: 'Workspace Select',
              script: '''
                set -eux
-               if [ -n "$TF_WORKSPACE" ]; then
+               if [ -n "${TF_WORKSPACE:-}" ]; then
                    terraform workspace new "$TF_WORKSPACE" || echo "Workspace '$TF_WORKSPACE' already exists or using Terraform Cloud as a backend"
                    #terraform workspace select "$TF_WORKSPACE"  # TF_WORKSPACE takes precedence over this select
                fi
