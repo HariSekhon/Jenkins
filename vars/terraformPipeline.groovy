@@ -127,7 +127,6 @@ def call(Map args = [
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
       stage ('Checkout') {
         when {
-          beforeAgent true
           expression { args.get('checkout', []) != [] }
         }
         steps {
@@ -240,10 +239,7 @@ def call(Map args = [
 
       stage('Human Gate') {
         when {
-          beforeAgent true
-          // TODO: test with and without
-          // https://www.jenkins.io/doc/book/pipeline/syntax/#evaluating-when-before-the-input-directive
-          beforeInput true  // change order to evaluate when{} first to only prompt if this is on production branch
+          beforeInput true
           branch pattern: "$args.apply_branch_pattern"
         }
         steps {
@@ -256,10 +252,6 @@ def call(Map args = [
 
       stage('Terraform Apply') {
         when {
-          beforeAgent true
-          // TODO: test with and without
-          // https://www.jenkins.io/doc/book/pipeline/syntax/#evaluating-when-before-the-input-directive
-          beforeInput true  // change order to evaluate when{} first to only prompt if this is on production branch
           branch pattern: "$args.apply_branch_pattern"
         }
         steps {
