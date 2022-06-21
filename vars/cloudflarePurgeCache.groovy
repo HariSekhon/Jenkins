@@ -13,6 +13,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                  C l o u d f l a r e   P u r g e   C a c h e
+// ========================================================================== //
+
 // Requires environment variables to be defined in environment{} section of Jenkinsfile:
 //
 //    CLOUDFLARE_EMAIL
