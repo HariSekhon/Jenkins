@@ -36,7 +36,6 @@ Jenkinsfile:
 
 pipeline {
   stages {
-
     stage('Test'){
       steps {
         // call any function from this libary by its filename under vars/... without the .groovy extension
@@ -52,7 +51,7 @@ pipeline {
         // log in to DockerHub
         dockerLogin()
 
-        // log in to AWS ECR before you build and push an image
+        // log in to AWS ECR before you build and push a docker image
         dockerLoginECR()
 
         // show all your authentications and who you're logged in as
@@ -61,11 +60,9 @@ pipeline {
         // launch a GCP Cloud Build job, by default against your cloudbuild.yaml if no args given
         gcpCloudBuild()
 
-
-				// see under vars/ for many more useful functions
+        // see under vars/ for many more useful functions
       }
     }
-
   }
 }
 ```
