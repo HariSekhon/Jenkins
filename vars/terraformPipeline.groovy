@@ -108,8 +108,9 @@ def call(Map args = [
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$args.version"
       TF_IN_AUTOMATION = 1
-      /// XXX: must match key dropped by logins() calling gcpSetupApplicationCredentials()
-      GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
+      /// XXX: must match key dropped by logins() calling gcpSetupApplicationCredentials() - $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
+      //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
+      GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
       // to pick up downloaded Terraform binary version first
       PATH = "$HOME/bin:$PATH"
       //TF_LOG = "$DEBUG"
