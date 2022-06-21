@@ -34,15 +34,6 @@
 //                        apply_branch_pattern: 'master',
 //                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ]
 //                       )
-//
-//    // with a kubernetes agent container that has all your tooling:
-//
-//      terraformPipeline(version: '1.1.7',
-//                        dir: 'deployments/dev',
-//                        apply_branch_pattern: 'master',
-//                        agent: { kubernetes { defaultContainer 'gcloud-sdk', yamlFile "ci/jenkins-pod.yaml" } }
-//                       )
-//
 
 def call(Map args = [
                       version: 'latest',
@@ -55,9 +46,7 @@ def call(Map args = [
 
   pipeline {
 
-    agent {
-      label args.agent == "any" ? "" : args.agent
-    }
+    agent any
 
     // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
     //      using terraform's official docker image seemed smart for caching but it lacks the cloud auth tooling to be effective
