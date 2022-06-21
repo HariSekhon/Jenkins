@@ -33,24 +33,29 @@ def call(timeoutMinutes=10){
         printAuth()
 
         dir(env.TERRAFORM_DIR ?: ".") {
+
           // terraform workspace is not supported if using Terraform Cloud
           // TF_WORKSPACE overrides 'terraform workspace select'
-          //
+
           // alpine/terragrunt docker image doesn't have bash
           //sh '''#/usr/bin/env bash -euxo pipefail
+
           echo 'Terragrunt Workspace Select'
-          sh (
-            label: 'Workspace Select',
-            script: '''#/bin/sh -eux
-              if [ -n "$TF_WORKSPACE" ]; then
-                  terragrunt workspace new "$TF_WORKSPACE" || echo "Workspace '$TF_WORKSPACE' already exists or using Terraform Cloud as a backend"
-                  #terragrunt workspace select "$TF_WORKSPACE"  # TF_WORKSPACE takes precedence over this select
-              fi
-            '''
-          )
+          sh label: 'Workspace Select',
+             script: '''
+               set -eux
+               if [ -n "$TF_WORKSPACE" ]; then
+                   terragrunt workspace new "$TF_WORKSPACE" || echo "Workspace '$TF_WORKSPACE' already exists or using Terraform Cloud as a backend"
+                   #terragrunt workspace select "$TF_WORKSPACE"  # TF_WORKSPACE takes precedence over this select
+               fi
+             '''
+
           echo "$label"
           sh label: "$label",
-             script: 'terragrunt init --terragrunt-non-interactive -input=false'  // # -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf"
+             script: '''
+               terragrunt init --terragrunt-non-interactive -input=false
+             '''
+             // # -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf"
         }
       }
     }
