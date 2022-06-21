@@ -120,6 +120,7 @@ def call(Map args = [
         steps {
           withEnv(args.get('env', [])){
             printEnv()
+            sh 'whoami'
           }
         }
       }
