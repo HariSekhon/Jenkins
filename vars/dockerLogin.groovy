@@ -15,7 +15,7 @@
 //
 
 // ========================================================================== //
-//                           Docker Login to DockerHub
+//               D o c k e r   L o g i n   t o   D o c k e r H u b
 // ========================================================================== //
 
 // DOCKERHUB_USER and DOCKERHUB_TOKEN must be set in the calling environment
