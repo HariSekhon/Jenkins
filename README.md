@@ -95,7 +95,7 @@ That was stupidly simple wasn't it. This is the power of shared libraries.
 
 ## More Documentation
 
-Read the comments at the top of each library function under `vars/<function>.groovy` for more details.
+Read the comments at the top of each library function under [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars)`<function>.groovy` for more details.
 
 If you want to prevent changes to this library re-triggering the last run of your pipelines, configure it as a a Shared Library in your global Jenkins configuration and untick "Include @Library changes in job recent changes".
 
