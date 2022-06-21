@@ -14,6 +14,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                               G i t   S e t u p
+// ========================================================================== //
+
 // Sets up Git username and email for comitting, you may want to call one of the sshKnownHosts* functions first if using dynamic agents and Git over SSH
 //
 // Recommended to set an Environment variable of GIT_EMAIL=your-team@your-company.com - consider doing this at the global Jenkins level:
