@@ -51,8 +51,11 @@ pipeline {
         // log in to DockerHub
         dockerLogin()
 
-        // log in to AWS ECR before you build and push a docker image
+        // log in to AWS ECR
         dockerLoginECR()
+
+        // log in to AWS GCR
+        dockerLoginGCR()
 
         // show all your authentications and who you're logged in as
         printAuth()
