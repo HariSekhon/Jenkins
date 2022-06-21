@@ -155,6 +155,18 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
         }
       }
 
+      //try {
+        stage('Terraform Fmt') {
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              terraformFmt()
+            }
+          }
+        }
+      //} catch (Exception e) {
+      //  echo e.toString()
+      //}
+
       stage('Terraform Init') {
         steps {
           terraformInit()
