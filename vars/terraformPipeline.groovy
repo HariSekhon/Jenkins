@@ -118,17 +118,17 @@ def call(Map args = [
       }
 
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
-      stage ('Checkout') {
-        when {
-          beforeAgent true
-          expression { args.get('checkout', []) != [] }
-        }
-        steps {
-          milestone(ordinal: null, label: "Milestone: Checkout")
-          sshKnownHostsGitHub()
-          checkout(args.checkout)
-        }
-      }
+      //stage ('Checkout') {
+      //  when {
+      //    beforeAgent true
+      //    expression { args.get('checkout', []) != [] }
+      //  }
+      //  steps {
+      //    milestone(ordinal: null, label: "Milestone: Checkout")
+      //    sshKnownHostsGitHub()
+      //    checkout(args.checkout)
+      //  }
+      //}
 
       // done via more cachable hashicorp/terraform image now
       //
