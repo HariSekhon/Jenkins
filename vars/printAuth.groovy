@@ -33,7 +33,7 @@
 def call(){
   echo 'Showing logged in status for any platforms we have CLIs available for'
 
-  sh label: Auth Status,
+  sh label: 'Auth Status',
      script: '''
        set -eux
 
