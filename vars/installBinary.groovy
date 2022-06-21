@@ -15,8 +15,10 @@
 //
 
 // ========================================================================== //
-//                            Installs Binary to ~/bin
+//                          I n s t a l l    B i n a r y
 // ========================================================================== //
+
+// Downloads a URL, extracts the given binary from the tarball/zip and copies it to $HOME/bin
 
 def call(Map args = [url: '', binary: '']) {
   withEnv(["URL=${args.url}", "BINARY=${args.binary}"]){
