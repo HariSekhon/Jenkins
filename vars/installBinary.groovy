@@ -23,6 +23,15 @@ def call(Map args = [url: '', binary: '']) {
     sh '''
       set -eux
 
+      if [ -z "$URL" ]; then
+        echo "No URL passed to installBinary()"
+        exit 1
+      fi
+      if [ -z "$BINARY" ]; then
+        echo "No binary name passed to installBinary()"
+        exit 1
+      fi
+
       mkdir -p ~/bin
 
       cd ~/bin
