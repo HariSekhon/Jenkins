@@ -21,7 +21,7 @@ def call(timeoutMinutes=10){
   // plan still locks on normal backends outside Terraform Cloud
   lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
-    milestone(ordinal: 50, label: "Milestone: $label")
+    milestone(label: "Milestone: $label")
 
     // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terraform') {

@@ -17,7 +17,7 @@ def call(timeoutMinutes=10){
   String label = 'Terragrunt Init'
 
   // forbids older inits from starting
-  milestone(ordinal: 10, label: "Milestone: $label")
+  milestone(label: "Milestone: $label")
 
   // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
   //container('terragrunt') {

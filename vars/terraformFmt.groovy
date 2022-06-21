@@ -17,7 +17,6 @@ def call(timeoutMinutes=1){
   String label = 'Terraform Fmt'
 
   // forbids older inits from starting
-  //milestone(ordinal: 1, label: "Milestone: $label")
   milestone(label: "Milestone: $label")
 
   // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers

@@ -22,7 +22,7 @@ def call(timeoutMinutes=30){
   echo "Acquiring Terraform Apply Lock: $lock"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older applys from starting
-    milestone(ordinal: 100, label: "Milestone: $label")
+    milestone(label: "Milestone: $label")
 
     // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terraform') {

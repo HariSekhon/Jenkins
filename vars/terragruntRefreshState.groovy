@@ -23,7 +23,7 @@ def call(timeoutMinutes=59){
   String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older runs from starting
-    milestone(ordinal: 100, label: "Milestone: $label")
+    milestone(label: "Milestone: $label")
 
     // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terragrunt') {
