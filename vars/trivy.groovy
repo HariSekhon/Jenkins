@@ -13,6 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                                   T r i v y
+// ========================================================================== //
+
+// Security scanner
+
 // Pass the target as the first arg, otherwise requires DOCKER_IMAGE and DOCKER_TAG to be set in environment{} section of Jenkinsfile pipeline
 
 def call(target="$DOCKER_IMAGE:$DOCKER_TAG", timeoutMinutes=10){
