@@ -34,13 +34,14 @@
 //                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ] )
 //
 
-def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', env: [], checkout: [] ] ){
+def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', env: [], checkout: [], agent: any ] ){
 
   pipeline {
 
-    agent any
+    agent args.get(agent, any)
+
     // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
-    // this seems smart for caching but terraform docker image lacks the cloud auth tooling to be effective
+    //      using terraform's official docker image seemed smart for caching but it lacks the cloud auth tooling to be effective
     //agent {
     //  //docker {
     //  //  image "hashicorp/terraform:${args.version}"
