@@ -115,7 +115,7 @@ def call(Map args = [
       stage ('Checkout') {
         when {
           beforeAgent true
-          expression { args.get(checkout, []) != [] }
+          expression { args.get('checkout', []) != [] }
         }
         steps {
           milestone(ordinal: 10, label: "Milestone: Checkout")
