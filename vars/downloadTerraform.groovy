@@ -18,6 +18,7 @@
 //                     D o w n l o a d s   T e r r a f o r m
 // ========================================================================== //
 
+// Downloads Terraform binary to $HOME/bin, which should be added to $PATH
 
 def call(version) {
     withEnv(["TERRAFORM_VERSION=$version"]){
