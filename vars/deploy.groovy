@@ -13,8 +13,12 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                                  D e p l o y
+// ========================================================================== //
+
 def call(){
-  String label = "Deploy App, Environment: " + "${env.ENVIRONMENT}".capitalize()
+  String label = "Deploy App, Environment: " + "$ENVIRONMENT".capitalize()
   echo "Acquiring Deployment Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: 30, label: "Milestone: $label"
