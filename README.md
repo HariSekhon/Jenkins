@@ -51,10 +51,10 @@ pipeline {
         // log in to DockerHub
         dockerLogin()
 
-        // log in to AWS ECR
+        // log in to AWS Elastic Container Registry
         dockerLoginECR()
 
-        // log in to AWS GCR
+        // log in to Google Container Registry
         dockerLoginGCR()
 
         // show all your authentications and who you're logged in as
