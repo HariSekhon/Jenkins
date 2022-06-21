@@ -34,7 +34,7 @@
 //                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ] )
 //
 
-def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', withEnv: [], checkout: [] ] ){
+def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', env: [], checkout: [] ] ){
 
   pipeline {
 
@@ -92,7 +92,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
 
       stage('Environment') {
         steps {
-          withEnv(withEnv){
+          withEnv(args.env){
             printEnv()
           }
         }
@@ -106,7 +106,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
         }
         steps {
           milestone(ordinal: 10, label: "Milestone: Checkout")
-          checkout(checkout)
+          checkout(args.checkout)
         }
       }
 
