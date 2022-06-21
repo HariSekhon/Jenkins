@@ -27,14 +27,31 @@
 //
 //      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', withEnv: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
 //
-//    // with explicit checkout settings or if tried from Jenkins without SCM
+//    // with explicit checkout settings or if tried from Jenkins without SCM:
+//
 //      terraformPipeline(version: '1.1.7',
 //                        dir: 'deployments/dev',
 //                        apply_branch_pattern: 'master',
-//                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ] )
+//                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ]
+//                       )
+//
+//    // with a kubernetes agent container that has all your tooling:
+//
+//      terraformPipeline(version: '1.1.7',
+//                        dir: 'deployments/dev',
+//                        apply_branch_pattern: 'master',
+//                        agent: { kubernetes { defaultContainer 'gcloud-sdk', yamlFile "ci/jenkins-pod.yaml" } }
+//                       )
 //
 
-def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', env: [], checkout: [], agent: any ] ){
+def call(Map args = [
+                      version: 'latest',
+                      dir: '.',
+                      apply_branch_pattern: '*/(main|master)$',
+                      env: [],
+                      checkout: [],
+                      agent: any
+                     ] ){
 
   pipeline {
 
