@@ -13,10 +13,14 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                                   B u i l d
+// ========================================================================== //
+
 def call(){
   echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
-  milestone ordinal: 10, label: "Milestone: Build"
+  milestone ordinal: null, label: "Milestone: Build"
   retry(2){
     timeout(time: 40, unit: 'MINUTES') {
       // script in local repo
