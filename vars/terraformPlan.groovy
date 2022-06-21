@@ -14,9 +14,9 @@
 //
 
 def call(timeoutMinutes=10){
-  String label = "Terraform Plan - App: $APP, Environment: $ENVIRONMENT"
+  String label = "Terraform Plan - Dir: $TERRAFORM_DIR"
   // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
-  String lock  = "Terraform - App: $APP, Environment: $ENVIRONMENT"
+  String lock  = "Terraform - Dir: $TERRAFORM_DIR"
   echo "Acquiring Terraform Plan Lock: $lock"
   // plan still locks on normal backends outside Terraform Cloud
   lock(resource: lock, inversePrecedence: true) {
