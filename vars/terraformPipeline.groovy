@@ -187,7 +187,6 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       }
 
     }
-    }
 
     //post {
     //  failure {
