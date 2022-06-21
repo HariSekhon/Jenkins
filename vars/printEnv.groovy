@@ -14,7 +14,7 @@
 //
 
 // ========================================================================== //
-//             p r i n t   e n v i r o n m e n t   v a r i a b l e s
+//             P r i n t   E n v i r o n m e n t   V a r i a b l e s
 // ========================================================================== //
 
 // Call this at the start of every pipeline to make debugging easier by having this info always available
