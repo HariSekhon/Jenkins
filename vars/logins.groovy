@@ -31,6 +31,7 @@ def call(){
   //stages {
   //
   //  stage('GCP Activate Service Account') {
+  steps {
       when {
         beforeAgent true
         not {
@@ -148,6 +149,6 @@ def call(){
       }
     //}
 
-  //}
+  }
 
 }
