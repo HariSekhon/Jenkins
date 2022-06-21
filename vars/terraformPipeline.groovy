@@ -83,8 +83,8 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
     stages {
 
       stage('Environment') {
-        withEnv(withEnv){
-          steps {
+        steps {
+          withEnv(withEnv){
             printEnv()
           }
         }
