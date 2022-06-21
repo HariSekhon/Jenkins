@@ -92,7 +92,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
 
       stage('Environment') {
         steps {
-          withEnv(args.env){
+          withEnv(args.get('env', [])){
             printEnv()
           }
         }
@@ -102,7 +102,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       stage ('Checkout') {
         when {
           beforeAgent true
-          expression { args.checkout != null }
+          expression { args.get(checkout, []) != [] }
         }
         steps {
           milestone(ordinal: 10, label: "Milestone: Checkout")
