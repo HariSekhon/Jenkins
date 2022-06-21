@@ -16,9 +16,9 @@
 // $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
 
 def call(timeoutMinutes=30){
-  String label = "Terragrunt Apply - Dir: $TERRAFORM_DIR"
+  String label = "Terragrunt Apply - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   // must differentiate lock to share the same lock as Terraform Plan and Terraform Apply
-  String lock  = "Terraform - Dir: $TERRAFORM_DIR"
+  String lock  = "Terraform - Dir: ${env.TERRAFORM_DIR ?: '.'}"
   lock(resource: lock, inversePrecedence: true) {  // use same lock between Terraform / Terragrunt for safety
     // forbids older applys from starting
     milestone(ordinal: null, label: "Milestone: $label")
