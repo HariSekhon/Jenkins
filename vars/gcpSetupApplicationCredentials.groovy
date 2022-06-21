@@ -32,6 +32,7 @@ def call(timeoutMinutes=1){
           # XXX: pipeline must set GOOGLE_APPLICATION_CREDENTIALS to match this to pick these up
           keyfile="$HOME/.gcloud/application-credentials.json.$BUILD_TAG"
           if [ -n "${GCP_SERVICEACCOUNT_KEY:-}" ]; then
+            mkdir -p -v "$(dirname "$keyfile")"
             echo "Writing Google Application Credentials key file to '$keyfile'"
             base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
           fi
