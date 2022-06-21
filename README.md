@@ -64,10 +64,11 @@ pipeline {
         gcpCloudBuild()
 
         // run a script with locks to prevent another script or deployment from happening at the same time, timeout after 30 mins
+        // newer runs will wait to acquire the locks, older intermediate runs will be skipped
         scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
 
         // download, extract and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
-        // here version is a variable passed for defined elsewhere, while os and arch are auto-inferred placeholders
+        // here ${version} is a variable previously defined, while {os} and {arch} with no dollar sign are auto-inferred placeholders
         installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
 
         // require human approval before proceeding to production deployment
