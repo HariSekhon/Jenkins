@@ -28,6 +28,9 @@ def call(timeoutMinutes=10){
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
+
+        printAuth()
+
         // terraform workspace is not supported if using Terraform Cloud
         // TF_WORKSPACE overrides 'terraform workspace select'
         //
@@ -49,11 +52,6 @@ def call(timeoutMinutes=10){
           sh (
             label: "$label",
             script: '''
-              #if [ -n "${DEBUG:-}" ]; then
-                if command -v gcloud &>/dev/null; then
-                  gcloud auth list || :
-                fi
-              #fi
               terraform init -input=false
             '''
             // -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf"
