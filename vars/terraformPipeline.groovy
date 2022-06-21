@@ -173,19 +173,25 @@ def call(Map args = [
         //  }
         //}
         steps {
-          logins()
+          withEnv(args.get('env', [])){
+            logins()
+          }
         }
       }
 
       stage('Download Terraform Version') {
         steps {
-          downloadTerraform("$TERRAFORM_VERSION")
+          withEnv(args.get('env', [])){
+            downloadTerraform("$TERRAFORM_VERSION")
+          }
         }
       }
 
       stage('Terraform Version') {
         steps {
-          sh 'terraform version'
+          withEnv(args.get('env', [])){
+            sh 'terraform version'
+          }
         }
       }
 
@@ -193,7 +199,9 @@ def call(Map args = [
         stage('Terraform Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              terraformFmt()
+              withEnv(args.get('env', [])){
+                terraformFmt()
+              }
             }
           }
         }
@@ -203,13 +211,17 @@ def call(Map args = [
 
       stage('Terraform Init') {
         steps {
-          terraformInit()
+          withEnv(args.get('env', [])){
+            terraformInit()
+          }
         }
       }
 
       stage('Terraform Plan') {
         steps {
-          terraformPlan()
+          withEnv(args.get('env', [])){
+            terraformPlan()
+          }
         }
       }
 
@@ -223,7 +235,9 @@ def call(Map args = [
         }
         steps {
           //humanGate(args.human_gate_args)
-          humanGate()
+          withEnv(args.get('env', [])){
+            humanGate()
+          }
         }
       }
 
@@ -236,8 +250,10 @@ def call(Map args = [
           branch pattern: "$args.apply_branch_pattern"
         }
         steps {
-          echo "Applying"
-          //terraformApply()
+          withEnv(args.get('env', [])){
+            echo "Applying"
+            //terraformApply()
+          }
         }
       }
 
