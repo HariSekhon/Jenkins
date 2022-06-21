@@ -48,7 +48,15 @@ def call(timeoutMinutes=10){
           echo "$label"
           sh (
             label: "$label",
-            script: 'terraform init -input=false  # -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf" '
+            script: '''
+              #if [ -n "${DEBUG:-}" ]; then
+                if command -v gcloud &>/dev/null; then
+                  gcloud auth list || :
+                fi
+              #fi
+              terraform init -input=false
+            '''
+            // -backend-config "bucket=$ACCOUNT-$PROJECT-terraform" -backend-config "key=${ENV}-${PRODUCT}/${COMPONENT}/state.tf"
           )
         }
       }
