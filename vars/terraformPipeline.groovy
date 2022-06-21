@@ -72,7 +72,6 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       pollSCM('H/10 * * * *')
     }
 
-    withEnv(withEnv){
     environment {
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$args.version"
@@ -80,10 +79,10 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       //TF_LOG = "$DEBUG"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
-    }
 
     stages {
 
+    withEnv(withEnv){
       stage('Environment') {
         steps {
           printEnv()
@@ -186,6 +185,7 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
         }
       }
 
+    }
     }
 
     //post {
