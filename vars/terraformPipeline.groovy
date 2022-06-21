@@ -158,8 +158,16 @@ def call(Map args = [
       //}
 
       stage('Logins') {
-        steps {
-          logins()
+        stages {
+          stage('GCP Activate Service Account') {
+            when {
+              not {
+                // must match the env var used in the gcpActivateServiceAccount() function
+                environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
+              }
+              gcpActivateServiceAccount()
+            }
+          }
         }
       }
 
