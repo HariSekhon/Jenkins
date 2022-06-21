@@ -28,7 +28,7 @@
 //      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', withEnv: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
 //
 
-def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', withEnv: [] ] ){
+def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main|master)$', withEnv: [], checkout: [] ] ){
 
   pipeline {
 
@@ -87,6 +87,17 @@ def call(Map args = [version: 'latest', dir: '.', apply_branch_pattern: '*/(main
       stage('Environment') {
         steps {
           printEnv()
+        }
+      }
+
+      stage ('Checkout') {
+        when {
+          beforeAgent true
+          expression { checkout != [] }
+        }
+        steps {
+          milestone(ordinal: 10, label: "Milestone: Checkout")
+          checkout(checkout)
         }
       }
 
