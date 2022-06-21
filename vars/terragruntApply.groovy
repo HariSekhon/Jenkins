@@ -13,7 +13,9 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
-// $APP and $ENVIRONMENT must be set in pipeline to ensure separate locking
+// ========================================================================== //
+//                        T e r r a g r u n t   A p p l y
+// ========================================================================== //
 
 def call(timeoutMinutes=30){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
