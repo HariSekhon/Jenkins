@@ -23,7 +23,7 @@ def call(timeoutMinutes=59){
   String lock = "Terraform - App: $APP, Environment: $ENVIRONMENT"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older runs from starting
-    milestone(label: "Milestone: $label")
+    milestone(ordinal: null, label: "Milestone: $label")
 
     // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terraform') {

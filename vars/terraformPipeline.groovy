@@ -118,7 +118,7 @@ def call(Map args = [
           expression { args.get('checkout', []) != [] }
         }
         steps {
-          milestone(label: "Milestone: Checkout")
+          milestone(ordinal: null, label: "Milestone: Checkout")
           sshKnownHostsGitHub()
           checkout(args.checkout)
         }
