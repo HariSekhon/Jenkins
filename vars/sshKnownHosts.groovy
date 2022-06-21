@@ -30,7 +30,14 @@ def call(known_hosts='', name='') {
       script: '''#!/bin/bash
         set -euxo pipefail
 
-        # convenient and dynamic but not secure - instead load them from revision controlled adjacent functions:
+        # convenient and dynamic but not secure:
+        #
+        #   ssh-keyscan github.com >> ~/.ssh/known_hosts
+        #   ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+        #   ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
+        #   ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
+        #
+        # instead load them from revision controlled adjacent functions:
         #
         #   sshKnownHostsGitHub()
         #   sshKnownHostsGitLab()
@@ -38,11 +45,6 @@ def call(known_hosts='', name='') {
         #   sshKnownHostsAzureDevOps()
         #
         # or if you want them more dynamic you can load them via an arg to this function or environment variable 'SSH_KNOWN_HOSTS' from a Jenkins secret to share across all pipelines
-        #
-        #ssh-keyscan github.com >> ~/.ssh/known_hosts
-        #ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-        #ssh-keyscan ssh.dev.azure.com >> ~/.ssh/known_hosts
-        #ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
         # don't do this either
         #cat >> ~/.ssh/config <<EOF
