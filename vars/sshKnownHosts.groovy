@@ -14,6 +14,10 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                         S S H   K n o w n   H o s t s
+// ========================================================================== //
+
 // Adds SSH Known hosts lines if not already present
 //
 // Can read from environment{} variable SSH_KNOWN_HOSTS or passed as an arg
@@ -66,6 +70,10 @@ def call(known_hosts='', name='') {
           done <<< "$SSH_KNOWN_HOSTS"
         fi
       '''
+      //sshKnownHostsGitHub()
+      //sshKnownHostsGitLab()
+      //sshKnownHostsBitbucket()
+      //sshKnownHostsAzureDevOps()
     )
   }
 }
