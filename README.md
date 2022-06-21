@@ -67,7 +67,9 @@ pipeline {
 }
 ```
 
-Run a whole Terraform parameterized pipeline, will handle all logins, Terraform fmt, validate, plan, approval, apply etc.
+## Terraform
+
+Generalized reusable Terraform parameterized pipeline -  handles all logins, Terraform fmt, validate, plan, approval, apply etc.
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 terraformPipeline(version: '1.1.7',
@@ -76,6 +78,18 @@ terraformPipeline(version: '1.1.7',
                   creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
                   container: 'gcloud-sdk')
 ```
+
+## Git Merges & Backports
+
+Run the `gitMergePipeline` to automatically merge one branch into another, for example to automatically backport between environment branches such as any hotfixes in Staging to Dev:
+```groovy
+@Library('jenkins@staging') _
+gitMergePipeline('staging', 'dev')
+```
+
+That was stupidly simple wasn't it. This is the power of shared libraries.
+
+## More Documentation
 
 Read the comments at the top of each library function under `vars/<function>.groovy` for more details.
 
