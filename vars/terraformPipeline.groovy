@@ -119,6 +119,7 @@ def call(Map args = [
         }
         steps {
           milestone(ordinal: 10, label: "Milestone: Checkout")
+          sshKnownHostsGitHub
           checkout(args.checkout)
         }
       }
