@@ -64,7 +64,7 @@ pipeline {
         gcpCloudBuild()
 
         // run a script with locks to prevent another script or deployment from happening at the same time, timeout after 30 mins
-        // newer runs will wait to acquire the locks, older intermediate runs will be skipped
+        // newer runs will wait to acquire the locks, older pending runs will be skipped
         scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
 
         // download, extract and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
