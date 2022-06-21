@@ -14,6 +14,16 @@
 //  https://www.linkedin.com/in/HariSekhon
 //
 
+// ========================================================================== //
+//                                  L o g i n s
+// ========================================================================== //
+
+// Logs in to all cloud platforms for which environment variable credentials are available
+//
+// For more details, see:
+//
+//  https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/login.sh
+
 // Usage in Jenkinsfile:
 //
 //    // import this library directly from github:
