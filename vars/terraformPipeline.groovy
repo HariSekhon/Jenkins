@@ -89,7 +89,10 @@ def call(Map args = [
     //}
 
     options {
+      buildDiscarder(logRotator(numToKeepStr: '100'))
       disableConcurrentBuilds()
+      timestamps()
+      timeout(time: 2, unit: 'HOURS')
     }
 
     // backup to catch GitHub -> Jenkins webhook failures
