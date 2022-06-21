@@ -37,8 +37,13 @@ def call(){
     export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
     export NO_MAKE=1
 
-    # downloads the DevOps Bash tools repo which contains docker_logins.sh
-    curl -L https://git.io/bash-bootstrap | sh
+    if [ -d bash-tools ]; then
+      pushd bash-tools
+      git pull
+      popd
+    else
+      git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
+    fi
 
     bash-tools/login.sh
 
