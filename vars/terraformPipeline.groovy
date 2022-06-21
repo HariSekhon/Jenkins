@@ -267,8 +267,7 @@ def call(Map args = [
         steps {
           withEnv(args.get('env', [])){
             withCredentials(args.get('creds', [])){
-              echo "Applying"
-              //terraformApply()
+              terraformApply()
             }
           }
         }
