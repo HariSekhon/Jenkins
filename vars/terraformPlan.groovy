@@ -14,9 +14,10 @@
 //
 
 def call(timeoutMinutes=10){
-  String label = "Terraform Plan - Dir: ${env.TERRAFORM_DIR ?: '.'}"
+  String terraformDir = env.TERRAFORM_DIR ?: '.'
+  String label = "Terraform Plan - Dir: $terraformDir"
   // must differentiate lock because Terraform Plan and Terraform Apply must share the same lock
-  String lock  = "Terraform - Dir: ${env.TERRAFORM_DIR ?: '.'}"
+  String lock  = "Terraform - Dir: $terraformDir"
   echo "Acquiring Terraform Plan Lock: $lock"
   lock(resource: lock, inversePrecedence: true) {
     // forbids older plans from starting
@@ -30,7 +31,7 @@ def call(timeoutMinutes=10){
           // terraform docker image doesn't have bash
           //sh '''#/usr/bin/env bash -euxo pipefail
           //sh '''#/bin/sh -eux
-          dir(env.TERRAFORM_DIR ?: ".") {
+          dir("$terraformDir") {
             echo 'Terraform Workspace List'
             sh (
               label: 'Workspace List',
