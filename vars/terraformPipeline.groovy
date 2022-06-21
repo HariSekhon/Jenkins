@@ -109,7 +109,7 @@ def call(Map args = [
       TERRAFORM_VERSION = "$args.version"
       TF_IN_AUTOMATION = 1
       /// XXX: must match key dropped by logins() calling gcpSetupApplicationCredentials()
-      GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$BUILD_TAG"
+      GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
       // to pick up downloaded Terraform binary version first
       PATH = "$HOME/bin:$PATH"
       //TF_LOG = "$DEBUG"
