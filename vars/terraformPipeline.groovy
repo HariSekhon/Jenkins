@@ -25,33 +25,37 @@
 //
 //      @Library('github.com/harisekhon/jenkins@master') _
 //
-//    // run using Terraform 1.2.3, plan for any branch but only apply for branch 'master':
+//    // runs pipeline using Terraform 1.2.3, plans for any branch but only applies for branch 'master' with required approval, uses 'gcloud-sdk' container specified in 'ci/jenkins-pod.yaml' from the root of the repo:
 //
-//      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master')
-//
-//    // with credentials to your cloud infrastructure:
-//
-//      terraformPipeline(version: '1.2.3', dir: '/path/to/dir', apply_branch_pattern: 'master', env: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"])
-//
-//    // with explicit checkout settings or if tried from Jenkins without SCM:
-//
-//      terraformPipeline(version: '1.1.7',
-//                        dir: 'deployments/dev',
+//      terraformPipeline(version: '1.2.3',
+//                        dir: '/path/to/dir',
 //                        apply_branch_pattern: 'master',
-//                        checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ]
-//                       )
+//                        env: ["GCP_SERVICEACCOUNT_KEY=${credentials('jenkins-gcp-serviceaccount-key')}"],
+//                        container: 'gcloud-sdk',
+//                        yamlFile: 'ci/jenkins-pod.yaml')
+//
+//    // for explicit Git checkout settings or to prototype this pipeline call from Jenkins UI without having to push through SCM, add this parameter:
+//
+//       checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-credential', url: 'git@github.com:myorg/terraform']] ]
 
 def call(Map args = [
                       version: 'latest',
                       dir: '.',
                       apply_branch_pattern: '*/(main|master)$',
                       env: [],
-                      checkout: []
+                      checkout: [],
+                      container: null,
+                      yamlFile: 'ci/jenkins-pod.yaml'
                      ] ){
 
   pipeline {
 
-    agent any
+    agent {
+      kubernetes {
+        defaultContainer args.container
+        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
+      }
+    }
 
     // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
     //      using terraform's official docker image seemed smart for caching but it lacks the cloud auth tooling to be effective
@@ -121,17 +125,17 @@ def call(Map args = [
       }
 
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
-      //stage ('Checkout') {
-      //  when {
-      //    beforeAgent true
-      //    expression { args.get('checkout', []) != [] }
-      //  }
-      //  steps {
-      //    milestone(ordinal: null, label: "Milestone: Checkout")
-      //    sshKnownHostsGitHub()
-      //    checkout(args.checkout)
-      //  }
-      //}
+      stage ('Checkout') {
+        when {
+          beforeAgent true
+          expression { args.get('checkout', []) != [] }
+        }
+        steps {
+          milestone(ordinal: null, label: "Milestone: Checkout")
+          sshKnownHostsGitHub()
+          checkout(args.checkout)
+        }
+      }
 
       // done via more cachable hashicorp/terraform image now
       //
