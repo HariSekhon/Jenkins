@@ -29,13 +29,13 @@ def call() {
     if command -v gcloud &>/dev/null; then
       gcloud auth configure-docker
     else
-      echo "GCloud SDK is not installed, attempting to login with docker directly"
+      echo "GCloud SDK is not installed, attempting to login with docker directly" >&2
       if [ -z "${GCR_REGISTRY:-}" ]; then
-        echo "GCR_REGISTRY environment variable not set!"
+        echo "GCR_REGISTRY environment variable not set!" >&2
         exit 1
       fi
       if [ -z "${GCP_SERVICEACCOUNT_KEY:-}" ]; then
-        echo "GCP_SERVICEACCOUNT_KEY environment variable not set!"
+        echo "GCP_SERVICEACCOUNT_KEY environment variable not set!" >&2
         exit 1
       fi
       docker login "$GAR_REGISTRY" -u _json_key -p "$GCP_SERVICEACCOUNT_KEY"
