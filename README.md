@@ -81,7 +81,7 @@ pipeline {
         // deploy to Kubernetes via ArgoCD
         argoDeploy()
 
-        // see under vars/ for many more useful functions
+        // see groovy files under vars/ for more documentation, details and many more useful functions
       }
     }
   }
