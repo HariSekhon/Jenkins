@@ -31,30 +31,35 @@
 //    // or
 //    DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
 
-def call(args, timeoutMinutes=60){
+def call(Map args = [args:'', timeoutMinutes:60]){
   milestone ordinal: 10, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
-  int timeoutSeconds = timeoutMinutes * 60
+  if(args.args == null){
+    args.args = ''
+  }
+  if(args.timeoutMinutes == null){
+    args.timeoutMinutes = 60
+  }
   retry(2){
-    timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
-      withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
-        String label = 'Running GCP CloudBuild'
-        echo "$label"
-        sh (
-          label: "$label",
-          script: """#!/bin/bash
-            set -euxo pipefail
-            gcloud auth list
-            if [ -n "\${DOCKER_IMAGE:-}" ] &&
-               [ -n "\${DOCKER_TAG:-}" ] &&
-               [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-               :
-            else
-              gcloud builds submit --timeout "\$TIMEOUT_SECONDS" $args
-            fi
-          """
-        )
-      }
+    timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
+      String label = 'Running GCP CloudBuild'
+      echo "$label"
+      sh (
+        label: "$label",
+        script: """#!/bin/bash
+          set -euxo pipefail
+          export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+          gcloud auth list
+          if [ -n "\${DOCKER_IMAGE:-}" ] &&
+             [ -n "\${DOCKER_TAG:-}" ] &&
+             [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+             :
+          else
+            gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
+          fi
+        """
+      )
     }
   }
 }
+
