@@ -52,21 +52,21 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
               label: "$labelCheckingImages",
               returnStatus: true,
               script: """#!/usr/bin/env bash
-              set -euxo pipefail
+                set -euxo pipefail
 
-              gcloud auth list
+                gcloud auth list
 
-              for docker_image_tag in ${ args.dockerImages.join(" ") }; do
-                if [[ "\$docker_image_tag" =~ : ]]; then
-                  docker_image="\${docker_image_tag%%:*}"
-                  docker_tag="\${docker_image_tag##*:}"
-                  if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                for docker_image_tag in ${ args.dockerImages.join(" ") }; do
+                  if [[ "\$docker_image_tag" =~ : ]]; then
+                    docker_image="\${docker_image_tag%%:*}"
+                    docker_tag="\${docker_image_tag##*:}"
+                    if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                      exit 1
+                    fi
+                  else
                     exit 1
                   fi
-                else
-                  exit 1
-                fi
-              done
+                done
               """
             ) == 0  // convert the exit code to a boolean
         }
