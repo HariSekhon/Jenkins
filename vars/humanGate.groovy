@@ -35,7 +35,7 @@
 // ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
 def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
-  milestone ordinal: 20, label: "Milestone: Human Gate"
+  milestone ordinal: null, label: "Milestone: Human Gate"
   if(args.timeoutMinutes == null){
     args.timeoutMinutes = 60
   }
