@@ -46,53 +46,55 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
-        //when {
-        //  expression { args.dockerImages != [] }
-        //}
-        stage('Check Docker Images Exist'){
-          steps {
-            assert dockerImages instanceof Collection
-            dockerImagesExist =
-              sh(returnStatus: true,
-                 script: """#!/usr/bin/env bash
-                 set -euxo pipefail
+        stages {
+          //when {
+          //  expression { args.dockerImages != [] }
+          //}
+          stage('Check Docker Images Exist'){
+            steps {
+              assert dockerImages instanceof Collection
+              dockerImagesExist =
+                sh(returnStatus: true,
+                   script: """#!/usr/bin/env bash
+                   set -euxo pipefail
 
-                 gcloud auth list
+                   gcloud auth list
 
-                 for docker_image_tag in ${ dockerImages.join(" ") }; do
-                   if ! [[ "\$docker_image_tag" =~ : ]]; then
-                     docker_image="\${docker_image_tag%%:}"
-                     docker_tag="\${docker_image_tag##*:}"
-                     if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                   for docker_image_tag in ${ dockerImages.join(" ") }; do
+                     if ! [[ "\$docker_image_tag" =~ : ]]; then
+                       docker_image="\${docker_image_tag%%:}"
+                       docker_tag="\${docker_image_tag##*:}"
+                       if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                         exit 1
+                       fi
+                     else
                        exit 1
                      fi
-                   else
-                     exit 1
-                   fi
-                 done
-                 """
-              )
+                   done
+                   """
+                )
+            }
           }
-        }
-        //when {
-        //  expression { dockerImagesExist != true }
-        //}
-        stage('CloudBuild'){
-          steps {
-            String label = 'Running GCP CloudBuild'
-            echo "$label"
-            sh (
-              label: "$label",
-              script: """#!/usr/bin/env bash
-                set -euxo pipefail
+          //when {
+          //  expression { dockerImagesExist != true }
+          //}
+          stage('CloudBuild'){
+            steps {
+              String label = 'Running GCP CloudBuild'
+              echo "$label"
+              sh (
+                label: "$label",
+                script: """#!/usr/bin/env bash
+                  set -euxo pipefail
 
-                export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+                  export CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
-                gcloud auth list
+                  gcloud auth list
 
-                gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
-              """
-            )
+                  gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
+                """
+              )
+            }
           }
         }
       }
