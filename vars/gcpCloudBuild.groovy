@@ -35,19 +35,16 @@
 def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
   milestone ordinal: null, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
-  if(args.args == null){
-    args.args = ''
-  }
-  if(args.timeoutMinutes == null){
-    args.timeoutMinutes = 60
-  }
+  // set defaults if these args aren't passed
+  args.args = args.get('args', '')
+  args.timeoutMinutes = args.get(timeoutMinutes, 60)
   args.dockerImages = args.get('dockerImages', [])
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
         if ( args.dockerImages != [] ) {
-          assert dockerImages instanceof Collection
+          assert args.dockerImages instanceof Collection
           dockerImagesExist =
             sh(returnStatus: true,
                script: """#!/usr/bin/env bash
@@ -55,7 +52,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
 
                gcloud auth list
 
-               for docker_image_tag in ${ dockerImages.join(" ") }; do
+               for docker_image_tag in ${ args.dockerImages.join(" ") }; do
                  if ! [[ "\$docker_image_tag" =~ : ]]; then
                    docker_image="\${docker_image_tag%%:}"
                    docker_tag="\${docker_image_tag##*:}"
