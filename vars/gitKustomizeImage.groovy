@@ -53,7 +53,7 @@ def call(dockerImages=["$DOCKER_IMAGE"], dir="$APP/$ENVIRONMENT", version="$GIT_
   String label = "Git Kustomize Image Version - Dir: '$dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
-    milestone ordinal: 90, label: "Milestone: $label"
+    milestone ordinal: null, label: "Milestone: $label"
     timeout(time: timeoutMinutes, unit: 'MINUTES'){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
