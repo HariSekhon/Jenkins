@@ -54,6 +54,8 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
               script: """#!/usr/bin/env bash
                 set -euxo pipefail
 
+                export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
                 gcloud auth list
 
                 for docker_image_tag in ${ args.dockerImages.join(" ") }; do
