@@ -46,9 +46,9 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
-        when {
-          expression { args.dockerImages != [] }
-        }
+        //when {
+        //  expression { args.dockerImages != [] }
+        //}
         stage('Check Docker Images Exist'){
           steps {
             assert dockerImages instanceof Collection
@@ -74,9 +74,9 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
               )
           }
         }
-        when {
-          expression { dockerImagesExist != true }
-        }
+        //when {
+        //  expression { dockerImagesExist != true }
+        //}
         stage('CloudBuild'){
           steps {
             String label = 'Running GCP CloudBuild'
