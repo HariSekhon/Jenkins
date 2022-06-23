@@ -46,24 +46,28 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
         if ( args.dockerImages != [] ) {
           assert args.dockerImages instanceof Collection
           dockerImagesExist =
-            sh(returnStatus: true,
-               script: """#!/usr/bin/env bash
-               set -euxo pipefail
+            String labelCheckingImages = 'Checking if Docker images exist in GCR'
+            echo "$label"
+            sh(
+              label: "$label"
+              returnStatus: true,
+              script: """#!/usr/bin/env bash
+              set -euxo pipefail
 
-               gcloud auth list
+              gcloud auth list
 
-               for docker_image_tag in ${ args.dockerImages.join(" ") }; do
-                 if [[ "\$docker_image_tag" =~ : ]]; then
-                   docker_image="\${docker_image_tag%%:*}"
-                   docker_tag="\${docker_image_tag##*:}"
-                   if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
-                     exit 1
-                   fi
-                 else
-                   exit 1
-                 fi
-               done
-               """
+              for docker_image_tag in ${ args.dockerImages.join(" ") }; do
+                if [[ "\$docker_image_tag" =~ : ]]; then
+                  docker_image="\${docker_image_tag%%:*}"
+                  docker_tag="\${docker_image_tag##*:}"
+                  if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                    exit 1
+                  fi
+                else
+                  exit 1
+                fi
+              done
+              """
             ) == 0  // convert the exit code to a boolean
         }
         if ( ! dockerImagesExist ) {
