@@ -64,7 +64,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
                  fi
                done
                """
-            )
+            ) == 0  // convert the exit code to a boolean
         }
         if ( ! dockerImagesExist ) {
           String label = 'Running GCP CloudBuild'
