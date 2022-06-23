@@ -53,7 +53,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
                gcloud auth list
 
                for docker_image_tag in ${ args.dockerImages.join(" ") }; do
-                 if ! [[ "\$docker_image_tag" =~ : ]]; then
+                 if [[ "\$docker_image_tag" =~ : ]]; then
                    docker_image="\${docker_image_tag%%:}"
                    docker_tag="\${docker_image_tag##*:}"
                    if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
@@ -66,7 +66,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
                """
             )
         }
-        if ( dockerImagesExist != true ) {
+        if ( ! dockerImagesExist ) {
           String label = 'Running GCP CloudBuild'
           echo "$label"
           sh (
