@@ -21,7 +21,7 @@ def call(fromBranch, toBranch){
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
   lock(resource: label, inversePrecedence: true) {
-    milestone ordinal: 1, label: "Milestone: $label"
+    milestone ordinal: null, label: "Milestone: $label"
     timeout(time: 5, unit: 'MINUTES') {
       // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
       sshagent (credentials: ['github-ssh-key']) {
@@ -36,7 +36,7 @@ def call(fromBranch, toBranch){
 
                 git status
 
-                git fetch
+                git fetch --all
 
                 git checkout "$TO_BRANCH" --force
                 git pull --no-edit
