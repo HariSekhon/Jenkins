@@ -31,7 +31,7 @@ def call(known_hosts='', name='') {
     String label = "Adding SSH Known Hosts: $name"
     sh (
       label: "$label",
-      script: '''#!/bin/bash
+      script: '''#!/usr/bin/env bash
         set -euxo pipefail
 
         # convenient and dynamic but not secure:
