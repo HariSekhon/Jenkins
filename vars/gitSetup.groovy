@@ -29,7 +29,7 @@ def call() {
   echo "$label"
   sh (
     label: "$label",
-    script: '''#!/bin/bash
+    script: '''#!/usr/bin/env bash
       set -euxo pipefail
 
       GIT_USERNAME="${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
