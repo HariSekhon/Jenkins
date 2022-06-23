@@ -46,7 +46,7 @@ def call(dockerImages, dir, version="$GIT_COMMIT", timeoutMinutes=5){
   if (!dockerImages) {
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
   }
-  assert dockerImages instanceof Collection
+  //assert dockerImages instanceof Collection
   if (!dir) {
     throw new IllegalArgumentException("second arg of gitKustomizeImage (dir) is null or empty, please define in the calling pipeline")
   }
