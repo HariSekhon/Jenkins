@@ -27,7 +27,7 @@ def call(timeoutMinutes=1){
       echo "$label"
       sh (
         label: "$label",
-        script: '''#!/bin/bash
+        script: '''#!/usr/bin/env bash
           set -euxo pipefail
           # XXX: pipeline must set GOOGLE_APPLICATION_CREDENTIALS to match this to pick these up
           keyfile="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
