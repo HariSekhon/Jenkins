@@ -30,7 +30,7 @@ def call(version='4.3.0'){
       echo "$label"
       sh (
         label: "$label",
-        script: '''#!/bin/bash
+        script: '''#!/usr/bin/env bash
           set -euxo pipefail
           echo "Downloading Kustomize version $VERSION"
           curl -sSL -o /tmp/kustomize.$$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz
