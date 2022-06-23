@@ -49,7 +49,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
           echo "$label"
           dockerImagesExist =
             sh(
-              label: "$label"
+              label: "$label",
               returnStatus: true,
               script: """#!/usr/bin/env bash
               set -euxo pipefail
