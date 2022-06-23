@@ -42,7 +42,7 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(dockerImages, dir, version="$GIT_COMMIT", timeoutMinutes=5){
+def call(List dockerImages, String dir, String version="$GIT_COMMIT", int timeoutMinutes=5){
   if (!dockerImages) {
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
   }
