@@ -78,7 +78,7 @@ def call(Map args = [dockerImages: [],
               GIT_USERNAME="\$(git config user.name)"
               GIT_EMAIL="\$(git config user.email)"
 
-              git clone --branch "\${args.branch}" "\${args.repo}" repo
+              git clone --branch "${args.branch}" "${args.repo}" repo
 
               cd "repo/${args.dir}"
 
