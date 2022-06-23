@@ -52,17 +52,17 @@ def call(Map args = [dockerImages: [],
   if (!args.repo) {
     throw new IllegalArgumentException("repo arg not provided to gitKustomizeImage() function")
   }
-  //assert args.dockerImages instanceof Collection
-  //assert args.dir instanceof String
-  //assert args.repo instanceof String
+  assert args.dockerImages instanceof Collection
+  assert args.dir instanceof String
+  assert args.repo instanceof String
   args.version = args.get('version', "$GIT_COMMIT")
   args.branch  = args.get('branch', 'main')
-  args.timeout = args.get('timeout', 5)
+  args.timeoutMinutes = args.get('timeout', 5)
   String label = "Git Kustomize Image Version - Dir: '${args.dir}'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: null, label: "Milestone: $label"
-    timeout(time: timeoutMinutes, unit: 'MINUTES'){
+    timeout(time: args.timeoutMinutes, unit: 'MINUTES'){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
         gitSetup()
