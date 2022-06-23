@@ -80,7 +80,7 @@ def call(Map args = [dockerImages: [],
 
               git clone --branch "\${args.branch}" "\${args.repo}" repo
 
-              cd "repo/$dir"
+              cd "repo/${args.dir}"
 
               git config user.name "\$GIT_USERNAME"
               git config user.email "\$GIT_EMAIL"
@@ -88,14 +88,14 @@ def call(Map args = [dockerImages: [],
               #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$version"
               #kustomize edit set image "\$DOCKER_IMAGE:\$version"
 
-              ${ dockerImages.collect{ "kustomize edit set image $it:$version" }.join("\n") }
+              ${ args.dockerImages.collect{ "kustomize edit set image $it:${args.version}" }.join("\n") }
 
               git diff
 
               git add -A
 
               if ! git diff-index --quiet HEAD; then
-                git commit -m "updated app images under '$dir' to version '\$version'"
+                git commit -m "updated app images under '${args.dir}' to version '${args.version}'"
               fi
 
               git push
