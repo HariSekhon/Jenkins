@@ -21,13 +21,16 @@
 //
 // Example call:
 //
+//    // single quote to evaluate the variables in the shell so we can use Bash to strip off the origin/ prefix for the Git Branch
 //    gcpCloudBuild(args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"', timeoutMinutes: 30)
 //
 //  If dockerImages list argument is set, will check for each of those docker 'image:tag' exist in GCR and skip running CloudBuild if all of them are already present
 //  - this can save a lot of time in CI/CD deployment re-runs and is an optimization worth setting:
 //
-//    gcpCloudBuild(dockerImages: ["$GCR_REGISTRY/$GCR_PROJECT/myapp:$version",
-//                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$version"])
+//    // double quote to interpolate the variables in Groovy to check $GCR_REGISTRY and $GCR_PROJECT were actually set in the pipeline
+//       - since this happens before CloudBuild is run with the args, catches errors earlier for you
+//    gcpCloudBuild(dockerImages: ["$GCR_REGISTRY/$GCR_PROJECT/myapp:$GIT_COMMIT",
+//                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$GIT_COMMIT"])
 
 def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
   milestone ordinal: null, label: "Milestone: Build"
