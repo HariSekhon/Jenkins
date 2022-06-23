@@ -27,7 +27,7 @@ def call(timeoutMinutes=2){
       echo "$label"
       sh (
         label: "$label",
-        script: '''#!/bin/bash
+        script: '''#!/usr/bin/env bash
           set -euxo pipefail
           export CLOUDSDK_CORE_DISABLE_PROMPTS=1
           gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
