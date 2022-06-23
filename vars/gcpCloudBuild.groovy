@@ -23,20 +23,14 @@
 //
 //    gcpCloudBuild(args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"', timeoutMinutes: 30)
 //
-// If the following are set then will check GCR for an existing image to skip building entirely
+//  If dockerImages list argument is set, will check for each of those docker 'image:tag' exist in GCR and skip running CloudBuild if all of them are already present
+//  - this can save a lot of time in CI/CD deployment re-runs and is an optimization worth setting:
 //
-//    DOCKER_IMAGE
-//    DOCKER_TAG
-//
-// You may want to set them like this in the environment{} section of your Jenkinsfile:
-//
-//    DOCKER_IMAGE = "$GCR_REGISTRY/$GCR_PROJECT/$APP"
-//    DOCKER_TAG = "$GIT_COMMIT"
-//    // or
-//    DOCKER_TAG = "${env.GIT_BRANCH.split('/')[-1]}"  // strip the leading 'origin/' from 'origin/mybranch'
+//    gcpCloudBuild(dockerImages: ["$GCR_REGISTRY/$GCR_PROJECT/myapp:$version",
+//                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$version"])
 
-def call(Map args = [args:'', timeoutMinutes:60]){
-  milestone ordinal: 10, label: "Milestone: Build"
+def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
+  milestone ordinal: null, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
   if(args.args == null){
     args.args = ''
@@ -46,23 +40,60 @@ def call(Map args = [args:'', timeoutMinutes:60]){
   }
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
-      String label = 'Running GCP CloudBuild'
-      echo "$label"
-      sh (
-        label: "$label",
-        script: """#!/bin/bash
-          set -euxo pipefail
-          export CLOUDSDK_CORE_DISABLE_PROMPTS=1
-          gcloud auth list
-          if [ -n "\${DOCKER_IMAGE:-}" ] &&
-             [ -n "\${DOCKER_TAG:-}" ] &&
-             [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-             :
-          else
-            gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
-          fi
-        """
-      )
+      script {
+        boolean dockerImagesExist = false
+        when {
+          expression { args.get('dockerImages', []) != [] }
+        }
+        steps {
+          assert dockerImages instanceof Collection
+          dockerImagesExist =
+            sh(returnStatus: true,
+               script: """#!/usr/bin/env bash
+
+               set -euxo pipefail
+
+               for docker_image_tag in ${ dockerImages.join(" ") }; do
+                 if ! [[ "\$docker_image_tag" =~ : ]]; then
+                   docker_image="\${docker_image_tag%%:}"
+                   docker_tag="\${docker_image_tag##*:}"
+                   if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
+                     exit 1
+                   fi
+                 else
+                   exit 1
+                 fi
+               done
+               """
+            )
+        }
+        when {
+          expression { dockerImagesExist == true }
+        }
+        steps {
+          String label = 'Running GCP CloudBuild'
+          echo "$label"
+          sh (
+            label: "$label",
+            script: """#!/usr/bin/env bash
+
+              set -euxo pipefail
+
+              export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+              gcloud auth list
+
+              if [ -n "\${DOCKER_IMAGE:-}" ] &&
+                 [ -n "\${DOCKER_TAG:-}" ] &&
+                 [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
+                 :
+              else
+                gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
+              fi
+            """
+          )
+        }
+      }
     }
   }
 }
