@@ -45,9 +45,9 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
         boolean dockerImagesExist = false
         if ( args.dockerImages != [] ) {
           assert args.dockerImages instanceof Collection
+          String labelCheckingImages = 'Checking if Docker images exist in GCR'
+          echo "$label"
           dockerImagesExist =
-            String labelCheckingImages = 'Checking if Docker images exist in GCR'
-            echo "$label"
             sh(
               label: "$label"
               returnStatus: true,
