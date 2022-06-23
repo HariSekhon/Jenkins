@@ -37,7 +37,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
   echo "Building from branch '$GIT_BRANCH'"
   // set defaults if these args aren't passed
   args.args = args.get('args', '')
-  args.timeoutMinutes = args.get(timeoutMinutes, 60)
+  args.timeoutMinutes = args.get('timeoutMinutes', 60)
   args.dockerImages = args.get('dockerImages', [])
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
