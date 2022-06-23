@@ -46,9 +46,13 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(dockerImages=["$DOCKER_IMAGE"], dir="$APP/$ENVIRONMENT", version="$GIT_COMMIT", timeoutMinutes=4){
-  if (!dockerImages){
+def call(dockerImages=["$DOCKER_IMAGE"], dir, version="$GIT_COMMIT", timeoutMinutes=5){
+  if (!dockerImages) {
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
+  }
+  assert dockerImages instanceof Collection
+  if (!dir) {
+    throw new IllegalArgumentException("second arg of gitKustomizeImage (dir) is null or empty, please define in the calling pipeline")
   }
   String label = "Git Kustomize Image Version - Dir: '$dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
@@ -61,6 +65,7 @@ def call(dockerImages=["$DOCKER_IMAGE"], dir="$APP/$ENVIRONMENT", version="$GIT_
         retry(2){
           sh (
             label: "$label",
+            // needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
             script: """#!/bin/bash
               set -euxo pipefail
 
@@ -78,7 +83,6 @@ def call(dockerImages=["$DOCKER_IMAGE"], dir="$APP/$ENVIRONMENT", version="$GIT_
               #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$version"
               #kustomize edit set image "\$DOCKER_IMAGE:\$version"
 
-              # needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
               ${ dockerImages.collect{ "kustomize edit set image $it:$version" }.join("\n") }
 
               git diff
