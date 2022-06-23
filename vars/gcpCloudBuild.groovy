@@ -41,12 +41,13 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
   if(args.timeoutMinutes == null){
     args.timeoutMinutes = 60
   }
+  args.dockerImages = args.get('dockerImages', [])
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
         when {
-          expression { args.get('dockerImages', []) != [] }
+          expression { args.dockerImages != [] }
         }
         stage('Check Docker Images Exist'){
           steps {
