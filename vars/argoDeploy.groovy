@@ -19,44 +19,44 @@
 
 // Required Environment Variables to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 //
-//    APP
-//    ENVIRONMENT
 //    ARGOCD_SERVER
 //    ARGOCD_AUTH_TOKEN
 //
-// The ArgoCD app must be set up with a name of $APP-$ENVIRONMENT
+// The ArgoCD app must be passed as the first argument
 
-def call(timeoutMinutes=10){
-  String label = "ArgoCD Deploy - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+def call(app, timeoutMinutes=10){
+  String label = "ArgoCD Deploy - App: '$app'"
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
   lock(resource: label, inversePrecedence: true){
-    milestone ordinal: 100, label: "Milestone: $label"
+    milestone ordinal: null, label: "Milestone: $label"
     container('argocd') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
-        withEnv(["TIMEOUT_SECONDS=$timeoutSeconds"]) {
-          echo "$label"
-          sh (
-            label: "$label",
-            // tried hard refresh to work around this problem:
-            //
-            //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
-            //
-            // it seemed to work initially when run as a one off in the UI,
-            // but when applied in CI/CD and run every time to try to patch over that problem,
-            // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
-            script: '''#!/bin/bash
-              set -euxo pipefail
+      retry(2){
+        timeout(time: timeoutMinutes, unit: 'MINUTES') {
+          withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
+            echo "$label"
+            sh (
+              label: "$label",
+              // tried hard refresh to work around this problem:
+              //
+              //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
+              //
+              // it seemed to work initially when run as a one off in the UI,
+              // but when applied in CI/CD and run every time to try to patch over that problem,
+              // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
+              script: '''#!/bin/bash
+                set -euxo pipefail
 
-              # might cause performance issues and 504 timeouts
-              #argocd app get  "$APP-$ENVIRONMENT" --grpc-web --hard-refresh
-              #argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
+                # might cause performance issues and 504 timeouts
+                #argocd app get  "$APP" --grpc-web --hard-refresh
+                #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
-              argocd app sync "$APP-$ENVIRONMENT" --grpc-web --force
+                argocd app sync "$APP" --grpc-web --force
 
-              argocd app wait "$APP-$ENVIRONMENT" --grpc-web --timeout "$TIMEOUT_SECONDS"
-            '''
-          )
+                argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS"
+              '''
+            )
+          }
         }
       }
     }
