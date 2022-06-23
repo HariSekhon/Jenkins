@@ -25,19 +25,15 @@
 // Requires the following environment variables to be already set in the pipeline environment{} section:
 //
 //    GITOPS_REPO
+//
+// Optional environment variables:
+//
 //    GIT_USERNAME
 //    GIT_EMAIL
 //
-//    GIT_COMMIT - provided automatically by Jenkins
+// Provided automatically by Jenkins:
 //
-//  If dockerImages list isn't passed as first argument:
-//
-//    DOCKER_IMAGE
-//
-//  Only if dir is not passed, infers by convention <$APP>/<$ENVIRONMENT>/ as the directory path in the repo to update
-//
-//    APP
-//    ENVIRONMENT
+//    GIT_COMMIT
 //
 // Should be wrapped in an sshagent block like this:
 //
@@ -46,7 +42,7 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(dockerImages=["$DOCKER_IMAGE"], dir, version="$GIT_COMMIT", timeoutMinutes=5){
+def call(dockerImages, dir, version="$GIT_COMMIT", timeoutMinutes=5){
   if (!dockerImages) {
     throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
   }
