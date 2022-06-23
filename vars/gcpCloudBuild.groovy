@@ -54,7 +54,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
 
                for docker_image_tag in ${ args.dockerImages.join(" ") }; do
                  if [[ "\$docker_image_tag" =~ : ]]; then
-                   docker_image="\${docker_image_tag%%:}"
+                   docker_image="\${docker_image_tag%%:*}"
                    docker_tag="\${docker_image_tag##*:}"
                    if ! gcloud container images list-tags "\$docker_image" --filter="tags:\$docker_tag" --format=text | grep -q .; then
                      exit 1
