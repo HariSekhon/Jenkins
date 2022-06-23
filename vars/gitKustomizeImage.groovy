@@ -21,11 +21,6 @@
 //
 //  XXX: the first argument should be a list of Docker Images including any repo prefix, eg. 'eu.gcr.io/$CLOUDSDK_CORE_PROJECT/myapp' for Kustomize to be able to update the right image reference in the K8s yaml
 //
-//
-// Requires the following environment variables to be already set in the pipeline environment{} section:
-//
-//    GITOPS_REPO
-//
 // Optional environment variables:
 //
 //    GIT_USERNAME
@@ -42,15 +37,28 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(List dockerImages, String dir, String version="$GIT_COMMIT", int timeoutMinutes=5){
-  if (!dockerImages) {
-    throw new IllegalArgumentException("first arg of gitKustomizeImage (dockerImages) is null or empty, please define in the calling pipeline")
+def call(Map args = [dockerImages: [],
+                     repo: '',
+                     dir: '',
+                     version: "$GIT_COMMIT",
+                     branch: "main",
+                     timeoutMinutes: 5]){
+  if (!args.dockerImages) {
+    throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
   }
-  //assert dockerImages instanceof Collection
-  if (!dir) {
-    throw new IllegalArgumentException("second arg of gitKustomizeImage (dir) is null or empty, please define in the calling pipeline")
+  if (!args.dir) {
+    throw new IllegalArgumentException("dir not provided to gitKustomizeImage() function")
   }
-  String label = "Git Kustomize Image Version - Dir: '$dir'"
+  if (!args.repo) {
+    throw new IllegalArgumentException("repo arg not provided to gitKustomizeImage() function")
+  }
+  //assert args.dockerImages instanceof Collection
+  //assert args.dir instanceof String
+  //assert args.repo instanceof String
+  args.version = args.get('version', "$GIT_COMMIT")
+  args.branch  = args.get('branch', 'main')
+  args.timeout = args.get('timeout', 5)
+  String label = "Git Kustomize Image Version - Dir: '${args.dir}'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: null, label: "Milestone: $label"
@@ -62,14 +70,15 @@ def call(List dockerImages, String dir, String version="$GIT_COMMIT", int timeou
           sh (
             label: "$label",
             // needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
-            script: """#!/bin/bash
+            script: """#!/usr/bin/env bash
               set -euxo pipefail
 
               # copy local repo's user and email setting from this pipeline to the cloned repo
+              # if this wasn't set then it'll be set up to sane defaults by gitSetup() function called above
               GIT_USERNAME="\$(git config user.name)"
               GIT_EMAIL="\$(git config user.email)"
 
-              git clone --branch "\$ENVIRONMENT" "\$GITOPS_REPO" repo
+              git clone --branch "\${args.branch}" "\${args.repo}" repo
 
               cd "repo/$dir"
 
