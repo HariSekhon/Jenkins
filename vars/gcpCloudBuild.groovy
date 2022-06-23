@@ -32,19 +32,19 @@
 //    gcpCloudBuild(dockerImages: ["$GCR_REGISTRY/$GCR_PROJECT/myapp:$GIT_COMMIT",
 //                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$GIT_COMMIT"])
 
-def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
+def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
   milestone ordinal: null, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
   // set defaults if these args aren't passed
   args.args = args.get('args', '')
   args.timeoutMinutes = args.get('timeoutMinutes', 60)
-  args.dockerImages = args.get('dockerImages', [])
+  args.skipIfDockerImagesExist = args.get('skipIfDockerImagesExist', [])
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
-        if ( args.dockerImages != [] ) {
-          assert args.dockerImages instanceof Collection
+        if ( args.skipIfDockerImagesExist != [] ) {
+          assert args.skipIfDockerImagesExist instanceof Collection
           String labelCheckingImages = 'Checking if Docker images exist in GCR'
           echo "$labelCheckingImages"
           dockerImagesExist =
@@ -58,7 +58,7 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
 
                 gcloud auth list
 
-                for docker_image_tag in ${ args.dockerImages.join(" ") }; do
+                for docker_image_tag in ${ args.skipIfDockerImagesExist.join(" ") }; do
                   if [[ "\$docker_image_tag" =~ : ]]; then
                     docker_image="\${docker_image_tag%%:*}"
                     docker_tag="\${docker_image_tag##*:}"
