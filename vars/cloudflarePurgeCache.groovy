@@ -33,7 +33,7 @@ def call(){
         echo "$label"
         sh (
           label: "$label",
-          script: '''#!/bin/bash
+          script: '''#!/usr/bin/env bash
             set -euxo pipefail
             output="$(
                 curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
