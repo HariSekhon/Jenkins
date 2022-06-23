@@ -45,17 +45,18 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
+        when {
+          expression { args.get('dockerImages', []) != [] }
+        }
         stage('Check Docker Images Exist'){
-          when {
-            expression { args.get('dockerImages', []) != [] }
-          }
           steps {
             assert dockerImages instanceof Collection
             dockerImagesExist =
               sh(returnStatus: true,
                  script: """#!/usr/bin/env bash
-
                  set -euxo pipefail
+
+                 gcloud auth list
 
                  for docker_image_tag in ${ dockerImages.join(" ") }; do
                    if ! [[ "\$docker_image_tag" =~ : ]]; then
@@ -72,30 +73,23 @@ def call(Map args = [args:'', dockerImages: [], timeoutMinutes:60]){
               )
           }
         }
+        when {
+          expression { dockerImagesExist != true }
+        }
         stage('CloudBuild'){
-          when {
-            expression { dockerImagesExist == true }
-          }
           steps {
             String label = 'Running GCP CloudBuild'
             echo "$label"
             sh (
               label: "$label",
               script: """#!/usr/bin/env bash
-
                 set -euxo pipefail
 
                 export CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
                 gcloud auth list
 
-                if [ -n "\${DOCKER_IMAGE:-}" ] &&
-                   [ -n "\${DOCKER_TAG:-}" ] &&
-                   [ -n "\$(gcloud container images list-tags "\$DOCKER_IMAGE" --filter="tags:\$DOCKER_TAG" --format=text)" ]; then
-                   :
-                else
-                  gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
-                fi
+                gcloud builds submit --timeout "${args.timeoutMinutes}m" ${args.args}
               """
             )
           }
