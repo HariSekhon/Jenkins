@@ -887,7 +887,7 @@ pipeline {
       steps {
         approval(
           // all these settings are optional
-          submitter: "$DEPLOYERS", // you can set this at the global Jenkins environment level to the groups eg. platform-engineering@domain.co.uk
+          submitter: "$DEPLOYERS", // you can set this env var at the global Jenkins level, see vars/approval.groovy for details
           ok: 'Deploy',            // set the Ok button to say Deploy instead
           timeout: 2,              // default: 60 (mins), see vars/approval.groovy
           timeoutUnits: 'HOURS'    // default: MINUTES, see vars/approval.groovy
