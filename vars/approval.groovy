@@ -44,7 +44,7 @@ def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
 
 This prompt will time out in ${args.timeout} ${args.timeoutUnits.lower()}""",
       ok: args.ok,
-      // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
+      // only allow people in these 2 groups to approve before proceeeding eg. to production deployment - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
       submitter: args.submitter
     )
