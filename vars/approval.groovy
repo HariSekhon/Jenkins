@@ -14,18 +14,18 @@
 //
 
 // ========================================================================== //
-//                              H u m a n   G a t e
+//                                A p p r o v a l
 // ========================================================================== //
 
 // Require human approval before progressing - protect your production environments from deployments
 
 // Usage:
 //
-//    humanGate(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
+//    approval(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
 //
 // or better to DRY between pipelines
 //
-//    humanGate(submitter: "$DEPLOYERS", timeoutMinutes: 10)
+//    approval(submitter: "$DEPLOYERS", timeoutMinutes: 10)
 //
 // then configure $DEPLOYERS environment variable at the global Jenkins level:
 //
@@ -34,12 +34,11 @@
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 // ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
-def call(Map args = [submitter:'', timeoutMinutes:60, ok:'']){
-  milestone ordinal: null, label: "Milestone: Human Gate"
-  if(args.timeoutMinutes == null){
-    args.timeoutMinutes = 60
-  }
-  timeout(time: args.timeoutMinutes, unit: 'MINUTES') {
+def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
+  milestone ordinal: null, label: "Milestone: Approval"
+  args.timeout = args.get('timeout', 60)
+  args.timeoutUnits = args.get('timeoutUnits', 'MINUTES')
+  timeout(time: args.timeout, unit: args.timeoutUnits) {
     input (
       message: """Are you sure you want to release this build?
 
