@@ -72,8 +72,8 @@ pipeline {
         // here ${version} is a variable previously defined, while {os} and {arch} with no dollar sign are auto-inferred placeholders
         installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
 
-        // require human approval before proceeding to production deployment
-        humanGate()
+        // prompts for human click approval before proceeding to next step ie. production deployment
+        approval()
 
         // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize, images served from GCR registry
         gitKustomizeImage(['$GCR_REGISTRY/$GCR_PROJECT/app1', '$GCR_REGISTRY/$GCR_PROJECT/app2'])
