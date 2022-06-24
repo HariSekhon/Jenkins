@@ -818,13 +818,13 @@ pipeline {
       }
     }
 
-    // Jenkins Deploys are further down after Human Gate - for ArgoCD GitOps human gate doesn't apply
+    // Jenkins Deploys are further down after Approval - for ArgoCD GitOps human gate doesn't apply
 
   // ========================================================================== //
   //           T e r r a f o r m   /   T e r r a g r u n t   S t a g e s
   // ========================================================================== //
 
-  // Terraform / Terragrunt Apply is further down after Human Gate
+  // Terraform / Terragrunt Apply is further down after Approval
 
     stage('Terraform Init') {
       steps {
@@ -860,7 +860,7 @@ pipeline {
   //                             L i q u i b a s e
   // ========================================================================== //
 
-  // Liquibase Update is further down after Human Gate
+  // Liquibase Update is further down after Approval
 
     stage('Liquibase Status'){
       steps {
@@ -869,12 +869,13 @@ pipeline {
     }
 
   // ========================================================================== //
-  //                            H u m a n   G a t e
+  //                              A p p r o v a l
   // ========================================================================== //
 
     // Should apply to any production release or Terraform / Terragrunt apply for safety
 
-    stage('Human Gate') {
+    stage('Approval') {
+      // by default input applies after options{} but before agent{} or when{}
       when {
         beforeAgent true  // don't spin up a K8s pod if we don't need to execute
         // TODO: test with and without
@@ -884,22 +885,28 @@ pipeline {
         //branch pattern: '^.*/(main|master|production)$', comparator: 'REGEXP' }
       }
       steps {
-        milestone(ordinal: 85, label: "Milestone: Human Gate")
-        // by default input applies after options{} but before agent{} or when{}
-        // https://www.jenkins.io/doc/book/pipeline/syntax/#input
-        //input "Proceed to deployment?"
-        timeout(time: 1, unit: 'HOURS') {
-          input (
-            message: '''Are you sure you want to release this build to production?
+        approval(
+          // all these settings are optional
+          submitter: "$DEPLOYERS", // you can set this at the global Jenkins environment level to the groups eg. platform-engineering@domain.co.uk
+          ok: 'Deploy',            // set the Ok button to say Deploy instead
+          timeout: 2,              // default: 60 (mins), see vars/approval.groovy
+          timeoutUnits: 'HOURS'    // default: MINUTES, see vars/approval.groovy
+        )
 
-This prompt will time out after 1 hour''',
-            ok: "Deploy",
-            // Azure AD security group is referenced by just name, whereas Microsoft 365 email distribution group is referenced by email address
-            submitter: "platform-engineering",  // only allow users in platform engineering group to Approve the human gate. Warning: users outside this group can still hit Abort!
-            // only do this if you have defined parameters and need to choose which property to store the result in
-            //submitterParameter: "SUBMITTER"
-          )
-        }
+//        // https://www.jenkins.io/doc/book/pipeline/syntax/#input
+//        //input "Proceed to deployment?"
+//        timeout(time: 1, unit: 'HOURS') {
+//          input (
+//            message: '''Are you sure you want to release this build to production?
+//
+//This prompt will time out after 1 hour''',
+//            ok: "Deploy",
+//            // Azure AD security group is referenced by just name, whereas Microsoft 365 email distribution group is referenced by email address
+//            submitter: "platform-engineering",  // only allow users in platform engineering group to Approve the human gate. Warning: users outside this group can still hit Abort!
+//            // only do this if you have defined parameters and need to choose which property to store the result in
+//            //submitterParameter: "SUBMITTER"
+//          )
+//        }
       }
     }
 
