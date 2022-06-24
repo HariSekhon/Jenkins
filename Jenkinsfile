@@ -252,8 +252,12 @@ pipeline {
     // XXX: Edit - useful for scripts to know which environment they're in to make adjustments
     ENV = 'dev'
     APP = 'www' // used by scripts eg. ArgoCD app sync commands
+    VERSION = "$GIT_COMMIT"
     //JDBC_URL = 'jdbc:mysql://x.x.x.x:3306/my_db'
     //JDBC_URL = 'jdbc:postgres://x.x.x.x:5432/my_db'
+
+    // repo passed to gitKustomize to GitOps deploy via ArgoCD
+    GITOPS_REPO = 'git@github.com/HariSekhon/app-k8s'
 
     // my DevOps Bash tools lib/ci.sh library will automatically set CI=true in shell if sourced and any of the CI heuristics match
     CI = true  // used by Artifactory JFrog CLI to disable interactive prompts and progress bar - https://www.jfrog.com/confluence/display/CLI/JFrog+CLI#JFrogCLI-EnvironmentVariables
@@ -389,7 +393,7 @@ pipeline {
     // not usually needed when sourcing Jenkinsfile from Git SCM in Pipeline / Multibranch Pipeline this is implied
     stage ('Checkout') {
       steps {
-        milestone(ordinal: 10, label: "Milestone: Checkout")
+        milestone(ordinal: null, label: "Milestone: Checkout")
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/HariSekhon/DevOps-Bash-tools']]])
       }
     }
@@ -431,7 +435,7 @@ pipeline {
           sh script: 'env | sort', label: 'Environment'
         }
         lock(resource: 'Git Merge Staging to Dev', inversePrecedence: true) {
-          milestone ordinal: 20, label: "Milestone: Git Merge"
+          milestone ordinal: null, label: "Milestone: Git Merge"
           timeout(time: 5, unit: 'MINUTES') {
             // provides credential as env vars to use as per normal eg. git clone https://$GIT_USER:$GIT_TOKEN@github.com/...
             //withCredentials([vaultString(credentialsId: 'my-secret', variable: 'MYSECRET')]) {  // HashiCorp Vault via plugin integration to give new type of vaultString
@@ -453,7 +457,7 @@ pipeline {
 
     stage('Setup') {
       steps {
-        milestone(ordinal: 30, label: "Milestone: Setup")
+        milestone(ordinal: null, label: "Milestone: Setup")
         label 'Setup'
         // execute in container name defined in the kubernetes {} section near the top
         //container('gcloud-sdk') {
@@ -464,13 +468,11 @@ pipeline {
           sh 'script_using_jq.sh'
         }
 
-        // rewrite build name to include commit id
         script {
+          // rewrite build name to include commit id
           currentBuild.displayName = "$BUILD_DISPLAY_NAME (${GIT_COMMIT.take(8)})"
-        }
 
-        // save workspace path to use in tests
-        script {
+          // save workspace path to use in tests
           workspace = "$env.WORKSPACE"
         }
 
@@ -482,6 +484,28 @@ pipeline {
             fi;
           done;
         '''
+
+        // DRY for gcpCloudBuild() and gitKustomize() - see further down
+        echo "Generating DOCKER_IMAGES list"
+        script {
+          env.DOCKER_IMAGES = """
+            $APP-php,
+            $APP-nginx,
+            $APP-solr,
+            queue-consumer,
+            pro-app,
+            consumer-app,
+            refund-request,
+          """.trim().tokenize(',').collect{"$GCR_REGISTRY/$GCR_PROJECT/${it.trim()}"}.join(',')
+        }
+        printEnv()
+      }
+    }
+
+    stage('Auth'){
+      steps {
+        gcpActivateServiceAccount()
+        printAuth()
       }
     }
 
@@ -528,7 +552,7 @@ pipeline {
       //  retry(2)
       //}
       steps {
-        milestone(ordinal: 70, label: "Milestone: Test")
+        milestone(ordinal: null, label: "Milestone: Test")
         echo 'Testing...'
         timeout(time: 60, unit: 'MINUTES') {
           sh 'make test'
@@ -696,19 +720,23 @@ pipeline {
       steps {
         // forbids older builds from starting
         // XXX: do not wrap milestone in a retry (stage/multi-steps/whole pipeline) because it will fail retry even for the same ordinal number
-        milestone(ordinal: 50, label: "Milestone: Build")
+        milestone(ordinal: null, label: "Milestone: Build")
 
         // convenient in Blue Ocean to see the environment quickly in a separate expand box
         //timeout(time: 1, unit: 'MINUTES') {
         //  sh script: 'env | sort', label: 'Environment'
         //}
-        printEnv()  // func in vars/ shared library
 
         //echo "${params.MyVar}"
         echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
         echo 'Building...'
 
         cloudBuild(timeout_minutes=40)  // func in vars/ shared library
+
+        gcpCloudBuild(args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"',
+                      timeoutMinutes: 90,
+                      skipIfDockerImagesExist: env.DOCKER_IMAGES.tokenize(',').collect { "$it:$VERSION" }
+                      )
 
         timeout(time: 60, unit: 'MINUTES') {
           sh 'make'
@@ -752,7 +780,7 @@ pipeline {
     stage('GHCR Login') {
       agent { label 'docker-builder' }
       steps {
-        milestone(ordinal: 60, label: "Milestone: GHCR Login")
+        milestone(ordinal: null, label: "Milestone: GHCR Login")
         timeout(time: 1, unit: 'MINUTES') {
           sh """#!/usr/bin/env bash
             docker login ghcr.io -u '$GITHUB_TOKEN_USR' --password-stdin <<< '$GITHUB_TOKEN_PSW'
@@ -767,7 +795,7 @@ pipeline {
       //  changeset 'Dockerfile' // if the docker image doesn't ADD/COPY anything from local repo then only rebuild it when the Dockerfile changes
       //}
       steps {
-        milestone(ordinal: 61, label: "Milestone: Docker Build")
+        milestone(ordinal: null, label: "Milestone: Docker Build")
         timeout(time: 60, unit: 'MINUTES') {
           // check 'DOCKER_BUILDKIT = 1' is set in environment {} section
           sh "docker build -t '$DOCKER_IMAGE':'$DOCKER_TAG' --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from '$DOCKER_IMAGE':'$DOCKER_TAG' ."
@@ -785,7 +813,7 @@ pipeline {
 
     stage('Trivy') {
       steps {
-        milestone(ordinal: 62, label: "Milestone: Trivy")
+        milestone(ordinal: null, label: "Milestone: Trivy")
         // Requires DOCKER_IMAGE and DOCKER_TAG to be set in environment{} section of pipeline
         trivy()  // func in vars/ shared library
       }
@@ -797,7 +825,7 @@ pipeline {
 
     stage('Grype') {
       steps {
-        milestone(ordinal: 63, label: "Milestone: Grype")
+        milestone(ordinal: null, label: "Milestone: Grype")
         grype("$DOCKER_IMAGE:$DOCKER_TAG")  // func in vars/ shared library
         // for locally built packages
         grype("dir:.")
@@ -811,7 +839,7 @@ pipeline {
     stage('Docker Push') {
       agent { label 'docker-builder' }
       steps {
-        milestone(ordinal: 69, label: "Milestone: Docker Push")
+        milestone(ordinal: null, label: "Milestone: Docker Push")
         timeout(time: 15, unit: 'MINUTES') {
           sh "docker push '$DOCKER_IMAGE':'$DOCKER_TAG'"
         }
@@ -963,17 +991,22 @@ pipeline {
       steps {
         lock(resource: "ArgoCD Deploy - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
           // forbids older deploys from starting
-          milestone(ordinal: 100, label: "Milestone: ArgoCD Deploy")
+          milestone(ordinal: null, label: "Milestone: ArgoCD Deploy")
 
           container('git-kustomize') {
             // credential needs to match the ID field, not the name, otherwise it'll fail with "FATAL: [ssh-agent] Could not find specified credentials" but continue with a blank ssh agent loaded in the environment causing SSH / Git clone failures later on
             // ignoreMissing: false (default) doesn't work and there is no issue tracker on the github project page to report this :-/
             sshagent (credentials: ['my-ssh-key'], ignoreMissing: false) {
-              gitKustomizeImage(['mydockerimage'])  // func in vars/ shared library
+              sshKnownHostsGitHub()
+              gitKustomizeImage(dockerImages: env.DOCKER_IMAGES.tokenize(','),
+                                repo: "$GITOPS_REPO",
+                                branch: "$ENVIRONMENT",
+                                dir: "$APP/$ENVIRONMENT",
+                                version: "$VERSION")
             }
           }
 
-          argoDeploy()  // func in vars/ shared library
+          argoDeploy("$APP-$ENVIRONMENT")  // func in vars/ shared library
         }
       }
     }
@@ -1006,7 +1039,7 @@ pipeline {
       steps {
         lock(resource: "Deploy - App: $APP, Environment: $ENVIRONMENT", inversePrecedence: true) {
           // forbids older deploys from starting
-          milestone(ordinal: 100, label: "Milestone: Deploy")
+          milestone(ordinal: null, label: "Milestone: Deploy")
           echo 'Deploying...'
           // push artifacts and/or deploy to production
           timeout(time: 15, unit: 'MINUTES') {
