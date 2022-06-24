@@ -17,7 +17,7 @@
 //                                A p p r o v a l
 // ========================================================================== //
 
-// Require human approval before progressing - protect your production environments from deployments
+// Prompts for human click approval before progressing - protect your production environments from deployments
 
 // Usage:
 //
@@ -42,7 +42,7 @@ def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
     input (
       message: """Are you sure you want to release this build?
 
-This prompt will time out in ${args.timeoutMinutes} minutes""",
+This prompt will time out in ${args.timeout} ${args.timeoutUnits.lower()}""",
       ok: args.ok,
       // only allow people in these 2 groups to approve this human gate before deployments, useful for production - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
