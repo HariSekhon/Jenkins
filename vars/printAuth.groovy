@@ -47,7 +47,7 @@ def call(){
        fi
 
        if command -v gcloud >/dev/null 2>&1; then
-         "GCP:"
+         echo "GCP:"
          gcloud auth list || :
          echo
        fi
