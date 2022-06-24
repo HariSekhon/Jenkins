@@ -249,15 +249,15 @@ def call(Map args = [
         }
       }
 
-      stage('Human Gate') {
+      stage('Approval') {
         when {
           beforeInput true
           branch pattern: "$args.apply_branch_pattern"
         }
         steps {
-          //humanGate(args.human_gate_args)
+          //approval(args.approval_args)
           withEnv(args.get('env', [])){
-            humanGate()
+            approval()
           }
         }
       }
