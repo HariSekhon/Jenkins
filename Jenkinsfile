@@ -153,7 +153,7 @@ pipeline {
     timestamps()
 
     // timeout entire pipeline after 2 hours
-    // XXX: if using Human Gate input in prod pipeline, if you don't confirm the deployment within under 2 hours this build will be cancelled to avoid hogging executors
+    // XXX: if using Approval input in prod pipeline, if you don't confirm the deployment within under 2 hours this build will be cancelled to avoid hogging executors
     timeout(time: 2, unit: 'HOURS')
 
     //retry entire pipeline 3 times, better to do retry at each Stage / Step for efficiency to not repeat previously succeed steps
@@ -818,7 +818,7 @@ pipeline {
       }
     }
 
-    // Jenkins Deploys are further down after Approval - for ArgoCD GitOps human gate doesn't apply
+    // Jenkins Deploys are further down after Approval
 
   // ========================================================================== //
   //           T e r r a f o r m   /   T e r r a g r u n t   S t a g e s
@@ -902,7 +902,7 @@ pipeline {
 //This prompt will time out after 1 hour''',
 //            ok: "Deploy",
 //            // Azure AD security group is referenced by just name, whereas Microsoft 365 email distribution group is referenced by email address
-//            submitter: "platform-engineering",  // only allow users in platform engineering group to Approve the human gate. Warning: users outside this group can still hit Abort!
+//            submitter: "platform-engineering",  // only allow users in platform engineering group to Approve. Warning: users outside this group can still hit Abort!
 //            // only do this if you have defined parameters and need to choose which property to store the result in
 //            //submitterParameter: "SUBMITTER"
 //          )
@@ -948,7 +948,7 @@ pipeline {
   //                               D e p l o y s
   // ========================================================================== //
 
-  // Deploys are intentionally below Human Gate
+  // Deploys are intentionally below Approval
 
     // no longer needed if pulling git-kustomize docker image in jenkins-pod.yaml
     //stage('Download Kustomize') {
@@ -989,7 +989,7 @@ pipeline {
       //  branch pattern: '^.*/(main|master|production)$', comparator: 'REGEXP'
       //}
 
-      // prompt to deploy - use in separate stage Human Gate instead
+      // prompt to deploy - use in separate stage Approval instead
       //input "Deploy?"
 
       // XXX: move to Shared Libary to use Groovy to define lock in a String and add an informational Acquiring Lock message to make it more obvious when a build is waiting on a lock before progressing, otherwise they just look like they're hanging
