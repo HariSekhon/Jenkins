@@ -43,21 +43,25 @@ def call(Map args = [dockerImages: [],
                      version: "$GIT_COMMIT",
                      branch: "main",
                      timeoutMinutes: 5]){
-  if (!args.dockerImages) {
-    throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
-  }
-  if (!args.dir) {
-    throw new IllegalArgumentException("dir not provided to gitKustomizeImage() function")
-  }
-  if (!args.repo) {
-    throw new IllegalArgumentException("repo arg not provided to gitKustomizeImage() function")
-  }
+  // these get blocked in Jenkins Groovy Sandbox
+  //if (!args.dockerImages) {
+  //  throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
+  //}
+  //if (!args.dir) {
+  //  throw new IllegalArgumentException("dir not provided to gitKustomizeImage() function")
+  //}
+  //if (!args.repo) {
+  //  throw new IllegalArgumentException("repo arg not provided to gitKustomizeImage() function")
+  //}
   //assert args.dockerImages instanceof Collection
   //assert args.dir instanceof String
   //assert args.repo instanceof String
-  args.version = args.get('version', "$GIT_COMMIT")
   args.branch  = args.get('branch', 'main')
+  args.dir = args.get('dir', '.')
+  args.dockerImages = args.get('dockerImages', [])
+  args.repo = args.get('repo', '')
   args.timeoutMinutes = args.get('timeout', 5)
+  args.version = args.get('version', "$GIT_COMMIT")
   String label = "Git Kustomize Image Version - Dir: '${args.dir}'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
