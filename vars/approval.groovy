@@ -23,9 +23,13 @@
 //
 //    approval(submitter: 'platform-engineering@mycompany.com,Deployers', timeout: 10)
 //
-// or better to DRY between pipelines
+// or better to DRY between pipelines:
 //
-//    approval(submitter: "$DEPLOYERS", timeoutMinutes: 10)
+//    approval(submitter: "$DEPLOYERS", timeout: 10)
+//
+// set to 2 hours instead of default 60 minutes - these values are those supported by the standard Jenkins timeout() function:
+//
+//    approval(submitter: "$DEPLOYERS", timeout: 2, timeoutUnits: 'HOURS')
 //
 // then configure $DEPLOYERS environment variable at the global Jenkins level:
 //
