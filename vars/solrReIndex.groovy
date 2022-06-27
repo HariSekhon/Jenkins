@@ -25,9 +25,14 @@
 //    ENVIRONMENT
 
 def call(String scriptPath, int timeoutMinutes=60){
-  echo "Solr Re-Indexing App '$APP' '${ENVIRONMENT.capitalize()}' from branch '$GIT_BRANCH'"
-  String deploymentLock = "ArgoCD Deploy - App: '${APP.toLowerCase()}-${ENVIRONMENT.toLowerCase()}'"
-  String indexingLock   = "Solr Re-Indexing - App: '$APP', Environment: ${ENVIRONMENT.capitalize()}"
+  String app = env.APP.toLowerCase()
+  String environment = env.ENVIRONMENT.toLowerCase()
+  String Environment = env.ENVIRONMENT.capitalize()
+  echo "Solr Re-Indexing App '$APP' '$Environment' from branch '$GIT_BRANCH'"
+  // XXX: these locks must match whatever locks are used by your deployment functions, in this case gitKustomizeImages() and argoDeploy()
+  String gitKustomizeLock = "Git Kustomize Image Version - Dir: '$app/$environment'"
+  String deploymentLock   = "ArgoCD Deploy - App: '$app-$environment'"
+  String indexingLock     = "Solr Re-Indexing - App: '$APP', Environment: $Environment"
 
-  scriptLockExecute(scriptPath, [deploymentLock, indexingLock], timeoutMinutes)
+  scriptLockExecute(scriptPath, [gitKustomizeLock, deploymentLock, indexingLock], timeoutMinutes)
 }
