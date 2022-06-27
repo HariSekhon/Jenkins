@@ -17,10 +17,13 @@
 //       G C P   S e t u p   A p p l i c a t i o n   C r e d e n t i a l s
 // ========================================================================== //
 
-// Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
+// Requires:
+//
+//   - environment {} section at top level of Jenkinsfile with:
+//     - base64 encoded GCP_SERVICEACCOUNT_KEY environment variable or passed as a first argument
+//     - GOOGLE_APPLICATION_CREDENTIALS environment variable set to a path to store the key - see top level Jenkinsfile template for a good example path
 
-
-def call(timeoutMinutes=1){
+def call(credential="$GCP_SERVICEACCOUNT_KEY", timeoutMinutes=1){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Generating GCP Application Credential Key'
@@ -29,12 +32,14 @@ def call(timeoutMinutes=1){
         label: "$label",
         script: '''#!/usr/bin/env bash
           set -euxo pipefail
-          # XXX: pipeline must set GOOGLE_APPLICATION_CREDENTIALS to match this to pick these up
-          keyfile="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
-          if [ -n "${GCP_SERVICEACCOUNT_KEY:-}" ]; then
+          if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
+            keyfile="$GOOGLE_APPLICATION_CREDENTIALS"
             mkdir -p -v "$(dirname "$keyfile")"
             echo "Writing Google Application Credentials key file to '$keyfile'"
             base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
+          else
+            echo '$GOOGLE_APPLICATION_CREDENTIALS is not set'
+            exit 1
           fi
         '''
       )
