@@ -27,6 +27,7 @@ def call(packages=[]){
         export DEBIAN_FRONTEND=noninteractive
 
         sudo=""
+        # adapted from DevOps Bash tools lib/utils.sh am_root() function
         if ! [ "\${EUID:-\${UID:-\$(id -u)}}" -eq 0 ]; then
             sudo=sudo
         fi
