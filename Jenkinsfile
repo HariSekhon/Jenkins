@@ -486,17 +486,18 @@ pipeline {
         '''
 
         // DRY for gcpCloudBuild() and gitKustomize() - see further down
+        // done here because you cannot run straight Groovy in the environment{} section and env also can't take list constructs which get syntactically checked, you'd have to write in multiline """ string which requires both global and ${it.trim()}
         echo "Generating DOCKER_IMAGES list"
         script {
-          env.DOCKER_IMAGES = """
-            $APP-php,
-            $APP-nginx,
-            $APP-solr,
-            queue-consumer,
-            pro-app,
-            consumer-app,
-            refund-request,
-          """.trim().tokenize(',').collect{"$GCR_REGISTRY/$GCR_PROJECT/${it.trim()}"}.join(',')
+          env.DOCKER_IMAGES = [
+            "$APP-php",
+            "$APP-nginx",
+            "$APP-solr",
+            "queue-consumer",
+            "pro-app",
+            "consumer-app",
+            "refund-request",
+          ].collect{"$GCR_REGISTRY/$GCR_PROJECT/$it"}.join(',')
         }
         printEnv()
       }
