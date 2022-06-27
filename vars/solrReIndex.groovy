@@ -25,9 +25,9 @@
 //    ENVIRONMENT
 
 def call(String scriptPath, int timeoutMinutes=60){
-  echo "Solr Re-Indexing App '$APP' '" + "$ENVIRONMENT".capitalize() + "' from branch '$GIT_BRANCH'"
-  String deploymentLock = "ArgoCD Deploy - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
-  String indexingLock   = "Solr Re-Indexing - App: '$APP', Environment: " + "$ENVIRONMENT".capitalize()
+  echo "Solr Re-Indexing App '$APP' '${ENVIRONMENT.capitalize()}' from branch '$GIT_BRANCH'"
+  String deploymentLock = "ArgoCD Deploy - App: '${APP.toLowerCase()}-${ENVIRONMENT.toLowerCase()}'"
+  String indexingLock   = "Solr Re-Indexing - App: '$APP', Environment: ${ENVIRONMENT.capitalize()}"
 
   scriptLockExecute(scriptPath, [deploymentLock, indexingLock], timeoutMinutes)
 }
