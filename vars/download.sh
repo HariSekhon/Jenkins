@@ -40,9 +40,10 @@
 
 set -euo pipefail
 [ -n "${DEBUG:-}" ] && set -x
-srcdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#srcdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-cd "$srcdir"
+# in case we want to download into a different dir than where we store this download.sh
+#cd "$srcdir"
 
 url="https://raw.githubusercontent.com/HariSekhon/Jenkins/master/vars"
 
@@ -61,8 +62,14 @@ for filename in "${filelist[@]}"; do
     fi
     if curl -sf "$url/$filename" > "$tmp" > "$tmp"; then
         {
-            echo "// copied from $url/$filename"
-            echo
+            comment_char="$(head -n1 "$tmp" | cut -c1)"
+            if [ "$comment_char" = "/" ]; then
+                comment_char="//"
+            fi
+            if [[ "$comment_char" =~ [#/] ]]; then
+                echo "$comment_char copied from $url/$filename"
+                echo
+            fi
             #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
             cat "$tmp"
         } > "$filename"
