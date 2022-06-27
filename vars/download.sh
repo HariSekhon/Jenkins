@@ -37,6 +37,8 @@
 # Or run without any args to search for every *.groovy file in the local directory under vars/ and, if available in HariSekhon/Jenkins repo, overwrite it with the latest version from GitHub
 #
 #       ./download.sh
+#
+# This will first check for a local checkout at checkout path $checkout (~/github/jenkins), which makes development easier and can also be used to override using local forked function copies if available
 
 set -euo pipefail
 [ -n "${DEBUG:-}" ] && set -x
@@ -46,9 +48,11 @@ set -euo pipefail
 #cd "$srcdir"
 
 url="https://raw.githubusercontent.com/HariSekhon/Jenkins/master/vars"
+checkout=~/github/jenkins
 
 tmp="$(mktemp)"
 
+unalias cp &>/dev/null || :
 unalias mv &>/dev/null || :
 
 filelist=("$@")
@@ -60,33 +64,38 @@ for filename in "${filelist[@]}"; do
     if ! [[ "$filename" =~ \. ]]; then
         filename+=".groovy"
     fi
-    if curl -sf "$url/$filename" > "$tmp"; then
-        {
-            shebang_detected=0
-            comment_line="$(head -n1 "$tmp")"
-            if [ "$(cut -c1-2 <<< "$comment_line")" = "#!" ]; then
-                shebang_detected=1
-                echo "$comment_line"
-                comment_line="$(sed -n '2p' "$tmp")"
-            fi
-
-            comment_char="$(cut -c1 <<< "$comment_line")"
-            if [ "$comment_char" = "/" ]; then
-                comment_char="//"
-            fi
-            if [[ "$comment_char" =~ [#/] ]]; then
-                echo "$comment_char"
-                echo "$comment_char copied from $url/$filename"
-                echo "$comment_char"
-            fi
-
-            #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
-            if [ "$shebang_detected" = 1 ]; then
-                tail -n+2 "$tmp"
-            else
-                cat "$tmp"
-            fi
-        } > "$filename"
-        echo "Downloaded $filename"
+    if [ -f "$checkout/vars/$filename" ]; then
+        # not really faster,  safer to cp
+        #tmp="$checkout/vars/$filename"
+        cp "$checkout/vars/$filename" "$tmp"
+    else
+        curl -sf "$url/$filename" > "$tmp" || continue
     fi
+    if [ -s "$tmp" ]; then
+        shebang_detected=0
+        comment_line="$(head -n1 "$tmp")"
+        if [ "$(cut -c1-2 <<< "$comment_line")" = "#!" ]; then
+            shebang_detected=1
+            echo "$comment_line"
+            comment_line="$(sed -n '2p' "$tmp")"
+        fi
+
+        comment_char="$(cut -c1 <<< "$comment_line")"
+        if [ "$comment_char" = "/" ]; then
+            comment_char="//"
+        fi
+        if [[ "$comment_char" =~ [#/] ]]; then
+            echo "$comment_char"
+            echo "$comment_char copied from $url/$filename"
+            echo "$comment_char"
+        fi
+
+        #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
+        if [ "$shebang_detected" = 1 ]; then
+            tail -n+2 "$tmp"
+        else
+            cat "$tmp"
+        fi
+        echo "Downloaded $filename" >&2
+    fi > "$filename"
 done
