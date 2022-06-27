@@ -60,9 +60,17 @@ for filename in "${filelist[@]}"; do
     if ! [[ "$filename" =~ \. ]]; then
         filename+=".groovy"
     fi
-    if curl -sf "$url/$filename" > "$tmp" > "$tmp"; then
+    if curl -sf "$url/$filename" > "$tmp"; then
         {
-            comment_char="$(head -n1 "$tmp" | cut -c1)"
+            shebang_detected=0
+            comment_line="$(head -n1 "$tmp")"
+            if [ "$(cut -c1-2 <<< "$comment_line")" = "#!" ]; then
+                shebang_detected=1
+                echo "$comment_line"
+                comment_line="$(sed -n '2p' "$tmp")"
+            fi
+
+            comment_char="$(cut -c1 <<< "$comment_line")"
             if [ "$comment_char" = "/" ]; then
                 comment_char="//"
             fi
@@ -70,8 +78,13 @@ for filename in "${filelist[@]}"; do
                 echo "$comment_char copied from $url/$filename"
                 echo
             fi
+
             #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
-            cat "$tmp"
+            if [ "$shebang_detected" = 1 ]; then
+                tail -n+2 "$tmp"
+            else
+                cat "$tmp"
+            fi
         } > "$filename"
         echo "Downloaded $filename"
     fi
