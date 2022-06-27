@@ -61,7 +61,7 @@ for filename in "${filelist[@]}"; do
     fi
     if curl -sf "$url/$filename" > "$tmp" > "$tmp"; then
         {
-            echo "// copied from $url/${filename%.groovy}.groovy"
+            echo "// copied from $url/$filename"
             echo
             #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
             cat "$tmp"
