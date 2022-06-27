@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 //
 //  Author: Hari Sekhon
 //  Date: 2022-06-27 13:23:20 +0100 (Mon, 27 Jun 2022)
