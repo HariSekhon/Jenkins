@@ -56,11 +56,13 @@ if [ $# -eq 0 ]; then
 fi
 
 for filename in "${filelist[@]}"; do
-    if curl -sf "$url/$filename" > "$tmp"; then
+    if curl -sf "$url/$filename" > "$tmp" ||
+       curl -sf "$url/$filename.groovy" > "$tmp"; then
         {
-            echo "// copied from $url/$filename"
+            echo "// copied from $url/${filename%.groovy}.groovy"
             echo
-            sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
+            #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
+            cat "$tmp"
         } > "$filename"
         echo "Downloaded $filename"
     fi
