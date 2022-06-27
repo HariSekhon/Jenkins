@@ -124,11 +124,21 @@ See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared
 
 ## Production
 
+### Option 1 - private, semi-automated
+
+Download the functions you want into your private jenkins shared library repo.
+
+You can use the [vars/download.sh](https://github.com/HariSekhon/Jenkins/blob/master/vars/download.sh) script to help you download given `*.groovy` files and periodically run it to get updates to these previously downloaded functions.
+
+You will be responsible for committing and reconciling any divergences in your local copies.
+
+### Option 2 - public fork, fully automated
+
 Fork this repo to have full control over all updates.
 
-Create environment branches to stage updates across dev/staging/production.
-
 Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
+
+If you create environment branches to stage updates across dev/staging/production, then:
 
 Enable the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
 
