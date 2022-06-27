@@ -50,6 +50,8 @@ def call(version) {
 
         unzip terraform.zip
 
+        chmod +x terraform
+
         mv -v terraform "$destination/"
       '''
     }
