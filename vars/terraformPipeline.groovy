@@ -193,7 +193,10 @@ def call(Map args = [
         steps {
           withEnv(args.env){
             withCredentials(args.get('creds', [])){
+              // tries everything
               logins()
+              // or call something simpler if you know what environment you're executing in
+              //gcpSetupApplicationCredentials()
             }
           }
         }
