@@ -64,12 +64,15 @@ for filename in "${filelist[@]}"; do
     if ! [[ "$filename" =~ \. ]]; then
         filename+=".groovy"
     fi
+    # much faster if you have a local checkout, easier for development, and gives option of using local override functions
     if [ -f "$checkout/vars/$filename" ]; then
         # not really faster,  safer to cp
         #tmp="$checkout/vars/$filename"
         cp "$checkout/vars/$filename" "$tmp"
+        echo "Copied $filename" >&2
     else
         curl -sf "$url/$filename" > "$tmp" || continue
+        echo "Downloaded $filename" >&2
     fi
     if [ -s "$tmp" ]; then
         shebang_detected=0
@@ -96,6 +99,5 @@ for filename in "${filelist[@]}"; do
         else
             cat "$tmp"
         fi
-        echo "Downloaded $filename" >&2
     fi > "$filename"
 done
