@@ -15,7 +15,7 @@
 
 # https://github.com/HariSekhon/Jenkins/blob/master/vars/download.sh
 
-# Downloads and replaces existing groovy files in the local directory with the upstream files from HariSekhon/Jenkins if they exist upstream
+# Downloads and replaces existing groovy files in the local directory with the latest function/pipeline files from HariSekhon/Jenkins if they exist upstream
 #
 # This allows one to maintain a local private copy of select functions, and get any updates periodically if wanted
 #
