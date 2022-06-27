@@ -1,6 +1,6 @@
 Jenkins Shared Library
 ======================
 
-Groovy + Pipeline code to be reused between Jenkins Pipelines
+Groovy Functions + Pipelines code to be reused between Jenkins Pipelines.
 
-See [Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for how to load and use this library directly from Jenkins.
+See top-level [README](https://github.com/HariSekhon/Jenkins/blob/master/README.md) for documentation.
