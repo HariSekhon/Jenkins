@@ -19,8 +19,39 @@
 
 // Downloads Terraform binary to $HOME/bin if run as a user, or /usr/local/bin if run as root
 
+// Adapted from DevOps Bash Tools setup/install_terraform.sh, install_binary.sh, install_packages.sh and lib/utils.sh
+
 def call(version) {
-  timeout(time: 3, unit: 'MINUTES') {
-    installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
+  timeout(time: 5, unit: 'MINUTES') {
+
+    installPackages(['curl', 'unzip'])
+
+    withEnv(["VERSION=$version"]){
+      sh '''
+        set -eux
+
+        # adapted from DevOps Bash tools lib/utils.sh am_root() function
+        if [ "${EUID:-${UID:-$(id -u)}}" -eq 0 ]; then
+          destination=/usr/local/bin
+        else
+          destination=~/bin
+        fi
+
+        # adapted from DevOps Bash tools lib/utils.sh get_os() and get_arch() functions
+        os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        arch="$(uname -m)"
+        if [ "$arch" = x86_64 ]; then
+          arch=amd64
+        fi
+
+        url="https://releases.hashicorp.com/terraform/$VERSION/terraform_${VERSION}_${os}_${arch}.zip"
+
+        curl -sSLf -o terraform.zip "$url"
+
+        unzip terraform.zip
+
+        mv -v terraform "$destination/"
+      '''
+    }
   }
 }
