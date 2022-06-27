@@ -75,8 +75,9 @@ for filename in "${filelist[@]}"; do
                 comment_char="//"
             fi
             if [[ "$comment_char" =~ [#/] ]]; then
+                echo "$comment_char"
                 echo "$comment_char copied from $url/$filename"
-                echo
+                echo "$comment_char"
             fi
 
             #sed 's|//.*|| ; /^[[:space:]]*$/d' "$tmp"
