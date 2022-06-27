@@ -33,13 +33,13 @@ def call(packages=[]){
           sudo=sudo
         fi
 
-        if type -P apt-get >/dev/null; then
+        if command -v apt-get >/dev/null; then
           $sudo apt-get update
           $sudo apt-get install -y $PACKAGES
-        elif type -P apk >/dev/null; then
+        elif command -v apk >/dev/null; then
           $sudo apk update
           $sudo apk add $PACKAGES
-        elif type -P yum >/dev/null; then
+        elif command -v yum >/dev/null; then
           $sudo yum install -y $PACKAGES
         fi
       '''
