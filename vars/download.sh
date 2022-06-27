@@ -56,8 +56,10 @@ if [ $# -eq 0 ]; then
 fi
 
 for filename in "${filelist[@]}"; do
-    if curl -sf "$url/$filename" > "$tmp" ||
-       curl -sf "$url/$filename.groovy" > "$tmp"; then
+    if ! [[ "$filename" =~ \. ]]; then
+        filename+=".groovy"
+    fi
+    if curl -sf "$url/$filename" > "$tmp" > "$tmp"; then
         {
             echo "// copied from $url/${filename%.groovy}.groovy"
             echo
