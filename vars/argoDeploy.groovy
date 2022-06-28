@@ -48,15 +48,19 @@ def call(app, timeoutMinutes=10){
                 set -euxo pipefail
 
                 # might cause performance issues and 504 timeouts
+                #
+                #   https://github.com/argoproj/argo-cd/issues/9701
+                #
                 #argocd app get  "$APP" --grpc-web --hard-refresh
                 #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
-                # workaround to avoid issue: https://github.com/argoproj/argo-cd/issues/5592
                 #argocd app sync "$APP" --grpc-web --force
                 #argocd app wait "$APP" --sync --health --grpc-web --timeout "$TIMEOUT_SECONDS"
 
+                # workaround for issue: https://github.com/argoproj/argo-cd/issues/5592
                 argocd --grpc-web app get --refresh "$APP" > /dev/null
 
+                # workaround for issue: https://github.com/argoproj/argo-cd/issues/6013
                 argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
                 argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
                 argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
