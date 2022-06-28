@@ -27,6 +27,7 @@ def call(timeoutMinutes=2){
       echo "$label"
       sh (
         label: "$label",
+        // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
         script: '''#!/usr/bin/env bash
           set -euxo pipefail
           export CLOUDSDK_CORE_DISABLE_PROMPTS=1
