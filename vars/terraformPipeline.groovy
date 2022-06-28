@@ -175,7 +175,7 @@ def call(Map args = [
       //  }
       //}
 
-      stage('Logins') {
+      stage('Auth') {
         // can't inject the passed in env var before this is evaluated, ends up skipping stage
         //stages {
         //  stage('GCP Activate Service Account') {
