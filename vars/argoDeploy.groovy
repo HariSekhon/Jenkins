@@ -51,9 +51,11 @@ def call(app, timeoutMinutes=10){
                 #argocd app get  "$APP" --grpc-web --hard-refresh
                 #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
-                argocd app sync "$APP" --grpc-web --force
+                # workaround to avoid issue: https://github.com/argoproj/argo-cd/issues/5592
+                #argocd app sync "$APP" --grpc-web --force
+                argocd --grpc-web app get --refresh "$APP" > /dev/null
 
-                argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS"
+                argocd app wait "$APP" --sync --health --grpc-web --timeout "$TIMEOUT_SECONDS"
               '''
             )
           }
