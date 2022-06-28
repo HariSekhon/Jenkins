@@ -31,6 +31,7 @@ def call(credential="$GCP_SERVICEACCOUNT_KEY", timeoutMinutes=1){
       withEnv(["GCP_SERVICEACCOUNT_KEY=$credential"]){
         sh (
           label: "$label",
+          // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
           script: '''#!/usr/bin/env bash
             set -euxo pipefail
             if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
