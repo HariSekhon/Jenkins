@@ -60,6 +60,15 @@ if [ $# -eq 0 ]; then
     filelist=(*.groovy)
 fi
 
+if [ -d "$checkout" ]; then
+    # only allow the use of the checkout if it's really the original origin
+    pushd "$checkout" >/dev/null
+    if ! git remote -v 2>/dev/null | grep -qi 'origin.*harisekhon'; then
+        checkout=""
+    fi
+    popd >/dev/null
+fi
+
 for filename in "${filelist[@]}"; do
     if ! [[ "$filename" =~ \. ]]; then
         filename+=".groovy"
