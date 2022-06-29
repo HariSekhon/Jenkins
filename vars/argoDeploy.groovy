@@ -63,7 +63,8 @@ def call(app, timeoutMinutes=10){
                 # workaround for issue: https://github.com/argoproj/argo-cd/issues/6013
                 argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
                 argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
-                argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
+                # HPAs transition to degraded, causing deployments to fail even on retry
+                #argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
               '''
             )
           }
