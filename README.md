@@ -79,7 +79,7 @@ pipeline {
         gitKustomizeImage(['$GCR_REGISTRY/$GCR_PROJECT/app1', '$GCR_REGISTRY/$GCR_PROJECT/app2'])
 
         // deploy to Kubernetes via ArgoCD
-        argoDeploy()
+        argoDeploy('my-app')
 
         // see groovy files under vars/ for more documentation, details and many more useful functions
       }
