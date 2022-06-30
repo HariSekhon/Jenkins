@@ -43,7 +43,7 @@ def call(Map args = [
                       jobs: [],
                       dir: '.',
                       checkout: [],
-                      cron: 'H * * * *',
+                      cron: 'H */3 * * *',
                       creds: [],
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
@@ -69,7 +69,7 @@ def call(Map args = [
 
     // backup to catch GitHub -> Jenkins webhook failures
     triggers {
-      cron("${args.get('cron', 'H * * * *')}")
+      cron("${args.get('cron', 'H */3 * * *')}")
     }
 
     environment {
