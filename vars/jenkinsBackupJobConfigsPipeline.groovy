@@ -29,8 +29,8 @@
 //
 //      jenkinsBackupJobConfigsPipeline(
 //        dir: '/jobs',
-//        creds: [string(credentialsId: 'hari-api-token', variable: 'JENKINS_API_TOKEN')],
 //        env: ["JENKINS_USER_ID=hari.sekhon@domain.co.uk"],
+//        creds: [string(credentialsId: 'hari-api-token', variable: 'JENKINS_API_TOKEN')],
 //        container: 'gcloud-sdk',
 //        yamlFile: 'ci/jenkins-pod.yaml'
 //      )
