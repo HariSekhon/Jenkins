@@ -37,12 +37,14 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(Map args = [dockerImages: [],
-                     repo: '',
-                     dir: '',
-                     version: "$GIT_COMMIT",
-                     branch: "main",
-                     timeoutMinutes: 5]){
+def call(Map args = [
+                      dockerImages: [],
+                      repo: '',
+                      dir: '',
+                      version: "$GIT_COMMIT",
+                      branch: "main",
+                      timeoutMinutes: 5
+                     ]){
   // these get blocked in Jenkins Groovy Sandbox
   //if (!args.dockerImages) {
   //  throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
@@ -74,8 +76,8 @@ def call(Map args = [dockerImages: [],
           sh (
             label: "$label",
             // needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list
-            script: """#!/usr/bin/env bash
-              set -euxo pipefail
+            script: """
+              set -eux
 
               # copy local repo's user and email setting from this pipeline to the cloned repo
               # if this wasn't set then it'll be set up to sane defaults by gitSetup() function called above
