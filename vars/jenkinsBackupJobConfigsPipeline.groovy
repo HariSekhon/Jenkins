@@ -203,13 +203,16 @@ def call(Map args = [
           dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
-                sh (
-                  label: 'Git Push',
-                  script: '''
-                    set -eux
-                    git push origin HEAD:"${GIT_BRANCH#origin/}"
-                  '''
-                )
+                // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
+                sshagent (credentials: ['github-ssh-key']) {
+                  sh (
+                    label: 'Git Push',
+                    script: '''
+                      set -eux
+                      git push origin HEAD:"${GIT_BRANCH#origin/}"
+                    '''
+                  )
+                }
               }
             }
           }
