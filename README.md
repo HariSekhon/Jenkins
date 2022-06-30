@@ -108,7 +108,6 @@ terraformPipeline(version: '1.1.7',
 
 Run the `gitMergePipeline` to automatically merge one branch into another, for example to automatically backport between environment branches such as any hotfixes in Staging to Dev:
 
-Jenkinsfile:
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
@@ -125,7 +124,6 @@ Useful because even with Jenkinsfile pipelines, the job config wrapper is not us
 
 If you wanted to recreate the job pointing to the Jenkinsfile, you'd need the job.xml config.
 
-Jenkinsfile:
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
