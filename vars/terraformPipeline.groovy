@@ -202,6 +202,14 @@ def call(Map args = [
         }
       }
 
+      stage('Install Packages') {
+        steps {
+          withEnv(args.get('env', [])){
+            installPackages(['curl', 'unzip'])
+          }
+        }
+      }
+
       stage('Download Terraform Version') {
         steps {
           withEnv(args.get('env', [])){
