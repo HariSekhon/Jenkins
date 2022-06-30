@@ -19,9 +19,30 @@
 
 // call this from the repo where you want to back up and commit the Jenkins job configurations to
 
+// Usage in Jenkinsfile:
+//
+//    // import this library directly from github:
+//
+//      @Library('github.com/harisekhon/jenkins@master') _
+//
+//    // runs pipeline using Terraform 1.2.3, plans for any branch but only applies for branch 'master' with required approval, uses 'gcloud-sdk' container specified in 'ci/jenkins-pod.yaml' from the root of the repo:
+//
+//      jenkinsBackupJobConfigsPipeline(
+//        dir: '/jobs',
+//        creds: [string(credentialsId: 'hari-api-token', variable: 'JENKINS_API_TOKEN')],
+//        env: ["JENKINS_USER_ID=hari.sekhon@domain.co.uk"],
+//        container: 'gcloud-sdk',
+//        yamlFile: 'ci/jenkins-pod.yaml'
+//      )
+//
+//    // for explicit Git checkout settings or to prototype this pipeline call from Jenkins UI without having to push through SCM, add this parameter:
+//
+//       checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-ssh-key', url: 'git@github.com:myorg/jenkins']] ]
+
 def call(Map args = [
                       dir: '.',
                       checkout: [],
+                      cron: 'H/10 * * * *',
                       creds: [],
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
@@ -47,7 +68,7 @@ def call(Map args = [
 
     // backup to catch GitHub -> Jenkins webhook failures
     triggers {
-      pollSCM('H/10 * * * *')
+      cron("${args.get('cron', 'H/10 * * * *')}")
     }
 
     environment {
@@ -127,7 +148,7 @@ def call(Map args = [
 
       stage('Download Jenkins Job Configurations') {
         steps {
-          dir("$dir"){
+          dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
                 jenkinsJobsDownloadConfigurations()
@@ -139,7 +160,7 @@ def call(Map args = [
 
       stage('Git Commit') {
         steps {
-          dir("$dir"){
+          dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
                 sh (
@@ -164,7 +185,7 @@ def call(Map args = [
 
       stage('Git Push') {
         steps {
-          dir("$dir"){
+          dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
                 sh (
