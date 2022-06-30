@@ -19,27 +19,34 @@
 
 // inspired by jenkins_jobs_download_configs_cli.sh in the adjacent DevOps Bash tools repo
 
+// this function
+//  takes 2 mins 22 secs to download 49 Jenkins jobs
+// whereas jenkins_jobs_download_configs.sh from my DevOps Bash tools repo
+//  takes 0 mins 21 secs to download the configs for the same 49 Jenkins jobs
+// this must be due to overheads in Jenkins of starting a new shell and jar startup overheads multiplied by 49
+
 def call(jobs=[]) {
-  jobs.each{
-    withEnv(["JOB=$it"]){
-      sh (
-        label: "Download Jenkins Job Configuration: $it",
+  if(!jobs){
+      jobs = sh (
+        label: "List Jobs",
+        returnStdout: true,
         script: '''
           set -eux
-          jar=''
-          for path in ~/bin /usr/local/bin; do
-            if [ -f "$path/jenkins-cli.jar" ]; then
-              jar="$path/jenkins-cli.jar"
-              break
-            fi
-          done
-          if [ -z "$jar" ]; then
-            echo 'jenkins-cli.jar not found!'
-            exit 1
-          fi
-          java -jar "$jar" get-job "$JOB" > "$JOB.xml"
+          java -jar ~/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} list-jobs
+        '''
+      ).tokenize('\n')
+  }
+  echo "Downloading configurations for ${jobs.size()} Jenkins jobs"
+  jobs.eachWithIndex{ it, index ->
+    withEnv(["JOB=$it"]){
+      sh (
+        // zero indexed
+        label: "${index+1} Download Jenkins Job Configuration: $it",
+        script: '''
+          set -eux
+          java -jar ~/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} get-job "$JOB" > "$JOB.xml"
           echo >> "$JOB.xml"
-          echo "Downloaded config to file: $PWD/{job}.xml"
+          echo "Downloaded config to file: $PWD/$JOB.xml"
         '''
       )
     }
