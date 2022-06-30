@@ -418,6 +418,9 @@ pipeline {
         beforeAgent true  // don't spin up a K8s pod if we don't need to execute
         branch '*/staging'
         //changeset 'src/**/*.java'  // only run this stage if Java code changed
+        //triggeredBy 'TimerTrigger'
+        //triggeredBy 'GitLabWebHookCause'
+        //triggeredBy cause: 'UserIdCause' // cause can be specified in a triggering script such as jenkins_job_trigger.sh in the adjacent DevOps Bash tools repo
       }
 
       steps {
