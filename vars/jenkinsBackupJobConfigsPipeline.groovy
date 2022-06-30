@@ -21,6 +21,7 @@
 
 def call(Map args = [
                       dir: '.',
+                      checkout: [],
                       creds: [],
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
