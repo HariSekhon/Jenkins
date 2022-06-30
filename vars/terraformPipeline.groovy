@@ -205,7 +205,9 @@ def call(Map args = [
       stage('Install Packages') {
         steps {
           withEnv(args.get('env', [])){
-            installPackages(['curl', 'unzip'])
+            timeout(time: 5, unit: 'MINUTES') {
+              installPackages(['curl', 'unzip'])
+            }
           }
         }
       }
