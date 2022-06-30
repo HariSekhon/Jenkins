@@ -117,11 +117,13 @@ gitMergePipeline('staging', 'dev')
 
 That was stupidly simple wasn't it. This is the power of shared libraries.
 
-## Jenkins Job Configurations Backups
+## Jenkins Job Configuration Backups
 
 Run the `jenkinsBackupJobConfigsPipeline` to periodically commit all Jenkins job configurations to Git.
 
-Useful because even with Jenkinsfile pipelines, the job config wrapper is not usually revision controlled. If you wanted to recreate the job, you'd need this XML config.
+Useful because even with Jenkinsfile pipelines, the job config wrapper is not usually revision controlled.
+
+If you wanted to recreate the job pointing to the Jenkinsfile, you'd need the job.xml config.
 
 Jenkinsfile:
 ```groovy
