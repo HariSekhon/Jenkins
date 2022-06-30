@@ -31,8 +31,8 @@ def call(fromBranch, toBranch){
             echo "$label"
             sh (
               label: "$label",
-              script: '''#!/usr/bin/env bash
-                set -euxo pipefail
+              script: '''
+                set -eux
 
                 git status
 
