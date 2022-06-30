@@ -41,6 +41,9 @@ def call(packages=[]){
           $sudo apk add $PACKAGES
         elif command -v yum >/dev/null; then
           $sudo yum install -y $PACKAGES
+        else
+          echo "ERROR: No recognized package manager found to install packages with"
+          exit 1
         fi
       '''
     }
