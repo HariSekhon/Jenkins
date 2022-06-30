@@ -28,18 +28,11 @@ def call() {
       script: '''
         set -eux
 
-        # adapted from DevOps Bash tools lib/utils.sh am_root() function
-        if [ "${EUID:-${UID:-$(id -u)}}" -eq 0 ]; then
-          destination=/usr/local/bin
-        else
-          destination=~/bin
-        fi
-
         url="$JENKINS_URL/jnlpJars/jenkins-cli.jar"
 
-        curl -sSLf -o jenkins-cli.jar "$url"
-
-        mv -v jenkins-cli.jar "$destination/"
+        if ! [ -f ~/jenkins-cli.jar ]; then
+          curl -sSLf -o ~/jenkins-cli.jar "$url"
+        fi
       '''
     )
   }
