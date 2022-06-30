@@ -92,8 +92,6 @@ pipeline {
 
 ## Terraform CI/CD
 
-[terraformPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/terraformPipeline.groovy)
-
 Handles all logins, Terraform fmt, validate, plan, approval, apply etc.
 
 ```groovy
@@ -108,8 +106,6 @@ terraformPipeline(version: '1.1.7',
 
 ## Git Merges & Backports
 
-[gitMergePipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/gitMergePipeline.groovy)
-
 Automatically merge one branch into another upon any change eg. backport between environment branches such as any hotfixes in Staging to Dev:
 
 ```groovy
@@ -119,8 +115,6 @@ gitMergePipeline('staging', 'dev')
 ```
 
 ## Jenkins Job Configuration Backups
-
-[jenkinsBackupJobConfigsPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/jenkinsBackupJobConfigsPipeline.groovy)
 
 Download and commit all Jenkins job configurations to the calling Git repo every 3 hours (configurable via optional `cron: '...'` parameter)
 
