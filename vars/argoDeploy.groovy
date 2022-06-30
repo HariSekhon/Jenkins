@@ -54,11 +54,12 @@ def call(app, timeoutMinutes=10){
                 #argocd app get  "$APP" --grpc-web --hard-refresh
                 #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
-                #argocd app sync "$APP" --grpc-web --force
-                #argocd app wait "$APP" --sync --health --grpc-web --timeout "$TIMEOUT_SECONDS"
-
                 # workaround for issue: https://github.com/argoproj/argo-cd/issues/5592
-                argocd --grpc-web app get --refresh "$APP" > /dev/null
+                # doesn't work because replacing sync with this relies on auto-sync being enabled
+                #argocd --grpc-web app get "$APP" --refresh > /dev/null
+                argocd app sync "$APP" --grpc-web --force
+
+                #argocd app wait "$APP" --sync --health --grpc-web --timeout "$TIMEOUT_SECONDS"
 
                 # workaround for issue: https://github.com/argoproj/argo-cd/issues/6013
                 argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
