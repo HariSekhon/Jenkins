@@ -90,9 +90,11 @@ pipeline {
 }
 ```
 
-## Terraform
+## Terraform CI/CD
 
-Run the `terraformPipeline` for a reusable parameterized Terraform CI/CD -  handles all logins, Terraform fmt, validate, plan, approval, apply etc.
+[terraformPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/terraformPipeline.groovy)
+
+Handles all logins, Terraform fmt, validate, plan, approval, apply etc.
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
@@ -106,7 +108,9 @@ terraformPipeline(version: '1.1.7',
 
 ## Git Merges & Backports
 
-Run the `gitMergePipeline` to automatically merge one branch into another, for example to automatically backport between environment branches such as any hotfixes in Staging to Dev:
+[gitMergePipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/gitMergePipeline.groovy)
+
+Automatically merge one branch into another upon any change eg. backport between environment branches such as any hotfixes in Staging to Dev:
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
@@ -114,15 +118,11 @@ Run the `gitMergePipeline` to automatically merge one branch into another, for e
 gitMergePipeline('staging', 'dev')
 ```
 
-That was stupidly simple wasn't it. This is the power of shared libraries.
-
 ## Jenkins Job Configuration Backups
 
-Run the `jenkinsBackupJobConfigsPipeline` to periodically commit all Jenkins job configurations to Git.
+[jenkinsBackupJobConfigsPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/jenkinsBackupJobConfigsPipeline.groovy)
 
-Useful because even with Jenkinsfile pipelines, the job config wrapper is not usually revision controlled.
-
-If you wanted to recreate the job pointing to the Jenkinsfile, you'd need the job.xml config.
+Download and commit all Jenkins job configurations to the calling Git repo every 3 hours (configurable via optional `cron: '...'` parameter)
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
@@ -131,6 +131,7 @@ jenkinsBackupJobConfigsPipeline(
   dir: 'jobs',  // directory in current repo to download and git commit to
   env: ["JENKINS_USER_ID=hari@mydomain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],  // -webSocket gets through reverse proxies like Kubernetes Ingress
   creds: [string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')],
+  container: 'gcloud-sdk')
 )
 ```
 
