@@ -29,7 +29,7 @@
 //
 //      jenkinsBackupJobConfigsPipeline(
 //        dir: '/jobs',
-//        env: ["JENKINS_USER_ID=hari.sekhon@domain.co.uk"],
+//        env: ["JENKINS_USER_ID=hari.sekhon@domain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],
 //        creds: [string(credentialsId: 'hari-api-token', variable: 'JENKINS_API_TOKEN')],
 //        container: 'gcloud-sdk',
 //        yamlFile: 'ci/jenkins-pod.yaml'
@@ -40,9 +40,10 @@
 //       checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-ssh-key', url: 'git@github.com:myorg/jenkins']] ]
 
 def call(Map args = [
+                      jobs: [],
                       dir: '.',
                       checkout: [],
-                      cron: 'H/10 * * * *',
+                      cron: 'H * * * *',
                       creds: [],
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
@@ -68,11 +69,11 @@ def call(Map args = [
 
     // backup to catch GitHub -> Jenkins webhook failures
     triggers {
-      cron("${args.get('cron', 'H/10 * * * *')}")
+      cron("${args.get('cron', 'H * * * *')}")
     }
 
     environment {
-      DIR = "$args.dir"
+      DIR = "${args.get('dir', '.')}"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
 
@@ -102,6 +103,7 @@ def call(Map args = [
       stage ('Setup') {
         steps {
           gitSetup()
+          sshKnownHostsGitHub()
         }
       }
 
@@ -119,7 +121,7 @@ def call(Map args = [
         steps {
           withEnv(args.get('env', [])){
             timeout(time: 5, unit: 'MINUTES') {
-              installPackages(['java', 'curl'])
+              installPackages(['default-jdk', 'curl'])
             }
           }
         }
@@ -139,7 +141,10 @@ def call(Map args = [
             withCredentials(args.get('creds', [])){
               sh (
                 label: 'Version',
-                script: 'java -jar jenkins-cli.jar version'
+                script: '''
+                  set -eux
+                  java -jar ~/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} version
+                '''
               )
             }
           }
@@ -151,7 +156,7 @@ def call(Map args = [
           dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
-                jenkinsJobsDownloadConfigurations()
+                jenkinsJobsDownloadConfigurations(args.get('jobs', []))
               }
             }
           }
@@ -168,12 +173,14 @@ def call(Map args = [
                   script: '''
                     set -eux
 
-                    git add -A
+                    git add *.xml
 
                     git diff
 
+                    git status
+
                     if ! git diff-index --quiet HEAD; then
-                      git commit -m "jenkinsBackupJobsPipeline: committed Jenkins Job Configurations"
+                      git commit -m "$JOB_NAME: committed Jenkins Job Configurations"
                     fi
                   '''
                 )
@@ -192,7 +199,7 @@ def call(Map args = [
                   label: 'Git Push',
                   script: '''
                     set -eux
-                    git push
+                    git push origin HEAD:"${GIT_BRANCH#origin/}"
                   '''
                 )
               }
