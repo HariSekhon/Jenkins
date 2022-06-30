@@ -28,8 +28,8 @@ def call() {
   echo "$label"
   sh (
     label: "$label",
-    script: '''#!/usr/bin/env bash
-      set -euxo pipefail
+    script: '''
+      set -eux
 
       GIT_USERNAME="${GIT_USERNAME:-${GIT_USER:-Jenkins}}"
       GIT_EMAIL="${GIT_EMAIL:-jenkins@noreply}"
