@@ -108,6 +108,7 @@ terraformPipeline(version: '1.1.7',
 
 Run the `gitMergePipeline` to automatically merge one branch into another, for example to automatically backport between environment branches such as any hotfixes in Staging to Dev:
 
+Jenkinsfile:
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
@@ -115,6 +116,23 @@ gitMergePipeline('staging', 'dev')
 ```
 
 That was stupidly simple wasn't it. This is the power of shared libraries.
+
+## Jenkins Job Configurations Backups
+
+Run the `jenkinsBackupJobConfigsPipeline` to periodically commit all Jenkins job configurations to Git.
+
+Useful because even with Jenkinsfile pipelines, the job config wrapper is not usually revision controlled. If you wanted to recreate the job, you'd need this XML config.
+
+Jenkinsfile:
+```groovy
+@Library('github.com/harisekhon/jenkins@master') _
+
+jenkinsBackupJobConfigsPipeline(
+  dir: 'jobs',  // directory in current repo to download and git commit to
+  env: ["JENKINS_USER_ID=hari@mydomain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],  // -webSocket gets through reverse proxies like Kubernetes Ingress
+  creds: [string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')],
+)
+```
 
 ## More Documentation
 
