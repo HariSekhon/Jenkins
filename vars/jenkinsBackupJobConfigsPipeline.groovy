@@ -63,7 +63,7 @@ def call(Map args = [
       buildDiscarder(logRotator(numToKeepStr: '100'))
       disableConcurrentBuilds()
       timestamps()
-      timeout(time: 1, unit: 'HOURS')
+      timeout(time: 30, unit: 'MINUTES')
     }
 
     // backup to catch GitHub -> Jenkins webhook failures
