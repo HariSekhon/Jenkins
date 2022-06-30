@@ -102,6 +102,7 @@ def call(Map args = [
 
       stage ('Setup') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           gitSetup()
           sshKnownHostsGitHub()
         }
@@ -109,6 +110,7 @@ def call(Map args = [
 
       stage('Auth Env Check') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env){
             withCredentials(args.get('creds', [])){
               jenkinsCLICheckEnvVars()
@@ -119,6 +121,7 @@ def call(Map args = [
 
       stage('Install Packages') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.get('env', [])){
             timeout(time: 5, unit: 'MINUTES') {
               installPackages(['default-jdk', 'curl'])
@@ -129,6 +132,7 @@ def call(Map args = [
 
       stage('Download Jenkins CLI') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.get('env', [])){
             downloadJenkinsCLI()
           }
@@ -137,6 +141,7 @@ def call(Map args = [
 
       stage('Jenkins CLI Version') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.get('env', [])){
             withCredentials(args.get('creds', [])){
               sh (
@@ -153,6 +158,7 @@ def call(Map args = [
 
       stage('Download Jenkins Job Configurations') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
@@ -165,6 +171,7 @@ def call(Map args = [
 
       stage('Git Commit') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
@@ -192,6 +199,7 @@ def call(Map args = [
 
       stage('Git Push') {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
             withEnv(args.get('env', [])){
               withCredentials(args.get('creds', [])){
