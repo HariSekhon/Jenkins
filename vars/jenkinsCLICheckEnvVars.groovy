@@ -20,12 +20,13 @@
 def call() {
   sh (
     label: 'Check Environment Variables for Jenkins CLI',
-    script: '''
+    script: '''#!/usr/bin/env bash
       set -eux
-      for _ in JENKINS_URL JENKINS_USER_ID JENKINS_API_TOKEN; do
-        echo "Checking $_"
-        if [ -z "${!_:-}" ]; then
-          echo "$_ is not set"
+      # doesn't work with _
+      for var in JENKINS_URL JENKINS_USER_ID JENKINS_API_TOKEN; do
+        echo "Checking $var"
+        if [ -z "${!var:-}" ]; then
+          echo "$var is not set"
           exit 1
         fi
       done
