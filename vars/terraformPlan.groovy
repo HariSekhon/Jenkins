@@ -17,7 +17,7 @@
 //                          T e r r a f o r m   P l a n
 // ========================================================================== //
 
-def call(args='' timeoutMinutes=10){
+def call(args='', timeoutMinutes=10){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Plan - $unique"
