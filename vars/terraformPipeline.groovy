@@ -252,20 +252,20 @@ def call(Map args = [
       //  echo e.toString()
       //}
 
-      stage('Terraform Validate') {
-        steps {
-          withEnv(args.env ?: []){
-            terraformValidate()
-          }
-        }
-      }
-
       stage('Terraform Init') {
         steps {
           withEnv(args.env ?: []){
             withCredentials(args.creds ?: []){
               terraformInit()
             }
+          }
+        }
+      }
+
+      stage('Terraform Validate') {
+        steps {
+          withEnv(args.env ?: []){
+            terraformValidate()
           }
         }
       }
