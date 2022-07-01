@@ -22,7 +22,7 @@
 // $ACR_NAME must be set in the calling environment
 
 def call() {
-	// configures docker config with a token
+  // configures docker config with a token
   sh '''
     set -eux
     az acr login --name "$ACR_NAME"
