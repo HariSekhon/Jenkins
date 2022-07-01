@@ -17,7 +17,11 @@
 //                      D o w n l o a d   T e r r a f o r m
 // ========================================================================== //
 
-// Downloads Terraform binary to $HOME/bin if run as a user, or /usr/local/bin if run as root
+// Downloads Terraform binary to $HOME/bin
+
+// Won't overwrite an existing ~/bin/terraform unless the 'overwrite: true' arg is given
+
+// Designed for Kubernetes ephemeral agents rather than old style long running agents, in which case it'd need to be modified with a unique destination per version, although I'd recommend using tfenv instead in that case
 
 // Adapted from DevOps Bash Tools setup/install_terraform.sh, install_binary.sh, install_packages.sh and lib/utils.sh
 
