@@ -17,7 +17,7 @@
 //                     I n s t a l l   O S   P a c k a g e s
 // ========================================================================== //
 
-// Adapted from the more advanced DevOps Bash tools repo's install_packages.sh scripts
+// Adapted from the more advanced DevOps Bash tools repo's install_packages.sh and supporting scripts
 
 def call(packages=[]){
   timeout(time: 5, unit: 'MINUTES') {
