@@ -52,7 +52,12 @@ def call(Map args = [
                       yamlFile: 'ci/jenkins-pod.yaml'
                      ] ){
 
+  args.version ?: error('Terraform version not specified')
+  args.dir = args.dir ?: '.'
   args.apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
+  args.args = args.args ?: ''
+  args.env = args.env ?: []
+  args.creds = args.creds ?: []
 
   pipeline {
 
@@ -111,8 +116,8 @@ def call(Map args = [
     }
 
     environment {
-      TERRAFORM_DIR = "${args.dir ?: '.'}"
-      TERRAFORM_VERSION = "${args.version ?: error('Terraform version not specified')}"
+      TERRAFORM_DIR = "$args.dir"
+      TERRAFORM_VERSION = "$args.version"
       TF_IN_AUTOMATION = 1
       APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
@@ -129,7 +134,7 @@ def call(Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             sh 'whoami'
             script {
               // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
@@ -204,8 +209,8 @@ def call(Map args = [
         //  }
         //}
         steps {
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env){
+            withCredentials(args.creds){
               // tries everything
               logins()
               // or call something simpler if you know what environment you're executing in
@@ -217,7 +222,7 @@ def call(Map args = [
 
       stage('Install Packages') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             timeout(time: 5, unit: 'MINUTES') {
               installPackages(['curl', 'unzip'])
             }
@@ -227,7 +232,7 @@ def call(Map args = [
 
       stage('Download Terraform Version') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             downloadTerraform("$TERRAFORM_VERSION")
           }
         }
@@ -235,7 +240,7 @@ def call(Map args = [
 
       stage('Terraform Version') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             sh 'terraform version'
           }
         }
@@ -245,7 +250,7 @@ def call(Map args = [
         stage('Terraform Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              withEnv(args.env ?: []){
+              withEnv(args.env){
                 terraformFmt()
               }
             }
@@ -257,8 +262,8 @@ def call(Map args = [
 
       stage('Terraform Init') {
         steps {
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env){
+            withCredentials(args.creds){
               terraformInit()
             }
           }
@@ -267,7 +272,7 @@ def call(Map args = [
 
       stage('Terraform Validate') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             terraformValidate()
           }
         }
@@ -275,8 +280,8 @@ def call(Map args = [
 
       stage('Terraform Plan') {
         steps {
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env){
+            withCredentials(args.creds){
               terraformPlan(args.args)
             }
           }
@@ -297,7 +302,7 @@ def call(Map args = [
         }
         steps {
           //approval(args.approval_args)
-          withEnv(args.env ?: []){
+          withEnv(args.env){
             approval()
           }
         }
@@ -315,8 +320,8 @@ def call(Map args = [
           }
         }
         steps {
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env){
+            withCredentials(args.creds){
               terraformApply(args.args)
             }
           }
