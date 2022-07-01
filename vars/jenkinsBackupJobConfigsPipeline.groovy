@@ -148,7 +148,7 @@ def call(Map args = [
                 label: 'Version',
                 script: '''
                   set -eux
-                  java -jar "${JENKINS_CLI_JAR:-~/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} version
+                  java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} version
                 '''
               )
             }
