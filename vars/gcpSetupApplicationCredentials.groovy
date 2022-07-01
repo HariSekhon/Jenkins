@@ -23,12 +23,12 @@
 //     - base64 encoded GCP_SERVICEACCOUNT_KEY environment variable or passed as a first argument
 //     - GOOGLE_APPLICATION_CREDENTIALS environment variable set to a path to store the key - see top level Jenkinsfile template for a good example path
 
-def call(credential="$GCP_SERVICEACCOUNT_KEY", timeoutMinutes=1){
+def call(credentials=[], timeoutMinutes=1){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Generating GCP Application Credential Key'
       echo "$label"
-      withEnv(["GCP_SERVICEACCOUNT_KEY=$credential"]){
+      withCredentials(args.get('creds', [])){
         sh (
           label: "$label",
           // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
