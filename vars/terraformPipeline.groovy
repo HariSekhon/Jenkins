@@ -43,6 +43,7 @@
 def call(Map args = [
                       version: 'latest',
                       dir: '.',
+                      args: '',
                       apply_branch_pattern: '^(.*/)?(main|master)$',
                       env: [],
                       checkout: [],
@@ -275,7 +276,7 @@ def call(Map args = [
         steps {
           withEnv(args.env ?: []){
             withCredentials(args.env ?: []){
-              terraformPlan()
+              terraformPlan(args.args)
             }
           }
         }
@@ -315,7 +316,7 @@ def call(Map args = [
         steps {
           withEnv(args.env ?: []){
             withCredentials(args.creds ?: []){
-              terraformApply()
+              terraformApply(args.args)
             }
           }
         }
