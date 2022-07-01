@@ -25,11 +25,11 @@
 //
 // whereas jenkins_jobs_download_configs.sh from my DevOps Bash tools repo
 //
-//  takes 0 mins 21 secs to download same 49 job configs
+//  takes 0 mins 21 secs to download same 49 job configs (8 secs user, 6 secs sys)
 //
 // nearly half of this is accounted for in JVM startup overheads of jenkins-cli.jar since jenkins_jobs_download_configs_cli.sh
 //
-//  takes 0 mins 52 secs for the same as above
+//  takes 0 mins 52 secs for the same as above (1m08secs user, 7secs sys - meaning the JVM is > 1 CPU intensive compared to Rest API calls which are minor CPU)
 //
 // the rest of the speed loss must be Jenkins withEnv + new shell overheads of 'sh' x49
 
