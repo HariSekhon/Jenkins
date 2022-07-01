@@ -36,15 +36,22 @@ def call(timeoutMinutes=1){
           // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
           script: '''#!/usr/bin/env bash
             set -euxo pipefail
-            if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
-              keyfile="$GOOGLE_APPLICATION_CREDENTIALS"
-              mkdir -p -v "$(dirname "$keyfile")"
-              echo "Writing Google Application Credentials key file to '$keyfile'"
-              base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
-            else
+            if [ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
               echo '$GOOGLE_APPLICATION_CREDENTIALS is not set'
               exit 1
             fi
+            if [ -z "${GCP_SERVICEACCOUNT_KEY:-}" ]; then
+              echo '$GCP_SERVICEACCOUNT_KEY is not set'
+              exit 1
+            fi
+
+            keyfile="$GOOGLE_APPLICATION_CREDENTIALS"
+
+            mkdir -p -v "$(dirname "$keyfile")"
+
+            echo "Writing Google Application Credentials key file to '$keyfile'"
+
+            base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
           '''
         )
       }
