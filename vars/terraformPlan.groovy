@@ -17,7 +17,7 @@
 //                          T e r r a f o r m   P l a n
 // ========================================================================== //
 
-def call(timeoutMinutes=10){
+def call(args='' timeoutMinutes=10){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Plan - $unique"
@@ -45,7 +45,7 @@ def call(timeoutMinutes=10){
             echo "$label"
             sh (
               label: "$label",
-              script: 'terraform plan -out=plan.zip -input=false'  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
+              script: "terraform plan -out=plan.zip -input=false ${args}"  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
             )
           }
         }
