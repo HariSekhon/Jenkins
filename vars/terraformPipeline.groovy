@@ -114,7 +114,7 @@ def call(Map args = [
       //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
       // to pick up downloaded Terraform binary version first
-      // doesn't work if container runs as root because this evaluate to /home/jenkins/bin but inside stages you'd need /root/bin instead, and no point hacking /root/bin addition to the path because would break if container was run as any other user
+      // doesn't work if container runs as root because this evaluate to /home/jenkins/bin but inside stages you'd need /root/bin instead, and no point hacking /root/bin addition to the path because would break if container was run as any other user. Instead this is set from within the Environment stage now to be more accurate
       //PATH = "$HOME/bin:$PATH"
       //TF_LOG = "$DEBUG"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
