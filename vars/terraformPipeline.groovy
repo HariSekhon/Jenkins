@@ -112,6 +112,7 @@ def call(Map args = [
       TERRAFORM_DIR = "${args.dir ?: '.'}"
       TERRAFORM_VERSION = "${args.version ?: error('Terraform version not specified')}"
       TF_IN_AUTOMATION = 1
+      APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
       //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
@@ -283,7 +284,14 @@ def call(Map args = [
       stage('Approval') {
         when {
           beforeInput true
-          branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+          anyOf {
+            // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
+            branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+            // which is why we use an expression evaluation here
+            expression {
+              (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+            }
+          }
         }
         steps {
           //approval(args.approval_args)
@@ -295,7 +303,14 @@ def call(Map args = [
 
       stage('Terraform Apply') {
         when {
-          branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+          anyOf {
+            // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
+            branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+            // which is why we use an expression evaluation here
+            expression {
+              (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+            }
+          }
         }
         steps {
           withEnv(args.env ?: []){
