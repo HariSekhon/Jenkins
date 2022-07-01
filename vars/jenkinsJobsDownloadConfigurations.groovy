@@ -25,7 +25,7 @@
 //
 // whereas jenkins_jobs_download_configs.sh from my DevOps Bash tools repo
 //
-//  takes 0 mins 21 secs to download same 49 job configs (8 secs user, 6 secs sys)
+//  takes 0 mins 22 secs to download same 49 job configs (8 secs user, 6 secs sys)
 //
 // nearly half of this is accounted for in JVM startup overheads of jenkins-cli.jar since jenkins_jobs_download_configs_cli.sh
 //
