@@ -20,10 +20,12 @@
 // Requires:
 //
 //   - environment {} section at top level of Jenkinsfile with:
-//     - base64 encoded GCP_SERVICEACCOUNT_KEY environment variable or passed as a first argument
+//     - base64 encoded GCP_SERVICEACCOUNT_KEY environment variable
+//        or wrapped in something like
+//     - withCredentials([string(credentialsId: 'gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]){
 //     - GOOGLE_APPLICATION_CREDENTIALS environment variable set to a path to store the key - see top level Jenkinsfile template for a good example path
 
-def call(credentials=[], timeoutMinutes=1){
+def call(timeoutMinutes=1){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Generating GCP Application Credential Key'
