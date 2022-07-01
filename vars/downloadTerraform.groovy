@@ -27,37 +27,9 @@
 
 def call(version) {
   timeout(time: 5, unit: 'MINUTES') {
-    withEnv(["VERSION=$version"]){
-      sh (
-        label: "Download Terraform Version $version",
-        script: '''
-          set -eux
-
-          # adapted from DevOps Bash tools lib/utils.sh am_root() function
-          if [ "${EUID:-${UID:-$(id -u)}}" -eq 0 ]; then
-            destination=/usr/local/bin
-          else
-            destination=~/bin
-          fi
-
-          # adapted from DevOps Bash tools lib/utils.sh get_os() and get_arch() functions
-          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
-          arch="$(uname -m)"
-          if [ "$arch" = x86_64 ]; then
-            arch=amd64
-          fi
-
-          url="https://releases.hashicorp.com/terraform/$VERSION/terraform_${VERSION}_${os}_${arch}.zip"
-
-          curl -sSLf -o terraform.zip "$url"
-
-          unzip terraform.zip
-
-          chmod +x terraform
-
-          mv -v terraform "$destination/"
-        '''
-      )
-    }
+    installBinary(
+      binary: 'terraform',
+      url: "https://releases.hashicorp.com/terraform/$version/terraform_${version}_{os}_{arch}.zip"
+    )
   }
 }
