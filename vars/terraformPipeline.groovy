@@ -127,7 +127,9 @@ def call(Map args = [
           withEnv(args.get('env', [])){
             sh 'whoami'
             echo "Setting PATH to include ${env.HOME}/bin"
-            env.PATH = "${env.HOME}/bin:${env.PATH}"
+            script {
+              env.PATH = "${env.HOME}/bin:${env.PATH}"
+            }
             printEnv()
           }
         }
