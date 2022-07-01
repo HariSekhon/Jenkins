@@ -129,7 +129,7 @@ def call(Map args = [
             script {
               // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
               // get accurate $HOME from running container
-              home = sh(returnStdout: true, script: 'echo "$HOME"')
+              home = sh(returnStdout: true, script: 'echo "$HOME"').trim()
               echo "Setting PATH to include $home/bin"
               env.PATH = "$home/bin:${env.PATH}"
             }
