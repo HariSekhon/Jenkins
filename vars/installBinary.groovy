@@ -113,7 +113,6 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           echo
 
           destination="$destination/${download_file##*/}"
-          destination="${destination%%.$$}"
           # if there are any -darwin-amd64 or -amd64-darwin suffixes remove them either way around (this is why $os is stripped before and after)
           destination="${destination%%-$os}"
           destination="${destination%%_$os}"
