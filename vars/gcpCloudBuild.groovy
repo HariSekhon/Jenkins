@@ -36,9 +36,9 @@ def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
   milestone ordinal: null, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
   // set defaults if these args aren't passed
-  args.args = args.get('args', '')
-  args.timeoutMinutes = args.get('timeoutMinutes', 60)
-  args.skipIfDockerImagesExist = args.get('skipIfDockerImagesExist', [])
+  args.args = args.args ?: ''
+  args.timeoutMinutes = args.timeoutMinutes ?: 60
+  args.skipIfDockerImagesExist = args.skipIfDockerImagesExist ?: []
   retry(2){
     timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
