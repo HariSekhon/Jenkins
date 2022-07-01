@@ -126,9 +126,12 @@ def call(Map args = [
         steps {
           withEnv(args.get('env', [])){
             sh 'whoami'
-            echo "Setting PATH to include ${env.HOME}/bin"
+            // get accurate $HOME from running container
+            home = sh(returnStdout: true, script: 'echo "$HOME"')
+            echo "Setting PATH to include $home/bin"
             script {
-              env.PATH = "${env.HOME}/bin:${env.PATH}"
+              // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
+              env.PATH = "$home/bin:${env.PATH}"
             }
             printEnv()
           }
