@@ -221,31 +221,31 @@ def call(Map args = [
 
     }
 
-    //post {
-    //  failure {
-    //    script {
-    //      env.LOG_COMMITTERS = sh(
-    //        label: 'Get Committers',
-    //        script:'''
-    //          git log --format='@%an' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
-    //          grep -Fv -e '[bot]' -e Jenkins |
-    //          sort -u |
-    //          tr '\n' ' '
-    //        ''',
-    //        returnStdout: true
-    //        ).trim()
-    //    }
-    //    echo "Inferred committers since last successful build via git log to be: ${env.LOG_COMMITTERS}"
-    //    slackSend color: 'danger',
-    //      message: "Git Merge FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
-    //      botUser: true
-    //  }
-    //  fixed {
-    //    slackSend color: 'good',
-    //      message: "Git Merge Fixed - ${env.SLACK_MESSAGE}",
-    //      botUser: true
-    //  }
-    //}
+    post {
+      failure {
+        script {
+          env.LOG_COMMITTERS = sh(
+            label: 'Get Committers',
+            script:'''
+              git log --format='@%an' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
+              grep -Fv -e '[bot]' -e Jenkins |
+              sort -u |
+              tr '\n' ' '
+            ''',
+            returnStdout: true
+            ).trim()
+        }
+        echo "Inferred committers since last successful build via git log to be: ${env.LOG_COMMITTERS}"
+        slackSend color: 'danger',
+          message: "Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
+          botUser: true
+      }
+      fixed {
+        slackSend color: 'good',
+          message: "Job Fixed - ${env.SLACK_MESSAGE}",
+          botUser: true
+      }
+    }
 
   }
 
