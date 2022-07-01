@@ -38,7 +38,7 @@ def call(timeoutMinutes=30){
             echo "$label"
             sh (
               label: "$label",
-              script: 'terraform apply plan.zip -input=false -auto-approve'
+              script: 'terraform apply -input=false -auto-approve plan.zip'
             )
           }
         }
