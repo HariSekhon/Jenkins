@@ -46,7 +46,7 @@ def call(Map args = [
                       args: '',
                       apply_branch_pattern: '^(.*/)?(main|master)$',
                       env: [],
-                      creds: [].
+                      creds: [],
                       checkout: [],
                       container: null,
                       yamlFile: 'ci/jenkins-pod.yaml'
@@ -276,7 +276,7 @@ def call(Map args = [
       stage('Terraform Plan') {
         steps {
           withEnv(args.env ?: []){
-            withCredentials(args.env ?: []){
+            withCredentials(args.creds ?: []){
               terraformPlan(args.args)
             }
           }
