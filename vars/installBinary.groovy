@@ -32,12 +32,12 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           unit: args.get('timeoutUnits', 'MINUTES') ) {
     withEnv([
         "URL=${args.get('url', '')}",
-        "BINARY=${args.get('binary', '')}",
+        "BINARY=${ args.get('binary', args.get('url', '').tokenize('/')[-1]) }",
         "OVERWRITE=${args.get('binary', false)}"
       ]
     ){
       sh (
-        label: "Install Binary '${env.BINARY.tokenize('/')[-1]}' from $URL",
+        label: "Install Binary $BINARY from $URL",
         // stripping and regex functions rely on bash
         script: '''#!/usr/bin/env bash
           set -euxo pipefail
