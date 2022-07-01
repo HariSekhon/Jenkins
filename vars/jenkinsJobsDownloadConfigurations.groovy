@@ -52,7 +52,7 @@ def call(jobs=[]) {
         label: "${index+1} Download Jenkins Job Configuration: $it",
         script: '''
           set -eux
-          java -jar ~/bin/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} get-job "$JOB" > "$JOB.xml"
+          java -jar "${JENKINS_CLI_JAR:-~/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} get-job "$JOB" > "$JOB.xml"
           echo >> "$JOB.xml"
           echo "Downloaded config to file: $PWD/$JOB.xml"
         '''
