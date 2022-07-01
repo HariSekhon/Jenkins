@@ -58,5 +58,9 @@ def call(){
 
   '''
 
-  gcpSetupApplicationCredentials()
+  script {
+    if(env.GCP_SERVICEACCOUNT_KEY){
+      gcpSetupApplicationCredentials()
+    }
+  }
 }
