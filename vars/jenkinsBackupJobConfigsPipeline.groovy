@@ -69,11 +69,11 @@ def call(Map args = [
 
     // backup to catch GitHub -> Jenkins webhook failures
     triggers {
-      cron("${args.get('cron', 'H */3 * * *')}")
+      cron("${args.cron ?: 'H */3 * * *'}")
     }
 
     environment {
-      DIR = "${args.get('dir', '.')}"
+      DIR = "${args.dir ?: '.'}"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
 
@@ -81,7 +81,7 @@ def call(Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             printEnv()
             sh 'whoami'
           }
@@ -91,7 +91,7 @@ def call(Map args = [
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
       stage ('Checkout') {
         when {
-          expression { args.get('checkout', []) != [] }
+          expression { args.checkout }
         }
         steps {
           milestone(ordinal: null, label: "Milestone: Checkout")
@@ -111,8 +111,8 @@ def call(Map args = [
       stage('Auth Env Check') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.creds ?: []){
               jenkinsCLICheckEnvVars()
             }
           }
@@ -122,7 +122,7 @@ def call(Map args = [
       stage('Install Packages') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             timeout(time: 5, unit: 'MINUTES') {
               installPackages(['default-jdk', 'curl'])
             }
@@ -133,7 +133,7 @@ def call(Map args = [
       stage('Download Jenkins CLI') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             downloadJenkinsCLI()
           }
         }
@@ -142,8 +142,8 @@ def call(Map args = [
       stage('Jenkins CLI Version') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.get('env', [])){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.creds ?: []){
               sh (
                 label: 'Version',
                 script: '''
@@ -160,9 +160,9 @@ def call(Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
-            withEnv(args.get('env', [])){
-              withCredentials(args.get('creds', [])){
-                jenkinsJobsDownloadConfigurations(args.get('jobs', []))
+            withEnv(args.env ?: []){
+              withCredentials(args.creds ?: []){
+                jenkinsJobsDownloadConfigurations(args.jobs ?: [])
               }
             }
           }
@@ -173,8 +173,8 @@ def call(Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
-            withEnv(args.get('env', [])){
-              withCredentials(args.get('creds', [])){
+            withEnv(args.env ?: []){
+              withCredentials(args.creds ?: []){
                 sh (
                   label: 'Git Commit',
                   script: '''
@@ -201,8 +201,8 @@ def call(Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR"){
-            withEnv(args.get('env', [])){
-              withCredentials(args.get('creds', [])){
+            withEnv(args.env ?: []){
+              withCredentials(args.creds ?: []){
                 // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
                 sshagent (credentials: ['github-ssh-key']) {
                   sh (
