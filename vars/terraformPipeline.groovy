@@ -43,12 +43,14 @@
 def call(Map args = [
                       version: 'latest',
                       dir: '.',
-                      apply_branch_pattern: '*/(main|master)$',
+                      apply_branch_pattern: '^(.*/)?(main|master)$',
                       env: [],
                       checkout: [],
                       container: null,
                       yamlFile: 'ci/jenkins-pod.yaml'
                      ] ){
+
+  args.apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
 
   pipeline {
 
@@ -107,8 +109,8 @@ def call(Map args = [
     }
 
     environment {
-      TERRAFORM_DIR = "$args.dir"
-      TERRAFORM_VERSION = "$args.version"
+      TERRAFORM_DIR = "${args.dir ?: '.'}"
+      TERRAFORM_VERSION = "${args.version ?: error('Terraform version not specified')}"
       TF_IN_AUTOMATION = 1
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
       //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
@@ -124,7 +126,7 @@ def call(Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             sh 'whoami'
             script {
               // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
@@ -141,7 +143,7 @@ def call(Map args = [
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
       stage ('Checkout') {
         when {
-          expression { args.get('checkout', []) != [] }
+          expression { args.checkout }
         }
         steps {
           milestone(ordinal: null, label: "Milestone: Checkout")
@@ -199,8 +201,8 @@ def call(Map args = [
         //  }
         //}
         steps {
-          withEnv(args.env){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.creds ?: []){
               // tries everything
               logins()
               // or call something simpler if you know what environment you're executing in
@@ -212,7 +214,7 @@ def call(Map args = [
 
       stage('Install Packages') {
         steps {
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             timeout(time: 5, unit: 'MINUTES') {
               installPackages(['curl', 'unzip'])
             }
@@ -222,7 +224,7 @@ def call(Map args = [
 
       stage('Download Terraform Version') {
         steps {
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             downloadTerraform("$TERRAFORM_VERSION")
           }
         }
@@ -230,7 +232,7 @@ def call(Map args = [
 
       stage('Terraform Version') {
         steps {
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             sh 'terraform version'
           }
         }
@@ -240,7 +242,7 @@ def call(Map args = [
         stage('Terraform Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              withEnv(args.get('env', [])){
+              withEnv(args.env ?: []){
                 terraformFmt()
               }
             }
@@ -252,8 +254,8 @@ def call(Map args = [
 
       stage('Terraform Init') {
         steps {
-          withEnv(args.get('env', [])){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.creds ?: []){
               terraformInit()
             }
           }
@@ -262,8 +264,8 @@ def call(Map args = [
 
       stage('Terraform Plan') {
         steps {
-          withEnv(args.get('env', [])){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.env ?: []){
               terraformPlan()
             }
           }
@@ -277,7 +279,7 @@ def call(Map args = [
         }
         steps {
           //approval(args.approval_args)
-          withEnv(args.get('env', [])){
+          withEnv(args.env ?: []){
             approval()
           }
         }
@@ -288,8 +290,8 @@ def call(Map args = [
           branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
         }
         steps {
-          withEnv(args.get('env', [])){
-            withCredentials(args.get('creds', [])){
+          withEnv(args.env ?: []){
+            withCredentials(args.creds ?: []){
               terraformApply()
             }
           }
