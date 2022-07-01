@@ -38,8 +38,9 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
     ){
       sh (
         label: "Install Binary '${env.BINARY.tokenize('/')[-1]}' from $URL",
-        script: '''
-          set -eux
+        // stripping and regex functions rely on bash
+        script: '''#!/usr/bin/env bash
+          set -euxo pipefail
 
           if [ -z "$URL" ]; then
             echo "No URL passed to installBinary()"
