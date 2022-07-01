@@ -23,17 +23,6 @@
 
 def call() {
   timeout(time: 5, unit: 'MINUTES') {
-    sh (
-      label: 'Download Jenkins CLI',
-      script: '''
-        set -eux
-
-        url="$JENKINS_URL/jnlpJars/jenkins-cli.jar"
-
-        if ! [ -f ~/jenkins-cli.jar ]; then
-          curl -sSLf -o ~/jenkins-cli.jar "$url"
-        fi
-      '''
-    )
+    installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
   }
 }
