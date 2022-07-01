@@ -46,6 +46,7 @@ def call(Map args = [
                       args: '',
                       apply_branch_pattern: '^(.*/)?(main|master)$',
                       env: [],
+                      creds: [].
                       checkout: [],
                       container: null,
                       yamlFile: 'ci/jenkins-pod.yaml'
