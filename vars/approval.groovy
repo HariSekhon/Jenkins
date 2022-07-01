@@ -40,8 +40,8 @@
 
 def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
   milestone ordinal: null, label: "Milestone: Approval"
-  args.timeout = args.get('timeout', 60)
-  args.timeoutUnits = args.get('timeoutUnits', 'MINUTES')
+  args.timeout = args.timeout ?: 60
+  args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
   timeout(time: args.timeout, unit: args.timeoutUnits) {
     input (
       message: """Are you sure you want to release this build?
