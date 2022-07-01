@@ -29,12 +29,13 @@
 // binary should be path to the binary after being unpacked, including any intermediate directory paths in an unpacked tarball or zip package
 def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeoutUnits: 'MINUTES']) {
 
-  args.url = args.get('url', '')
-  args.binary = args.get('binary', args.get('url').tokenize('/')[-1])
-  args.overwrite = args.get('overwrite', false)
+  args.url = args.url ?: error('URL not specified')
+  args.binary = args.binary ?: args.url.tokenize('/')[-1]
+  args.overwrite = args.overwrite ?: false
+  args.timeout = args.timeout ?: 15
+  args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
 
-  timeout(time: args.get('timeout', 15),
-          unit: args.get('timeoutUnits', 'MINUTES') ) {
+  timeout(time: args.timeout, unit: args.timeoutUnits) {
 
     // avoiding using Bash specific constructs like ${var//}
     //script {
