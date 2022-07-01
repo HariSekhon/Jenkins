@@ -273,7 +273,7 @@ def call(Map args = [
       stage('Approval') {
         when {
           beforeInput true
-          branch pattern: "$args.apply_branch_pattern"
+          branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
         }
         steps {
           //approval(args.approval_args)
@@ -285,7 +285,7 @@ def call(Map args = [
 
       stage('Terraform Apply') {
         when {
-          branch pattern: "$args.apply_branch_pattern"
+          branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
         }
         steps {
           withEnv(args.get('env', [])){
