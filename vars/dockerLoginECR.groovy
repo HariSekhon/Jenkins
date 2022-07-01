@@ -19,9 +19,9 @@
 
 // AWS CLI must be available in the environment and the following environment variables must be set:
 //
-//		AWS_ACCESS_KEY_ID
-//		AWS_SECRET_ACCESS_KEY
-//		AWS_DEFAULT_REGION
+//    AWS_ACCESS_KEY_ID
+//    AWS_SECRET_ACCESS_KEY
+//    AWS_DEFAULT_REGION
 
 def call() {
   sh '''
