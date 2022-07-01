@@ -28,37 +28,54 @@
 
 // binary should be path to the binary after being unpacked, including any intermediate directory paths in an unpacked tarball or zip package
 def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeoutUnits: 'MINUTES']) {
+
+  args.url = args.get('url', '')
+  args.binary = args.get('binary', args.get('url').tokenize('/')[-1])
+  args.overwrite = args.get('overwrite', false)
+
   timeout(time: args.get('timeout', 15),
           unit: args.get('timeoutUnits', 'MINUTES') ) {
+
+    // avoiding using Bash specific constructs like ${var//}
+    //script {
+    //  os = sh(returnStdout: true, label: 'Determine OS', script: 'uname -s').trim().toLowerCase()
+    //  arch = sh(returnStdout: true, label: 'Determine Architecture', script: 'uname -m').trim()
+    //  if(arch == 'x86_64'){
+    //    arch = 'amd64' // files are conventionally named amd64 not x86_64
+    //  }
+    //  args.url = args.url.replaceAll('\\{os\\}' , "$os")
+    //  args.url = args.url.replaceAll('\\{arch\\}' , "$arch")
+    //}
+
     withEnv([
-        "URL=${args.get('url', '')}",
-        "BINARY=${ args.get('binary', args.get('url', '').tokenize('/')[-1]) }",
-        "OVERWRITE=${args.get('binary', false)}"
+        "URL=${args.url}",
+        "BINARY=${args.binary}",
+        "OVERWRITE=${args.overwrite}",
+        //"OS=$os",
+        //"ARCH=$arch",
       ]
     ){
       sh (
-        label: "Install Binary $BINARY from $URL",
-        // stripping and regex functions rely on bash
-        script: '''#!/usr/bin/env bash
-          set -euxo pipefail
+        // Blue Ocean UI doesn't put a space between from and url not matter what I do, must be a minor bug
+        label: "Install Binary '$BINARY' from:  ${env.URL}", // using $URL or ${args.url} here prints 'class java.net.URL'
+        script: '''
+          set -eux
+
+          # gets this error and exits with error code 2 even when || : is appended in gcloud-sdk container, which has bash too but must be running in strict bourne mode
+          # even if running this before set -e this still happens
+          #
+          #   /home/jenkins/agent/workspace/test@tmp/durable-7bb89a26/script.sh: 3: set: Illegal option -o pipefail
+          #
+          #set -o pipefail || :
 
           if [ -z "$URL" ]; then
             echo "No URL passed to installBinary()"
             exit 1
           fi
           if [ -z "$BINARY" ]; then
-            echo "No binary name passed to installBinary()"
-            exit 1
+              echo "No binary name passed to installBinary()"
+              exit 1
           fi
-
-          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
-          arch="$(uname -m)"
-          if [ "$arch" = x86_64 ]; then
-              arch=amd64  # files are conventionally named amd64 not x86_64
-          fi
-
-          URL="${URL//\\{os\\}/$os}"
-          URL="${URL//\\{arch\\}/$arch}"
 
           destination=~/bin
 
@@ -67,11 +84,21 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           cd "$destination"
 
           if [ -f "BINARY" ]; then
-            if [ "$OVERWRITE" != true ]; then
-              echo "$BINARY already present, skipping"
-              exit 0
-            fi
+              if [ "$OVERWRITE" != true ]; then
+                echo "$BINARY already present, skipping"
+                exit 0
+              fi
           fi
+
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          arch="$(uname -m)"
+
+          if [ "$arch" = x86_64 ]; then
+              arch=amd64  # files are conventionally named amd64 not x86_64
+          fi
+
+          URL="$(echo "$URL" | sed "s/{os}/$os/")"
+          URL="$(echo "$URL" | sed "s/{arch}/$arch/")"
 
           package="${URL##*/}"
           tmp="/tmp/installBinary.$$"
@@ -89,11 +116,11 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           curl -sSLf -o "$download_file" "$URL"
 
           # adapted from has_tarball_extension() in lib/utils.sh
-          if [[ "$package" =~ \\.(tgz|tar\\.gz|tbz|tar\\.bz2)$ ]]; then
+          if echo "$package" | grep -Eq '\\.(tgz|tar\\.gz|tbz|tar\\.bz2)$'; then
               echo "Extracting tarball package"
-              if [[ "$package" =~ \\.(tgz|tar\\.gz)$ ]]; then
+              if echo "$package" | grep -Eq '\\.(tgz|tar\\.gz)$'; then
                   tar xvzf "$download_file"
-              elif [[ "$package" =~ \\.(tbz|tar\\.bz2)$ ]]; then
+              elif echo "$package" | grep -Eq '\\.(tbz|tar\\.bz2)$'; then
                   tar xvjf "$download_file"
               fi
               if ! [ -f "$BINARY" ]; then
@@ -102,7 +129,7 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
               fi
               download_file="$BINARY"
               echo
-          elif [[ "$package" =~ \\.zip$ ]]; then
+          elif echo "$package" | grep -Eq '\\.zip$'; then
               echo "Extracting zip package"
               unzip -o "$download_file"
               download_file="$BINARY"
@@ -113,7 +140,7 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           echo
 
           destination="$destination/${download_file##*/}"
-          # if there are any -darwin-amd64 or -amd64-darwin suffixes remove them either way around (this is why $os is stripped before and after)
+          # if there are any -linux-amd64 or -amd64-linux suffixes remove them either way around (this is why $os is stripped before and after)
           destination="${destination%%-$os}"
           destination="${destination%%_$os}"
           destination="${destination%%-$arch}"
