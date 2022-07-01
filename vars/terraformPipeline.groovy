@@ -314,12 +314,12 @@ def call(Map args = [
         }
         echo "Inferred committers since last successful build via git log to be: ${env.LOG_COMMITTERS}"
         slackSend color: 'danger',
-          message: "Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
+          message: "Terraform Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
           botUser: true
       }
       fixed {
         slackSend color: 'good',
-          message: "Job Fixed - ${env.SLACK_MESSAGE}",
+          message: "Terraform Job Fixed - ${env.SLACK_MESSAGE}",
           botUser: true
       }
     }
