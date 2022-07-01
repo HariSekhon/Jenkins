@@ -70,8 +70,8 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
           #set -o pipefail || :
 
           if [ -z "$URL" ]; then
-            echo "No URL passed to installBinary()"
-            exit 1
+              echo "No URL passed to installBinary()"
+              exit 1
           fi
           if [ -z "$BINARY" ]; then
               echo "No binary name passed to installBinary()"
