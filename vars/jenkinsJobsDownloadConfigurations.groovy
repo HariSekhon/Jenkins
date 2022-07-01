@@ -20,10 +20,18 @@
 // inspired by jenkins_jobs_download_configs_cli.sh in the adjacent DevOps Bash tools repo
 
 // this function
+//
 //  takes 2 mins 22 secs to download 49 Jenkins jobs
+//
 // whereas jenkins_jobs_download_configs.sh from my DevOps Bash tools repo
-//  takes 0 mins 21 secs to download the configs for the same 49 Jenkins jobs
-// this must be due to overheads in Jenkins of starting a new shell and jar startup overheads multiplied by 49
+//
+//  takes 0 mins 21 secs to download same 49 job configs
+//
+// nearly half of this is accounted for in JVM startup overheads of jenkins-cli.jar since jenkins_jobs_download_configs_cli.sh
+//
+//  takes 0 mins 52 secs for the same as above
+//
+// the rest of the speed loss must be Jenkins withEnv + new shell overheads of 'sh' x49
 
 def call(jobs=[]) {
   if(!jobs){
