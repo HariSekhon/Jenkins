@@ -21,6 +21,10 @@
 
 // Adapted from DevOps Bash Tools setup/install_terraform.sh, install_binary.sh, install_packages.sh and lib/utils.sh
 
+// you may need to call this first to ensure the prerequisite commands curl and unzip are available:
+//
+//    installPackages(['curl', 'unzip'])
+
 def call(version) {
   timeout(time: 5, unit: 'MINUTES') {
     withEnv(["VERSION=$version"]){
