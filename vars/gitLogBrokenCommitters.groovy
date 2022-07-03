@@ -34,7 +34,7 @@
 //      }
 
 def call() {
-  logCommittters = sh (
+  logCommitters = sh (
     label: 'Get Git Log Committers Since Last Successful Build',
     returnStdout: true,
     script: '''
