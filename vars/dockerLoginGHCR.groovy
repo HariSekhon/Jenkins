@@ -17,6 +17,8 @@
 //                   Docker Login to GitHub Container Registry
 // ========================================================================== //
 
+// GITHUB_USER and GH_TOKEN / GITHUB_TOKEN must be passed as args or set in the calling environment
+
 def call(user="$GITHUB_USER", token="${env.GH_TOKEN || env.GITHUB_TOKEN}") {
   dockerLogin(user, token, 'ghcr.io')
 }
