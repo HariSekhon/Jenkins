@@ -29,7 +29,7 @@ def call(timeoutMinutes=10){
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
 
-        // let's check we have the login creds we think we should (checking up on the logins() function you should have called earlier)
+        // let's check we have the login creds we think we should (checking up on the login() function you should have called earlier)
         printAuth()
 
         // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use staticMethod java.lang.System getenv java.lang.String
