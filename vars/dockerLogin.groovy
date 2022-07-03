@@ -17,19 +17,18 @@
 //               D o c k e r   L o g i n   t o   D o c k e r H u b
 // ========================================================================== //
 
-// DOCKERHUB_USER and DOCKERHUB_TOKEN must be set in the calling environment
-
-def call() {
-  echo "Docker Login: DockerHub"
-  // Bourne compatible
-  //sh '''
-  //  set -eux
-  //  #docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN"
-  //  docker login -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_TOKEN"
-  //'''
-  // requires Bash
-  sh '''#!/usr/bin/env bash
-    set -eux
-    docker login -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_TOKEN"
-  '''
+def call(user="$DOCKERHUB_USER", pass="$DOCKERHUB_TOKEN", registry='') {
+  echo "Docker Login: $user"
+  withEnv(["USER=$user", "PASS=$pass", "REGISTRY=$registry"]){
+    // Bourne compatible
+    //sh '''
+    //  set -eux
+    //  docker login $REGISTRY -u "$USER" -p "$PASS"
+    //'''
+    // requires Bash
+    sh '''#!/usr/bin/env bash
+      set -eux
+      docker login $REGISTRY -u "$USER" --password-stdin <<< "$PASS"
+    '''
+  }
 }
