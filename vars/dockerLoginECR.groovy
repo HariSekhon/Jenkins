@@ -27,7 +27,7 @@
 def call() {
   script {
     ECR_TOKEN = sh(
-                  label: 'Generated ECR Authentication Token',
+                  label: 'Generating ECR Authentication Token',
                   returnStdout: true,
                   script: 'aws ecr get-login-password --region "$AWS_DEFAULT_REGION"'
                 )
