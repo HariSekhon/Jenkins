@@ -17,11 +17,8 @@
 //                   Docker Login to GitLab Container Registry
 // ========================================================================== //
 
-// GITLAB_USER and GITLAB_TOKEN must be set in the calling environment
+// GITLAB_USER and GITLAB_TOKEN must be passed as args or set in the calling environment
 
-def call() {
-  sh '''
-    set -eux
-    docker login registry.gitlab.com -u "$GITLAB_USER" -p "$GITLAB_TOKEN"
-  '''
+def call(user="$GITLAB_USER", token="$GITLAB_TOKEN") {
+  dockerLogin(user, token, 'registry.gitlab.com')
 }
