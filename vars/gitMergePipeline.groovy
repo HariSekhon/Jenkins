@@ -55,18 +55,8 @@ def call(from_branch, to_branch){
       post {
         failure {
           script {
-            env.LOG_COMMITTERS = sh(
-              label: 'Get Committers',
-              script:'''
-                git log --format='@%an' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
-                grep -Fv -e '[bot]' -e Jenkins |
-                sort -u |
-                tr '\n' ' '
-              ''',
-              returnStdout: true
-              ).trim()
+            env.LOG_COMMITTERS = gitLogBrokenCommitters()
           }
-          echo "Inferred committers since last successful build via git log to be: ${env.LOG_COMMITTERS}"
           slackSend color: 'danger',
             message: "Git Merge FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
             botUser: true
