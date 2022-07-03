@@ -19,9 +19,6 @@
 
 // QUAY_USER and QUAY_TOKEN must be set in the calling environment
 
-def call() {
-  sh '''
-    set -eux
-    docker login quay.io -u "$QUAY_USER" -p "$QUAY_TOKEN"
-  '''
+def call(user="$QUAY_USER", token="$QUAY_TOKEN") {
+  dockerLogin(user, token, 'quay.io')
 }
