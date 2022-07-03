@@ -27,7 +27,8 @@ def call(key="$GCP_SERVICEACCOUNT_KEY", registry="$GCR_REGISTRY") {
     script {
       if(isCommandAvailable('gcloud')){
         echo 'Using GCloud SDK to configure Docker'
-        gcloud auth configure-docker "$GAR_REGISTRY"
+        // configures docker config with a token
+        sh 'gcloud auth configure-docker "$GCR_REGISTRY"'
       } else {
         echo 'GCloud SDK is not installed, attempting to login with docker directly'
         if(!env.GCR_REGISTRY){
