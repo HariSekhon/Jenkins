@@ -1,6 +1,6 @@
 //
 //  Author: Hari Sekhon
-//  Date: 2022-07-03 10:01:11 +0100 (Sun, 03 Jul 2022)
+//  Date: 2021-04-30 15:25:01 +0100 (Fri, 30 Apr 2021)
 //
 //  vim:ts=2:sts=2:sw=2:et
 //
@@ -25,14 +25,16 @@
 //        script {
 //          env.LOG_COMMITTERS = gitLogBrokenCommitters()
 //        }
-//        echo "Inferred committers since last successful build via git log to be: ${env.LOG_COMMITTERS}"
+//
+//        // then use it in whichever notification method you want:
+//
 //        slackSend color: 'danger',
 //          message: "Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
 //          botUser: true
 //      }
 
 def call() {
-  sh (
+  logCommittters = sh (
     label: 'Get Git Log Committers Since Last Successful Build',
     returnStdout: true,
     script: '''
@@ -44,4 +46,6 @@ def call() {
       tr '\n' ' '
     '''
   ).trim()
+  echo "Inferred Git committers since last successful build via git log to be: $logCommitters"
+  return logCommitters
 }
