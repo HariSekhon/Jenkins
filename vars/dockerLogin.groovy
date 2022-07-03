@@ -19,6 +19,7 @@
 
 def call(user="$DOCKERHUB_USER", pass="$DOCKERHUB_TOKEN", registry='') {
   echo "Docker Login: $user"
+  echo "Docker Registry: ${registry ?: 'DockerHub'}"
   withEnv(["USER=$user", "PASS=$pass", "REGISTRY=$registry"]){
     // Bourne compatible
     //sh '''
