@@ -18,7 +18,7 @@
 //                      L o g i n   t o   A z u r e   C L I
 // ========================================================================== //
 
-def call(user, pass) {
+def call(user="$AZURE_USER", pass="$AZURE_PASSWORD") {
   withEnv(["AZURE_USER=$user", "AZURE_PASSWORD=$pass"]){
     sh (
       label: 'Azure CLI Login',
