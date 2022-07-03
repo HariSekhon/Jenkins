@@ -212,7 +212,7 @@ def call(Map args = [
           withEnv(args.env){
             withCredentials(args.creds){
               // tries everything
-              logins()
+              login()
               // or call something simpler if you know what environment you're executing in
               //gcpSetupApplicationCredentials()
             }
