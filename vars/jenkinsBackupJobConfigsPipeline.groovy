@@ -209,7 +209,13 @@ def call(Map args = [
                     label: 'Git Push',
                     script: '''
                       set -eux
-                      git push origin HEAD:"${GIT_BRANCH#origin/}"
+
+                      branch="${GIT_BRANCH#origin/}"
+
+                      # do a local merge rather than fail if there are new edits in the branch
+                      git pull --no-edit "$branch"
+
+                      git push origin HEAD:"$branch"
                     '''
                   )
                 }
