@@ -17,11 +17,26 @@
 //                                  L o g i n s
 // ========================================================================== //
 
-// Logs in to all cloud platforms for which environment variable credentials are available
+// Logs in to any cloud platforms for which environment variable credentials are available
 //
-// For more details, see:
+// Adapted from 'login.sh' in DevOps Bash tools repo:
 //
-//  https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/login.sh
+//  https://github.com/HariSekhon/DevOps-Bash-tools
+
+// Currently supports:
+//
+//   - AWS
+//   - GCP
+//   - GitHub CLI
+//   - Docker Registries:
+//     - DockerHub
+//     - GitHub Container Registry (GHCR)
+//     - Gitlab Container Registry
+//     - AWS Elastic Container Registry (ECR)
+//     - Azure Container Registry (ACR)
+//     - Google Container Registry (GCR)
+//     - Google Artifact Registry (GAR)
+//     - Quay.io Container Registry (quay)
 
 // Usage in Jenkinsfile:
 //
@@ -36,31 +51,68 @@
 def call(){
   echo 'Running Logins for any platforms we have environment credentials for'
 
-  sh '''
-    set -eux
-
-    mkdir -p ~/bin
-
-    cd ~/bin
-
-    export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
-
-    if [ -d bash-tools ]; then
-      # pushd not available in sh
-      cd bash-tools
-      git pull
-      cd ..
-    else
-      git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
-    fi
-
-    bash-tools/login.sh
-
-  '''
-
   script {
+
+    if(env.DOCKERHUB_USER && env.DOCKERHUB_TOKEN){
+      dockerLogin()
+    }
+
+    if(env.GH_TOKEN || env.GITHUB_TOKEN){
+      if(env.GITHUB_USER && isDockerAvailable()){
+        dockerLoginGHCR()
+      }
+      if(isCommandAvailable('gh')){
+        sh(
+          label: 'GitHub CLI Auth Status',
+          script: 'gh auth status'
+        )
+      }
+    }
+
+    if(env.AWS_ACCESS_KEY_ID &&
+       env.AWS_SECRET_ACCESS_KEY &&
+       isCommandAvailable('aws')){
+      awsAuth()
+      if(isDockerAvailable()){
+        dockerLoginECR()
+      }
+    }
+
     if(env.GCP_SERVICEACCOUNT_KEY){
+      if(isCommandAvailable('gcloud')){
+        gcpActivateServiceAccount()
+      }
+      if(isDockerAvailable()){
+        if(env.GAR_REGISTRY){
+          dockerLoginGAR()
+        }
+        if(env.GCR_REGISTRY){
+          dockerLoginGCR()
+        }
+      }
       gcpSetupApplicationCredentials()
     }
+
+    if(env.AZURE_USER && env.AZURE_PASSWORD){
+      if(isCommandAvailable('az')){
+        azureCLILogin()
+      }
+      if(isDockerAvailable()){
+        dockerLoginACR()
+      }
+    }
+
+    if(env.GITLAB_USER && env.GITLAB_TOKEN){
+      if(isDockerAvailable()){
+        dockerLoginGitlab()
+      }
+    }
+
+    if(env.QUAY_USER && env.QUAY_TOKEN){
+      if(isDockerAvailable()){
+        dockerLoginQuay()
+      }
+    }
+
   }
 }
