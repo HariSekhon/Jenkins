@@ -19,12 +19,16 @@
 
 // must be called after 'az login' and have Azure CLI in the calling environment
 //
-// $ACR_NAME must be set in the calling environment
+// $ACR_REGISTRY_NAME must be passed as the first argument or else set in the calling environment
 
-def call() {
-  // configures docker config with a token
-  sh '''
-    set -eux
-    az acr login --name "$ACR_NAME"
-  '''
+def call(registry="$ACR_REGISTRY_NAME") {
+  withEnv(["ACR_REGISTRY_NAME=$registry"]){
+    script {
+      // configures docker config with a token
+      sh '''
+        set -eux
+        az acr login --name "$ACR_REGISRY_NAME"
+      '''
+    }
+  }
 }
