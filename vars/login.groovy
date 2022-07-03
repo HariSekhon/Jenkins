@@ -46,7 +46,7 @@
 //
 //    // run to login to any platforms for which we have standard expected environment variables available
 //
-//      logins()
+//      login()
 
 def call(){
   echo 'Running Logins for any platforms we have environment credentials for'
