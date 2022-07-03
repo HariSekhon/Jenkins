@@ -23,11 +23,16 @@ def call() {
     label: 'AWS CLI auth',
     script: 'aws sts get-caller-identity'
   )
-  if(!env.AWS_ACCOUNT_ID && isCommandAvailable('jq')){
-    env.AWS_ACCOUNT_ID = sh(
-                          label: 'Generate AWS Account ID environment variable',
-                          returnStdout: true,
-                          script: 'aws sts get-caller-identity | jq -r .Account'
-                         )
+  script {
+    if(!env.AWS_ACCOUNT_ID && isCommandAvailable('jq')){
+      env.AWS_ACCOUNT_ID = sh(
+                            label: 'Generate AWS Account ID environment variable',
+                            returnStdout: true,
+                            script: 'aws sts get-caller-identity | jq -r .Account'
+                           )
+      if(!env.AWS_ACCOUNT_ID){
+        error('Failed to determine AWS Account ID')
+      }
+    }
   }
 }
