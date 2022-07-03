@@ -19,11 +19,17 @@
 
 // Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 
-// TODO: if you're not calling this on dynamic short-lived K8s agents, you'll need to add a unique cache for each build to prevent race conditions if using different credentials between pipelines
 def call(key="$GCP_SERVICEACCOUNT_KEY", timeoutMinutes=2){
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Activating GCP Service Account credential'
+      script {
+        // if called on concurrent persistent agents instead of single-use Kubernetes ephemeral agents, isolate the config to this pipeline
+        echo "Isolating GCloud SDK config auth to this pipeline"
+        env.CLOUDSDK_CONFIG = "$HOME/.gcloud/auth/$BUILD_TAG"
+        echo "Setting GCloud SDK to non-interactive"
+        env.CLOUDSDK_CORE_DISABLE_PROMPTS = 1
+      }
       echo "$label"
       withEnv(["GCP_SERVICEACCOUNT_KEY=$key"]){
         sh (
@@ -31,7 +37,6 @@ def call(key="$GCP_SERVICEACCOUNT_KEY", timeoutMinutes=2){
           // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
           script: '''#!/usr/bin/env bash
             set -euxo pipefail
-            export CLOUDSDK_CORE_DISABLE_PROMPTS=1
             gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
             gcloud auth list
           '''
