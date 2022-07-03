@@ -20,8 +20,16 @@
 // DOCKERHUB_USER and DOCKERHUB_TOKEN must be set in the calling environment
 
 def call() {
-  sh '''
+  echo "Docker Login: DockerHub"
+  // Bourne compatible
+  //sh '''
+  //  set -eux
+  //  #docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN"
+  //  docker login -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_TOKEN"
+  //'''
+  // requires Bash
+  sh '''#!/usr/bin/env bash
     set -eux
-    docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN"
+    docker login -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_TOKEN"
   '''
 }
