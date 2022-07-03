@@ -22,22 +22,15 @@
 //    AWS_ACCESS_KEY_ID
 //    AWS_SECRET_ACCESS_KEY
 //    AWS_DEFAULT_REGION
+//    AWS_ACCOUNT_ID  // should be set by awsAuth() if jq is available
 
 def call() {
-  sh '''
-    set -eux
-    if [ -z "${AWS_ACCOUNT_ID:-}" ]; then
-      AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"
-      if [ -z "$AWS_ACCOUNT_ID" ]; then
-        echo "Failed to determine AWS_ACCOUNT_ID"
-        exit 1
-      fi
-    fi
-    TOKEN="$(aws ecr get-login-password --region '$AWS_DEFAULT_REGION')"
-    if [ -z "$TOKEN" ]; then
-      echo "Failed to get AWS ECR authentication TOKEN"
-      exit 1
-    fi
-    docker login '${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com' -u AWS -p "$TOKEN"
-  '''
+  script {
+    ECR_TOKEN = sh(
+                  label: 'Generated ECR Authentication Token',
+                  returnStdout: true,
+                  script: 'aws ecr get-login-password --region "$AWS_DEFAULT_REGION"'
+                )
+    dockerLogin('AWS', ECR_TOKEN, "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com")
+  }
 }
