@@ -22,9 +22,5 @@
 // XXX: could extend to check that Docker server is responding too
 
 def call(){
-  sh(
-    label: 'Check if Docker command is available',
-    returnStatus: true,
-    script: 'command -v docker'
-  )
+  isCommandAvailable('docker')
 }
