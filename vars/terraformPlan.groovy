@@ -48,7 +48,10 @@ def call(args='', timeoutMinutes=10){
               script: "terraform plan -out=plan.zip -input=false ${args}"  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
             )
             script {
-              if(manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')){
+              // manager is not available
+              // hudson.remoting.ProxyException: groovy.lang.MissingPropertyException: No such property: manager for class: terraformPlan
+              //if(manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')){
+              if(currentBuild.rawBuild.getLog(100).contains('No changes\\. Your infrastructure matches the configuration')){
                 env.TERRAFORM_CHANGES = false
               } else {
                 env.TERRAFORM_CHANGES = true
