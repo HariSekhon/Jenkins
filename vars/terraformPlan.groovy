@@ -51,7 +51,11 @@ def call(args='', timeoutMinutes=10){
               // manager is not available
               // hudson.remoting.ProxyException: groovy.lang.MissingPropertyException: No such property: manager for class: terraformPlan
               //if(manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')){
-              if(currentBuild.rawBuild.getLog(100).contains('No changes\\. Your infrastructure matches the configuration')){
+              // there are escape codes around 'No changes' that would break this matching
+              //if(currentBuild.rawBuild.getLog(100).contains('No changes\\. Your infrastructure matches the configuration')){
+              logList = currentBuild.rawBuild.getLog(100)
+              logString = logList.join('\n')
+              if(logString.contains('Your infrastructure matches the configuration')){
                 env.TERRAFORM_CHANGES = false
               } else {
                 env.TERRAFORM_CHANGES = true
