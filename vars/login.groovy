@@ -90,15 +90,17 @@ def call(){
           dockerLoginGCR()
         }
       }
-      gcpSetupApplicationCredentials()
+      if(env.GOOGLE_APPLICATION_CREDENTIALS){
+        gcpSetupApplicationCredentials()
+      }
     }
 
     if(env.AZURE_USER && env.AZURE_PASSWORD){
       if(isCommandAvailable('az')){
         azureCLILogin()
-      }
-      if(isDockerAvailable()){
-        dockerLoginACR()
+        if(isDockerAvailable()){
+          dockerLoginACR()
+        }
       }
     }
 
