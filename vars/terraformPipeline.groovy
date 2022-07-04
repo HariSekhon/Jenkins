@@ -291,12 +291,17 @@ def call(Map args = [
       stage('Approval') {
         when {
           beforeInput true
-          anyOf {
-            // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
-            branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
-            // which is why we use an expression evaluation here
+          allOf {
             expression {
-              (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+              env.TERRAFORM_CHANGES != 'false'
+            }
+            anyOf {
+              // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
+              branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+              // which is why we use an expression evaluation here
+              expression {
+                (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+              }
             }
           }
         }
@@ -310,12 +315,17 @@ def call(Map args = [
 
       stage('Terraform Apply') {
         when {
-          anyOf {
-            // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
-            branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
-            // which is why we use an expression evaluation here
+          allOf {
             expression {
-              (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+              env.TERRAFORM_CHANGES != 'false'
+            }
+            anyOf {
+              // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
+              branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+              // which is why we use an expression evaluation here
+              expression {
+                (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+              }
             }
           }
         }
