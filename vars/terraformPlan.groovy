@@ -47,6 +47,13 @@ def call(args='', timeoutMinutes=10){
               label: "$label",
               script: "terraform plan -out=plan.zip -input=false ${args}"  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
             )
+            script {
+              if(manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')){
+                env.TERRAFORM_CHANGES = false
+              } else {
+                env.TERRAFORM_CHANGES = true
+              }
+            }
           }
         }
       }
