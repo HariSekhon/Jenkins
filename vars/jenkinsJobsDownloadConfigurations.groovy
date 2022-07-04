@@ -44,6 +44,9 @@ def call(jobs=[]) {
         '''
       ).tokenize('\n')
   }
+  //jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+  //echo jobs2.toString()
+  //echo jobs2.size().toString()
   echo "Downloading configurations for ${jobs.size()} Jenkins jobs"
   jobs.eachWithIndex{ it, index ->
     withEnv(["JOB=$it"]){
