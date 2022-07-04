@@ -97,6 +97,12 @@ pipeline {
 
 Handles all logins, Terraform fmt, validate, plan, approval, apply etc.
 
+Non-apply branches do Plan only so you can see if you want to merge.
+
+On the apply branch, eg. `master` or `main`, only prompts for approval is there are actual changes in the Terraform plan output.
+
+Saves the Terraform plan output and an approval will only apply that exact plan for safety.
+
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
