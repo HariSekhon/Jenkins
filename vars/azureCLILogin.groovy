@@ -18,7 +18,9 @@
 //                      L o g i n   t o   A z u r e   C L I
 // ========================================================================== //
 
-def call(user="$AZURE_USER", pass="$AZURE_PASSWORD") {
+def call(user='', pass='') {
+  user = user ?: env.get('AZURE_USER', error('azureCLILogin: user not specified and AZURE_USER not set in the environment'))
+  pass = pass ?: env.get('AZURE_PASSWORD', error('azureCLILogin: pass not specified and AZURE_PASSWORD not set in the environment'))
   withEnv(["AZURE_USER=$user", "AZURE_PASSWORD=$pass"]){
     sh (
       label: 'Azure CLI Login',
