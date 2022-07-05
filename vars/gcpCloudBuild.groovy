@@ -44,7 +44,7 @@ def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
       script {
         boolean dockerImagesExist = false
         if ( args.skipIfDockerImagesExist != [] ) {
-          assert args.skipIfDockerImagesExist instanceof Collection
+          assert args.skipIfDockerImagesExist instanceof List
           String labelCheckingImages = 'Checking if Docker images exist in GCR'
           echo "$labelCheckingImages"
           dockerImagesExist =
