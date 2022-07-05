@@ -20,7 +20,7 @@
 // QUAY_USER and QUAY_TOKEN must be set in the calling environment
 
 def call(user='', token='') {
-  user = user ?: env.get('QUAY_USER', error('dockerLoginQuay: user not specified and QUAY_USER not set in the environment'))
-  token = token ?: env.get('QUAY_TOKEN', error('dockerLoginQuay: token not specified and QUAY_TOKEN not set in the environment'))
+  user = user ?: env.QUAY_USER ?: error('dockerLoginQuay: user not specified and QUAY_USER not set in the environment')
+  token = token ?: env.QUAY_TOKEN ?: error('dockerLoginQuay: token not specified and QUAY_TOKEN not set in the environment')
   dockerLogin(user, token, 'quay.io')
 }
