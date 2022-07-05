@@ -25,6 +25,8 @@
 //    AWS_ACCOUNT_ID  // should be set by awsAuth() if jq is available
 
 def call() {
+  env.get("AWS_ACCOUNT_ID", error('dockerLoginECR: AWS_ACCOUNT_ID not set in the environment'))
+  env.get("AWS_DEFAULT_REGION", error('dockerLoginECR: AWS_DEFAULT_REGION not set in the environment'))
   script {
     ECR_TOKEN = sh(
                   label: 'Generating ECR Authentication Token',
