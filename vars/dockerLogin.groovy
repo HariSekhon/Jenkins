@@ -17,7 +17,9 @@
 //               D o c k e r   L o g i n   t o   D o c k e r H u b
 // ========================================================================== //
 
-def call(user="$DOCKERHUB_USER", pass="$DOCKERHUB_TOKEN", registry='') {
+def call(user='', pass='', registry='') {
+  user = user ?: env.get("DOCKERHUB_USER", error('dockerLogin: username not specified and DOCKERHUB_USER not set in the environment'))
+  password = password ?: env.get("DOCKERHUB_TOKEN", error('dockerLogin: password/token not specified and DOCKERHUB_TOKEN not set in the environment'))
   echo "Docker Login: $user"
   echo "Docker Registry: ${registry ?: 'DockerHub'}"
   withEnv(["USER=$user", "PASS=$pass", "REGISTRY=$registry"]){
