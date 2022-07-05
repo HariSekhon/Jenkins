@@ -14,10 +14,10 @@
 //
 
 // ========================================================================== //
-//                      T e r r a f o r m   P i p e l i n e
+//                     T e r r a g r u n t   P i p e l i n e
 // ========================================================================== //
 
-// Generic re-usable parameterized pipeline for running Terraform across environments
+// Generic re-usable parameterized pipeline for running Terragrunt across environments
 
 // Usage in Jenkinsfile:
 //
@@ -25,9 +25,9 @@
 //
 //      @Library('github.com/harisekhon/jenkins@master') _
 //
-//    // runs pipeline using Terraform 1.2.3, plans for any branch but only applies for branch 'master' with required approval, uses 'gcloud-sdk' container specified in 'ci/jenkins-pod.yaml' from the root of the repo:
+//    // runs pipeline using Terragrunt 1.2.3, plans for any branch but only applies for branch 'master' with required approval, uses 'gcloud-sdk' container specified in 'ci/jenkins-pod.yaml' from the root of the repo:
 //
-//      terraformPipeline(version: '1.2.3',
+//      terragruntPipeline(version: '1.2.3',
 //                        dir: '/path/to/dir',
 //                        apply_branch_pattern: 'master',
 //                        creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
@@ -52,7 +52,7 @@ def call(Map args = [
                       yamlFile: 'ci/jenkins-pod.yaml'
                      ] ){
 
-  args.version ?: error('Terraform version not specified')
+  args.version ?: error('Terragrunt version not specified')
   args.dir = args.dir ?: '.'
   args.apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
   args.args = args.args ?: ''
@@ -67,41 +67,6 @@ def call(Map args = [
         yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
       }
     }
-
-    // XXX: better to set jenkins-pod.yaml in the repo to a container with all the tooling needed
-    //      using terraform's official docker image seemed smart for caching but it lacks the cloud auth tooling to be effective
-    //agent {
-    //  //docker {
-    //  //  image "hashicorp/terraform:${args.version}"
-    //  //}
-    //  kubernetes {
-    //    defaultContainer 'terraform'
-    //    idleMinutes 5
-    //    label 'terraform'
-    //    yaml """\
-    //      apiVersion: v1
-    //      kind: Pod
-    //      metadata:
-    //        namespace: jenkins
-    //        labels:
-    //          app: terraform
-    //      spec:
-    //        containers:
-    //          - name: terraform  # do not name this 'jnlp', without that container this'll never come up properly to execute the build
-    //            image: hashicorp/terraform:${args.version}
-    //            command:
-    //              - cat
-    //            tty: true
-    //            resources:
-    //              requests:
-    //                cpu: 300m
-    //                memory: 300Mi
-    //              limits:
-    //                cpu: "1"
-    //                memory: 1Gi
-    //        """.stripIndent()
-    //   }
-    //}
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '100'))
@@ -120,12 +85,7 @@ def call(Map args = [
       TERRAFORM_VERSION = "$args.version"
       TF_IN_AUTOMATION = 1
       APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
-      /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
-      //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
-      // to pick up downloaded Terraform binary version first
-      // doesn't work if container runs as root because this evaluate to /home/jenkins/bin but inside stages you'd need /root/bin instead, and no point hacking /root/bin addition to the path because would break if container was run as any other user. Instead this is set from within the Environment stage now to be more accurate
-      //PATH = "$HOME/bin:$PATH"
       //TF_LOG = "$DEBUG"
       SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
@@ -160,54 +120,7 @@ def call(Map args = [
         }
       }
 
-      // done via more cachable hashicorp/terraform image now
-      //
-      // see also .envrc in
-      //
-      //   https://github.com/HariSekhon/Terraform
-      //
-      //stage('tfenv') {
-      //  steps {
-      //    sh '''#!/usr/bin/env bash
-      //    set -euxo pipefail
-      //    if [ -f .envrc ]; then
-      //      . .envrc
-      //    fi
-      //    version="${TERRAFORM_VERSION:-}"
-      //    if [ -z "$version" ]; then
-      //        exit 0
-      //    fi
-      //    if ! type -P tfenv &>/dev/null; then
-      //        exit 0
-      //    fi
-      //    if ! tfenv list | tfenv_list_sed | grep -Fxq "$version"; then
-      //        echo "Terraform version '$version' not installed in tfenv, installing now..."
-      //        tfenv install "$version"
-      //    fi
-      //    local current_version
-      //    current_version="$(tfenv list | grep '^\\*' | tfenv_list_sed)"
-      //    if [ "$current_version" != "$version" ]; then
-      //        tfenv use "$version"
-      //    fi
-      //    '''
-      //  }
-      //}
-
       stage('Auth') {
-        // can't inject the passed in env var before this is evaluated, ends up skipping stage
-        //stages {
-        //  stage('GCP Activate Service Account') {
-        //    when {
-        //      not {
-        //        // must match the env var used in the gcpActivateServiceAccount() function
-        //        environment name: 'GCP_SERVICEACCOUNT_KEY', value: ''
-        //      }
-        //    }
-        //    steps {
-        //      gcpActivateServiceAccount()
-        //    }
-        //  }
-        //}
         steps {
           withEnv(args.env){
             withCredentials(args.creds){
@@ -230,28 +143,28 @@ def call(Map args = [
         }
       }
 
-      stage('Download Terraform Version') {
+      stage('Download Terragrunt Version') {
         steps {
           withEnv(args.env){
-            downloadTerraform("$TERRAFORM_VERSION")
+            downloadTerragrunt("$TERRAFORM_VERSION")
           }
         }
       }
 
-      stage('Terraform Version') {
+      stage('Terragrunt Version') {
         steps {
           withEnv(args.env){
-            sh 'terraform version'
+            sh 'terragrunt version'
           }
         }
       }
 
       //try {
-        stage('Terraform Fmt') {
+        stage('Terragrunt Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               withEnv(args.env){
-                terraformFmt()
+                terragruntFmt()
               }
             }
           }
@@ -260,29 +173,29 @@ def call(Map args = [
       //  echo e.toString()
       //}
 
-      stage('Terraform Init') {
+      stage('Terragrunt Init') {
         steps {
           withEnv(args.env){
             withCredentials(args.creds){
-              terraformInit()
+              terragruntInit()
             }
           }
         }
       }
 
-      stage('Terraform Validate') {
+      stage('Terragrunt Validate') {
         steps {
           withEnv(args.env){
-            terraformValidate()
+            terragruntValidate()
           }
         }
       }
 
-      stage('Terraform Plan') {
+      stage('Terragrunt Plan') {
         steps {
           withEnv(args.env){
             withCredentials(args.creds){
-              terraformPlan(args.args)
+              terragruntPlan(args.args)
             }
           }
         }
@@ -313,7 +226,7 @@ def call(Map args = [
         }
       }
 
-      stage('Terraform Apply') {
+      stage('Terragrunt Apply') {
         when {
           allOf {
             expression {
@@ -332,7 +245,7 @@ def call(Map args = [
         steps {
           withEnv(args.env){
             withCredentials(args.creds){
-              terraformApply(args.args)
+              terragruntApply(args.args)
             }
           }
         }
@@ -346,12 +259,12 @@ def call(Map args = [
           env.LOG_COMMITTERS = gitLogBrokenCommitters()
         }
         slackSend color: 'danger',
-          message: "Terraform Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
+          message: "Terragrunt Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
           botUser: true
       }
       fixed {
         slackSend color: 'good',
-          message: "Terraform Job Fixed - ${env.SLACK_MESSAGE}",
+          message: "Terragrunt Job Fixed - ${env.SLACK_MESSAGE}",
           botUser: true
       }
     }
