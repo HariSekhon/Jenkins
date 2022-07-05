@@ -47,6 +47,15 @@ def call(timeoutMinutes=10){
               label: "$label",
               script: 'terragrunt plan --terragrunt-non-interactive -out=plan.zip -input=false'  // # -var-file=base.tfvars -var-file="$ENV.tfvars"
             )
+            script {
+              logList = currentBuild.rawBuild.getLog(100)
+              logString = logList.join('\n')
+              if(logString.contains('Your infrastructure matches the configuration')){
+                env.TERRAFORM_CHANGES = false
+              } else {
+                env.TERRAFORM_CHANGES = true
+              }
+            }
           }
         }
       }
