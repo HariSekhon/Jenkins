@@ -26,7 +26,7 @@
 //
 //    gcloud artifacts locations list
 
-def call(key='', registry="$GAR_REGISTRY") {
+def call(key='', registry='') {
   key = key ?: env.get('GCP_SERVICEACCOUNT_KEY', error('dockerLoginGAR: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment'))
   registry = registry ?: env.get('GAR_REGISTRY', error('dockerLoginGAR: registry not specified and GAR_REGISTRY not set in the environment'))
   withEnv(["GCP_SERVICEACCOUNT_KEY=$key", "GAR_REGISTRY=$registry"]){
