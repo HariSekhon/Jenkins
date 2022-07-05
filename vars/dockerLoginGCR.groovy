@@ -22,7 +22,9 @@
 // must be called after gcpActivateServiceAccount.groovy
 // must have GCloud SDK in the calling environment or will fall back to attempting a direct Docker login
 
-def call(key="$GCP_SERVICEACCOUNT_KEY", registry="$GCR_REGISTRY") {
+def call(key='', registry='') {
+  key = key ?: env.get("GCP_SERVICEACCOUNT_KEY", error('dockerLoginGCR: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment'))
+  registry = registry ?: env.get("GCR_REGISTRY", error('dockerLoginGCR: registry not specified and GCR_REGISTRY not set in the environment'))
   withEnv(["GCP_SERVICEACCOUNT_KEY=$key", "GCR_REGISTRY=$registry"]){
     script {
       if(isCommandAvailable('gcloud')){
