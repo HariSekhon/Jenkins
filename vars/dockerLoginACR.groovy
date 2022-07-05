@@ -21,7 +21,8 @@
 //
 // $ACR_REGISTRY_NAME must be passed as the first argument or else set in the calling environment
 
-def call(registry="$ACR_REGISTRY_NAME") {
+def call(registry='') {
+  registry = registry ?: env.get("ACR_REGISTRY_NAME", error('dockerLoginACR: Azure registry name not specified and ACR_REGISTRY_NAME not set in the environment'))
   withEnv(["ACR_REGISTRY_NAME=$registry"]){
     script {
       // configures docker config with a token
