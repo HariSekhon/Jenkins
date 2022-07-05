@@ -57,6 +57,11 @@ def call(jobs=[]) {
           set -eux
           java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} get-job "$JOB" > "$JOB.xml"
           echo >> "$JOB.xml"
+          if command -v xmllint >/dev/null 2>&1; then
+            tmp="$(mktemp)"
+            xmllint < "$JOB.xml" > "$tmp"
+            mv "$tmp" "$JOB.xml"
+          fi
           echo "Downloaded config to file: $PWD/$JOB.xml"
         '''
       )
