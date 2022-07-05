@@ -27,12 +27,15 @@
 def call() {
   env.get("AWS_ACCOUNT_ID", error('dockerLoginECR: AWS_ACCOUNT_ID not set in the environment'))
   env.get("AWS_DEFAULT_REGION", error('dockerLoginECR: AWS_DEFAULT_REGION not set in the environment'))
+  ECR_TOKEN = sh(
+                label: 'Generating ECR Authentication Token',
+                returnStdout: true,
+                script: 'aws ecr get-login-password --region "$AWS_DEFAULT_REGION"'
+              )
   script {
-    ECR_TOKEN = sh(
-                  label: 'Generating ECR Authentication Token',
-                  returnStdout: true,
-                  script: 'aws ecr get-login-password --region "$AWS_DEFAULT_REGION"'
-                )
-    dockerLogin('AWS', ECR_TOKEN, "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com")
+    if(! ECR_TOKEN){
+      error('dockerLoginECR: Failed to generate ECR_TOKEN')
+    }
   }
+  dockerLogin('AWS', ECR_TOKEN, "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com")
 }
