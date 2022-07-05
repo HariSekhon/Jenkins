@@ -124,7 +124,15 @@ def call(Map args = [
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []){
             timeout(time: 5, unit: 'MINUTES') {
-              installPackages(['default-jdk', 'curl'])
+              // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+              // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+              installPackages(
+                [
+                  'default-jdk',
+                  'curl',
+                  'libxml2-utils', // for xmllint
+                ]
+              )
             }
           }
         }
