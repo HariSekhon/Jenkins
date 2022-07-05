@@ -20,7 +20,7 @@
 // GITLAB_USER and GITLAB_TOKEN must be passed as args or set in the calling environment
 
 def call(user='', token='') {
-  user = user ?: env.get('GITLAB_USER', error('dockerLoginGitlab: user not specified and GITLAB_USER not set in the environment'))
-  token = token ?: env.get('GITLAB_TOKEN', error('dockerLoginGitlab: token not specified and GITLAB_TOKEN not set in the environment'))
+  user = user ?: env.GITLAB_USER ?: error('dockerLoginGitlab: user not specified and GITLAB_USER not set in the environment')
+  token = token ?: env.GITLAB_TOKEN ?: error('dockerLoginGitlab: token not specified and GITLAB_TOKEN not set in the environment')
   dockerLogin(user, token, 'registry.gitlab.com')
 }
