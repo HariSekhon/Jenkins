@@ -30,7 +30,7 @@
 //      printAuth()
 
 def call(){
-  timeout(time: 5, unit: 'MINUTES') {
+  timeout(time: 2, unit: 'MINUTES') {
     echo 'Showing logged in status for any platforms we have CLIs available for'
 
     sh (
