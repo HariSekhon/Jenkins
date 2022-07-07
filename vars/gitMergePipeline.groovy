@@ -56,14 +56,15 @@ def call(from_branch, to_branch){
           }
         }
 
-        stage('Git Push') {
-          steps {
-            sh (
-              label: 'Git Push',
-              script: 'git push origin --all'
-            )
-          }
-        }
+        // git push needs to be done in the same step gitMerge to benefit properly from the locking
+        //stage('Git Push') {
+        //  steps {
+        //    sh (
+        //      label: 'Git Push',
+        //      script: 'git push origin --all'
+        //    )
+        //  }
+        //}
       }
 
       post {
