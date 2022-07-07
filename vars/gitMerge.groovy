@@ -21,7 +21,7 @@
 
 def call(fromBranch, toBranch, creds = ['github-ssh-key']){
   script {
-    assert creds instanceOf List<String>
+    assert creds instanceof List<String>
   }
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
