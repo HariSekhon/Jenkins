@@ -30,48 +30,52 @@
 //      printAuth()
 
 def call(){
-  echo 'Showing logged in status for any platforms we have CLIs available for'
+  timeout(time: 5, unit: 'MINUTES') {
+    echo 'Showing logged in status for any platforms we have CLIs available for'
 
-  sh label: 'Auth Status',
-     script: '''
-       set -eu
+    sh (
+      label: 'Auth Status',
+      script: '''
+        set -eu
 
-       whoami
-       echo
+        whoami
+        echo
 
-       if command -v aws >/dev/null 2>&1; then
-         echo "AWS:"
-         aws sts get-caller-identity || :
-         echo
-       fi
+        if command -v aws >/dev/null 2>&1; then
+          echo "AWS:"
+          aws sts get-caller-identity || :
+          echo
+        fi
 
-       if command -v gcloud >/dev/null 2>&1; then
-         echo "GCP:"
-         gcloud auth list || :
-         echo
-       fi
+        if command -v gcloud >/dev/null 2>&1; then
+          echo "GCP:"
+          gcloud auth list || :
+          echo
+        fi
 
-       if command -v az >/dev/null 2>&1; then
-         echo "Azure:"
-         az ad signed-in-user show || :
-         echo
-       fi
+        if command -v az >/dev/null 2>&1; then
+          echo "Azure:"
+          az ad signed-in-user show || :
+          echo
+        fi
 
-       if command -v gh >/dev/null 2>&1; then
-         gh auth status || :
-         #echo  # above command prints an extra newline anyway
-       fi
+        if command -v gh >/dev/null 2>&1; then
+          gh auth status || :
+          #echo  # above command prints an extra newline anyway
+        fi
 
-       if command -v docker >/dev/null 2>&1; then
-         if [ -f ~/.docker/config.json ]; then
-           if command -v jq >/dev/null 2>&1; then
-             echo "Docker registries logged in to:"
-             echo
-             jq -r '.auths | keys[]' ~/.docker/config.json
-             echo
-           fi
-         fi
-       fi
+        if command -v docker >/dev/null 2>&1; then
+          if [ -f ~/.docker/config.json ]; then
+            if command -v jq >/dev/null 2>&1; then
+              echo "Docker registries logged in to:"
+              echo
+              jq -r '.auths | keys[]' ~/.docker/config.json
+              echo
+            fi
+          fi
+        fi
 
-     '''
+      '''
+    )
+  }
 }
