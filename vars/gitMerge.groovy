@@ -41,8 +41,6 @@ def call(fromBranch, toBranch){
                 git checkout "$TO_BRANCH" --force
                 git pull --no-edit
                 git merge "origin/$FROM_BRANCH" --no-edit
-
-                git push
               '''
             )
           }
