@@ -59,7 +59,14 @@ def call(jobs=[]) {
           echo >> "$JOB.xml"
           if command -v xmllint >/dev/null 2>&1; then
             tmp="$(mktemp)"
-            xmllint < "$JOB.xml" > "$tmp"
+
+            # --nowarning because we don't want this cluttering the logs and having people raising questions:
+            #
+            # $JOB.xml:1: parser warning : Unsupported version '1.1'
+            # <?xml version='1.1' encoding='UTF-8'?>
+            #
+            xmllint --nowarning "$JOB.xml" > "$tmp"
+
             mv "$tmp" "$JOB.xml"
           fi
           echo "Downloaded config to file: $PWD/$JOB.xml"
