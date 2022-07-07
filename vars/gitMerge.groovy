@@ -20,7 +20,9 @@
 // XXX: define github-ssh-key credential SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
 
 def call(fromBranch, toBranch, creds = ['github-ssh-key']){
-  assert creds instanceOf List
+  script {
+    assert creds instanceOf List<String>
+  }
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
   lock(resource: label, inversePrecedence: true) {
