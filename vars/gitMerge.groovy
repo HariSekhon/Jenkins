@@ -17,7 +17,17 @@
 //                      G i t   M e r g e   B r a n c h e s
 // ========================================================================== //
 
-// XXX: define github-ssh-key credential SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
+// XXX: define 'github-ssh-key' credential (SSH private key) in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
+//
+//      See Also:
+//
+//        jenkins_cred_set_ssh_key.sh
+//          or
+//        jenkins_cred_cli_set_ssh_key.sh
+//
+//      scripts in DevOps Bash tools repo which can createthis quickly from a local private key using API or CLI
+//
+//        https://github.com/HariSekhon/DevOps-Bash-tools/
 
 def call(fromBranch, toBranch, credential = 'github-ssh-key'){
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
