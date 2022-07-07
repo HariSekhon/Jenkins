@@ -60,7 +60,7 @@ def call(from_branch, to_branch){
           steps {
             sh (
               label: 'Git Push',
-              script: 'git push --all'
+              script: 'git push origin --all'
             )
           }
         }
