@@ -44,10 +44,24 @@ def call(from_branch, to_branch){
 
       stages {
 
-        stage('Git Merge') {
+        stage('Environment') {
           steps {
             printEnv()
+          }
+        }
+
+        stage('Git Merge') {
+          steps {
             gitMerge("$from_branch", "$to_branch")
+          }
+        }
+
+        stage('Git Push') {
+          steps {
+            sh (
+              label: 'Git Push',
+              script: 'git push --all'
+            )
           }
         }
       }
