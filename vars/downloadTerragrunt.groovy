@@ -29,7 +29,7 @@ def call(version) {
   timeout(time: 5, unit: 'MINUTES') {
     installBinary(
       binary: 'terragrunt',
-      url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}""
+      url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}"
     )
   }
 }
