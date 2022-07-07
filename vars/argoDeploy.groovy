@@ -34,7 +34,7 @@ def call(app, timeoutMinutes=10){
       retry(2){
         timeout(time: timeoutMinutes, unit: 'MINUTES') {
           withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
-            echo "$label"
+            //echo "$label"
             sh (
               label: "$label",
               // tried hard refresh to work around this problem:
