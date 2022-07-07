@@ -17,14 +17,16 @@
 //                      G i t   M e r g e   B r a n c h e s
 // ========================================================================== //
 
-def call(fromBranch, toBranch){
+// XXX: define github-ssh-key credential SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
+
+def call(fromBranch, toBranch, creds = ['github-ssh-key']){
+  assert creds instanceOf List
   String label = "Git Merge from branch '$fromBranch' to branch '$toBranch'"
   echo "Acquiring Git Merge Lock: $label"
   lock(resource: label, inversePrecedence: true) {
     milestone ordinal: null, label: "Milestone: $label"
     timeout(time: 5, unit: 'MINUTES') {
-      // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
-      sshagent (credentials: ['github-ssh-key']) {
+      sshagent (credentials: creds) {
         retry(2) {
           withEnv(["FROM_BRANCH=$fromBranch", "TO_BRANCH=$toBranch"]) {
             gitSetup()
