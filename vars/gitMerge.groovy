@@ -53,6 +53,8 @@ def call(fromBranch, toBranch, credential = 'github-ssh-key'){
                 git pull --no-edit
                 git merge "origin/$FROM_BRANCH" --no-edit
 
+                # XXX: push is done here and not a separate stage (which would be nicer visually in a Blue Ocean pipeline)
+                #      because we need the lock to encompass the entire operation for safety
                 git push
               '''
             )
