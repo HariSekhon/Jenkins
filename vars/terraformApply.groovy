@@ -17,7 +17,7 @@
 //                         T e r r a f o r m   A p p l y
 // ========================================================================== //
 
-def call(args='', timeoutMinutes=30){
+def call(timeoutMinutes=30){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Apply - $unique"
@@ -38,7 +38,18 @@ def call(args='', timeoutMinutes=30){
             echo "$label"
             sh (
               label: "$label",
-              script: "terraform apply -input=false -auto-approve ${args} plan.zip"
+              // cannot add ${args} here when using saved plan, otherwise will get an error like this:
+              //
+              //[2022-07-11T15:45:39.085Z] + terraform apply -input=false -auto-approve -var-file ../tf_vars/datadog.tfvars plan.zip
+              //[2022-07-11T15:45:39.085Z] ╷
+              //[2022-07-11T15:45:39.085Z] │ Error: Can't set variables when applying a saved plan
+              //[2022-07-11T15:45:39.085Z] │
+              //[2022-07-11T15:45:39.085Z] │ The -var and -var-file options cannot be used when applying a saved plan
+              //[2022-07-11T15:45:39.085Z] │ file, because a saved plan includes the variable values that were set when
+              //[2022-07-11T15:45:39.085Z] │ it was created.
+              //[2022-07-11T15:45:39.085Z] ╵
+              //script returned exit code 1
+              script: "terraform apply -input=false -auto-approve plan.zip"
             )
           }
         }
