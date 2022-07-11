@@ -332,7 +332,7 @@ def call(Map args = [
         steps {
           withEnv(args.env){
             withCredentials(args.creds){
-              terraformApply(args.args)
+              terraformApply()
             }
           }
         }
