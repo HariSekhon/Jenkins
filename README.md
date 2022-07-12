@@ -162,9 +162,9 @@ Fork this repo to have full control over all updates.
 
 Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
 
-If you create environment branches to stage updates across dev/staging/production, then:
+You can then create tags or environment branches to stage updates across dev/staging/production.
 
-Enable the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
+If using environment branches, enable the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to automatically raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
 
 ## Related Repositories
 
