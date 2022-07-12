@@ -154,7 +154,7 @@ Import the library as shown above directly from this repo, replacing `@master` w
 
 ### Option 2 - Public Fork (fully automated)
 
-Fork this repo to have full control over all updates.
+Fork this repo for more control and visibility over all updates.
 
 Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
 
