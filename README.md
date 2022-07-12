@@ -148,15 +148,11 @@ See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared
 
 ## Production
 
-### Option 1 - private, semi-automated
+### Option 1 - Hashref
 
-Download the functions you want into your private jenkins shared library repo.
+Import the library as shown above directly from this repo, replacing `@master` with `@<hashref>` to fix to an immutable version (tags are not immutable). This is a GitHub security best practice for CI/CD as seen in this [doc](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions).
 
-You can use the [vars/download.sh](https://github.com/HariSekhon/Jenkins/blob/master/vars/download.sh) script to help you download given `*.groovy` files and periodically run it to get updates to these previously downloaded functions.
-
-You will be responsible for committing and reconciling any divergences in your local copies.
-
-### Option 2 - public fork, fully automated
+### Option 2 - Public Fork (fully automated)
 
 Fork this repo to have full control over all updates.
 
@@ -165,6 +161,14 @@ Enable the [fork-sync](https://github.com/HariSekhon/Jenkins/blob/master/.github
 You can then create tags or environment branches to stage updates across dev/staging/production.
 
 If using environment branches, enable the [fork-update-pr](https://github.com/HariSekhon/Jenkins/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to automatically raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
+
+### Option 3 - Private Copy (semi-automated)
+
+Download the functions you want into your private jenkins shared library repo.
+
+You can use the [vars/download.sh](https://github.com/HariSekhon/Jenkins/blob/master/vars/download.sh) script to help you download given `*.groovy` files and periodically run it to get updates to these previously downloaded functions.
+
+You will be responsible for committing and reconciling any divergences in your local copies.
 
 ## Related Repositories
 
