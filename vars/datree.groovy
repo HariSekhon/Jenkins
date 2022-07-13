@@ -42,15 +42,21 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
 
   milestone "$label"
 
-  withEnv(["DIR=${args.dir ?: '.'}", "KUSTOMIZE=${args.kustomize && 'kustomize' || ''}", "ARGS=${args.args}"]){
+  withEnv(["DIR=${args.dir ?: '.'}", "KUSTOMIZE=${args.kustomize}", "ARGS=${args.args}"]){
     // needs to be bash for pipefail detection
     sh (
       label "$label",
       script: '''#!/usr/bin/env bash
         set -euxo pipefail
 
-        find "$DIR" -type f -name '*.yaml' -o -type -f -name '*.yml' -print0 |
-        xargs -0 datree $KUSTOMIZE test --only-k8s-files $ARGS
+        if [ "$KUSTOMIZE" = true ]; then
+          pushd "$DIR"
+          datree kustomize test
+          popd
+        else
+          find "$DIR" -type f -name '*.yaml' -o -type -f -name '*.yml' -print0 |
+          xargs -0 datree test --only-k8s-files $ARGS
+        fi
       '''
     )
   }
