@@ -31,50 +31,57 @@ def call(app, timeoutMinutes=10){
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: null, label: "Milestone: $label"
     container('argocd') {
-      retry(2){
-        timeout(time: timeoutMinutes, unit: 'MINUTES') {
+      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+        waitUntil(initialRecurrencePeriod: 5000){
           withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
             //echo "$label"
-            sh (
-              label: "$label",
-              // tried hard refresh to work around this problem:
-              //
-              //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
-              //
-              // it seemed to work initially when run as a one off in the UI,
-              // but when applied in CI/CD and run every time to try to patch over that problem,
-              // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
-              script: '''#!/usr/bin/env bash
-                set -euxo pipefail
+            script {
+              int exitCode = sh (
+                label: "$label",
+                // tried hard refresh to work around this problem:
+                //
+                //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
+                //
+                // it seemed to work initially when run as a one off in the UI,
+                // but when applied in CI/CD and run every time to try to patch over that problem,
+                // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
+                returnStatus: true,
+                script: '''#!/usr/bin/env bash
+                  set -euxo pipefail
 
-                # might cause performance issues and 504 timeouts
-                #
-                #   https://github.com/argoproj/argo-cd/issues/9701
-                #
-                #argocd app get  "$APP" --grpc-web --hard-refresh
-                #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
+                  # might cause performance issues and 504 timeouts
+                  #
+                  #   https://github.com/argoproj/argo-cd/issues/9701
+                  #
+                  #argocd app get  "$APP" --grpc-web --hard-refresh
+                  #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
-                # workaround for issue:
-                #
-                #   https://github.com/argoproj/argo-cd/issues/5592
-                #
-                argocd --grpc-web app get "$APP" --refresh > /dev/null
+                  # workaround for issue:
+                  #
+                  #   https://github.com/argoproj/argo-cd/issues/5592
+                  #
+                  #argocd --grpc-web app get "$APP" --refresh > /dev/null
 
-                # needed in case auto-sync isn't enabled - above workaround isn't enough
-                argocd app sync "$APP" --grpc-web --force || :
+                  # needed in case auto-sync isn't enabled - above workaround isn't enough
+                  argocd app sync "$APP" --grpc-web --force
 
-                #argocd app wait "$APP" --sync --health --grpc-web --timeout "$TIMEOUT_SECONDS"
-                #
-                # workaround for issue:
-                #
-                #   https://github.com/argoproj/argo-cd/issues/6013
-                #
-                argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
-                argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
-                # HPAs transition to degraded, causing deployments to fail even on retry
-                #argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
-              '''
-            )
+                  # workaround for issue:
+                  #
+                  #   https://github.com/argoproj/argo-cd/issues/6013
+                  #
+                  #argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  #argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  # HPAs transition to degraded, causing deployments to fail even on retry
+                  ##argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  #
+                  # is no good because not running --health checks returns ok on the deployment in Jenkins pipeine when k8s pods are actually failing healthchecks
+
+                  argocd app wait "$APP" --sync --operation --health --grpc-web --timeout "$TIMEOUT_SECONDS"
+                '''
+              )
+              // convert exitCode boolean for waitUntil()
+              exitCode == 0
+            }
           }
         }
       }
