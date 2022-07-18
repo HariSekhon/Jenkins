@@ -42,7 +42,7 @@ def call(Map args = [
                       repo: '',
                       dir: '',
                       version: "$GIT_COMMIT",
-                      branch: "main",
+                      branch: 'main',
                       timeoutMinutes: 5
                      ]){
   // these get blocked in Jenkins Groovy Sandbox
@@ -104,6 +104,8 @@ def call(Map args = [
                 git commit -m "updated app images under '${args.dir}' to version '${args.version}'"
               fi
 
+              # XXX: push is done here and not a separate stage (which would be nicer visually in a Blue Ocean pipeline)
+              #      because we need the lock to encompass the entire operation for safety
               git push
             """
           )
