@@ -28,6 +28,9 @@ test:
 	@# script is in DevOps Bash tools repo, clone whole repo for dependency lib and put it in the $PATH
 	check_groovyc.sh
 
+push:
+	git push
+
 clean:
 	@#echo "Removing .class files"
 	find . -name '*.class' -exec rm {} \;
