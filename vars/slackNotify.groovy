@@ -39,8 +39,9 @@ def call(String channel='') {
     //  def userId = slackUserIdFromEmail(email)
     //  slack_users.add(userId)
     //}
+
     List userIds = slackUserIdsFromCommitters()
-    String userTags = userIds.collect { "<@$it>" }.join(' ')
+    env.USERTAGS = userIds.collect { "<@$it>" }.join(' ')
 
     env.BUILD_RESULT = currentBuild.result ?: 'SUCCESS'
 
@@ -60,7 +61,7 @@ def call(String channel='') {
     }
 
     env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
-    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS - $userTags"
+    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS - $USERTAGS"
 
   }
 
