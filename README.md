@@ -92,10 +92,10 @@ pipeline {
   }
   post {
     failure {
-      notify() // DRY wrapper function to sends notifications like Slack messages, emails etc.
+      Notify() // DRY wrapper function to sends notifications like Slack messages, emails etc.
     }
     fixed {
-      notify()
+      Notify()
     }
   }
 }
