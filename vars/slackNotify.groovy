@@ -61,7 +61,10 @@ def call(String channel='') {
     }
 
     env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
-    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS - $USERTAGS"
+    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS"
+    if(env.USERTAGS){
+      env.SLACK_MESSAGE += " - $USERTAGS"
+    }
 
   }
 
