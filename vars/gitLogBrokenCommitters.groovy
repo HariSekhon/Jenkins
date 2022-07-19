@@ -39,6 +39,9 @@ def call() {
     returnStdout: true,
     script: '''
       set -eux
+      if [ -z "${GIT_PREVIOUS_SUCCESSFUL_COMMIT:-}" ]; then
+        exit 0
+      fi
       git log --format='@%an' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
       grep -Fv -e Jenkins \
                -e '[bot]' |
