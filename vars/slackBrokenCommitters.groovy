@@ -51,7 +51,7 @@ def call(){
         // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed
         //echo "Trying to resolve Slack user using transformed email '$email'"
 
-        //userId = slackUserIdFromEmail(email: email, botUser: true)  // makes not difference
+        //userId = slackUserIdFromEmail(email: email, botUser: true)  // makes no difference
         userId = slackUserIdFromEmail(email)
       }
     }
