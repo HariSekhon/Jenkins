@@ -49,9 +49,9 @@ def call() {
       sort -fu
     '''
   ).trim().split('\n').collect{ it.trim() }
-  echo "Inferred Git committers List since last successful build via git log to be: $logCommittersList"
+  //echo "Inferred Git committers List since last successful build via git log to be: $logCommittersList"
   // gets a Map in ['user': 'email'] format
   Map logCommitters = mapUserEmails(logCommittersList)
-  echo "Inferred Git committers Map since last successful build via git log to be: $logCommitters"
+  echo "Inferred Git committers since last successful build via git log to be: $logCommitters"
   return logCommitters
 }
