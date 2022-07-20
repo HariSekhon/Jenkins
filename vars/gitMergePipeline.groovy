@@ -25,64 +25,53 @@
 
 def call(from_branch, to_branch){
 
-    pipeline {
+  pipeline {
 
-      agent any
+    agent any
 
-      options {
-        disableConcurrentBuilds()
-      }
-
-      // backup to catch GitHub -> Jenkins webhook failures
-      triggers {
-        pollSCM('H/10 * * * *')
-      }
-
-      environment {
-        SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
-      }
-
-      stages {
-
-        stage('Environment') {
-          steps {
-            printEnv()
-          }
-        }
-
-        stage('Git Merge') {
-          steps {
-            gitMerge("$from_branch", "$to_branch")
-          }
-        }
-
-        // git push needs to be done in the same step gitMerge to benefit properly from the locking
-        //stage('Git Push') {
-        //  steps {
-        //    sh (
-        //      label: 'Git Push',
-        //      script: 'git push origin --all'
-        //    )
-        //  }
-        //}
-      }
-
-      post {
-        failure {
-          script {
-            env.LOG_COMMITTERS = gitLogBrokenCommitters()
-          }
-          slackSend color: 'danger',
-            message: "Git Merge FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
-            botUser: true
-        }
-        fixed {
-          slackSend color: 'good',
-            message: "Git Merge Fixed - ${env.SLACK_MESSAGE}",
-            botUser: true
-        }
-      }
-
+    options {
+      disableConcurrentBuilds()
     }
+
+    // backup to catch GitHub -> Jenkins webhook failures
+    triggers {
+      pollSCM('H/10 * * * *')
+    }
+
+    stages {
+
+      stage('Environment') {
+        steps {
+          printEnv()
+        }
+      }
+
+      stage('Git Merge') {
+        steps {
+          gitMerge("$from_branch", "$to_branch")
+        }
+      }
+
+      // git push needs to be done in the same step gitMerge to benefit properly from the locking
+      //stage('Git Push') {
+      //  steps {
+      //    sh (
+      //      label: 'Git Push',
+      //      script: 'git push origin --all'
+      //    )
+      //  }
+      //}
+    }
+
+    post {
+      failure {
+        Notify()
+      }
+      fixed {
+        Notify()
+      }
+    }
+
+  }
 
 }
