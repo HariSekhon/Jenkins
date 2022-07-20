@@ -17,6 +17,8 @@
 //                            S l a c k   N o t i f y
 // ========================================================================== //
 
+// https://www.jenkins.io/doc/pipeline/steps/slack/
+
 // Sends a Slack notification from any post{} section in a pipeline
 //
 // - auto-determines Git log committers between last Success and Broken builds
@@ -54,6 +56,8 @@ def call(String channel='') {
     env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
   }
 
+  // $BUILD_URL       for Classic UI
+  // $RUN_DISPLAY_URL for Blue Ocean UI
   env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
   env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS $SLACK_USERTAGS"
 
