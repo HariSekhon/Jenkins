@@ -1193,52 +1193,18 @@ pipeline {
     }
     success {
       echo 'SUCCESS!'
-      //slackSend channel: '#ops-room',
-      //      color: 'good',
-      //      message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
     }
     fixed {
       echo "FIXED!"
-      //
-      // https://www.jenkins.io/doc/pipeline/steps/slack/
-      //
-      //slackSend color: 'good',
-      //  //message: "Build Fixed - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"        // Classic UI
-      //  //message: "Build Fixed - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|Open>)"  // Blue Ocean
-      //  message: "Build FAILED - ${env.SLACK_MESSAGE}"  // unified message with better links to Pipeline, Build # logs and even Allure Report
-
-      //slackSend color: 'good',
-      //  message: "Git Merge Fixed - ${env.SLACK_MESSAGE}" //,
-      //  //botUser: true  // needs to match the credential - so if Jenkins -> System Configuration -> Slack is using it, needs this or message won't come through
+      Notify()
     }
     failure {
       echo 'FAILURE!'
-      //mail to: team@example.com, subject: "Jenkins Pipeline Failed - Job '${env.JOB_NAME}' Build ${env.BUILD_NUMBER}"
+      Notify()  // calls slackNotify or other notification functions
+      // or
+      slackNotify() // resolves and tags committers who broke build
 
-      // https://www.jenkins.io/doc/pipeline/steps/slack/
-      //
-      // Get all users who have committed since the last successful build into an environment variable to add to the slack message
-      script {
-      //  // should return true in the UI, otherwise probably missing users:read and users:read.email permission
-      //  // didn't return any users, probably because the Git email addresses don't match the Slack users email addresses
-      //  //def userIds = slackUserIdsFromCommitters(botUser: true)
-      //  //def committers = userIds.collect { "<@$it>" }.join(' ')
-      //  //env.COMMITTERS = "$committers"
-      //  //
-        // GIT_PREVIOUS_SUCCESSFUL_COMMIT env var is not 100% reliable, sometimes it goes back too far, generating a long list of committers
-        env.GIT_COMMITTERS = sh(script:"git log --format='@%an' \"${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${env.GIT_COMMIT}\" | grep -Fv -e '[bot]' -e Jenkins | sort -u | tr '\\n' ' '", returnStdout: true, label: 'Get Committers').trim()
-      }
-      //echo "Inferred committers via slackUserIdsFromCommitters to be: ${env.COMMITTERS}"
-      echo "Inferred committers since last successful build via git log to be: ${env.GIT_COMMITTERS}"
-      slackSend color: 'danger',
-        message: "Git Merge FAILED - ${env.SLACK_MESSAGE} - @here ${env.GIT_COMMITTERS}" //,  // unfortunately @Hari Sekhon doesn't get activate notification the way @here does, nor does <@Hari Sekhon>
-        //botUser: true  // needed if using slackUserIdsFromCommitters() - must set up the Slack Jenkins app manually - see https://plugins.jenkins.io/slack/#bot-user-mode for details
-      //
-      //slackSend color: 'danger',
-      //  message: "Build FAILED - ${env.SLACK_MESSAGE} - ${env.NOTIFY_USERS}"  // unified message with better links to Pipeline, Build # logs and even Allure Report
-      //  // Older
-      //  //message: "Build FAILED - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"        // Classic UI
-      //  //message: "Build FAILED - Pipeline '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|Open>)"  // Blue Ocean
+      //mail to: team@example.com, subject: "Jenkins Pipeline Failed - Job '${env.JOB_NAME}' Build ${env.BUILD_NUMBER}"
     }
     //unsuccessful {
     //}
