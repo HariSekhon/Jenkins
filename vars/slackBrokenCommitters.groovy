@@ -48,14 +48,13 @@ def call(){
       String originalEmail = email
       email = emailTransform(email)
       if(email != originalEmail){
-        // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed
+        // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed (update: only when doesn't have permissions it seems, blank when working)
         //echo "Trying to resolve Slack user using transformed email '$email'"
 
         //userId = slackUserIdFromEmail(email: email, botUser: true)  // makes no difference
         userId = slackUserIdFromEmail(email)
       }
     }
-    //echo "userId = $userId" // null even with the right email address
     if(userId){
       userTags.add("<@$userId>")
     } else {
