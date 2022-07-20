@@ -19,22 +19,21 @@
 
 // abstracted from previous pipelines gitMergePipeline, terraformPipe, jenkinsBackupJobConfigsPipeline
 
+// returns Map of committers since last successful build, in format ['username': 'email']
+
 // Example Usage:
 //
 //      failure {
 //        script {
-//          env.LOG_COMMITTERS = gitLogBrokenCommitters()
+//          Map committers = gitLogBrokenCommitters()
+//          // send notification to these users
+//          // see slackBrokenCommitters.groovy and slackNotify.groovy for examples
 //        }
-//
-//        // then use it in whichever notification method you want:
-//
-//        slackSend color: 'danger',
-//          message: "Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
-//          botUser: true
 //      }
 
 def call() {
-  logCommitters = sh (
+  // gets a List in ['username<email>'] format
+  List logCommittersList = sh (
     label: 'Get Git Log Committers Since Last Successful Build',
     returnStdout: true,
     script: '''
@@ -42,13 +41,24 @@ def call() {
       if [ -z "${GIT_PREVIOUS_SUCCESSFUL_COMMIT:-}" ]; then
         exit 0
       fi
-      git log --format='@%an' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
+      git log --format='%an <%ae>' "${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..${GIT_COMMIT}" |
       grep -Fv -e Jenkins \
                -e '[bot]' |
-      sort -fu |
-      tr '\n' ' '
+      sort -fu
     '''
-  ).trim()
+  ).trim().split('\n').collect{ it.trim() }
+  echo "Inferred Git committers since last successful build via git log to be: $logCommittersList"
+  // gets a Map in ['user': 'email'] format
+  Map logCommitters = [:]
+  logCommittersList.each {
+    if((match = it =~ /^(.+)<(.+)>$/)){
+      username = match.group(1)
+      email = match.group(2)
+      logCommitters.put(username, email)
+    } else {
+      warning("failed to parse username<email>: $it")
+    }
+  }
   echo "Inferred Git committers since last successful build via git log to be: $logCommitters"
   return logCommitters
 }
