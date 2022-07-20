@@ -46,11 +46,12 @@ def call(String channel='') {
       env.SLACK_COLOR = 'danger'
   }
 
+  env.SLACK_USERTAGS = ''
   if(env.SLACK_COLOR != 'good'){
     env.SLACK_USERTAGS = slackBrokenCommitters().join(' ')
-    if(env.SLACK_USERTAGS){
-      env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
-    }
+  }
+  if(env.SLACK_USERTAGS){
+    env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
   }
 
   env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
