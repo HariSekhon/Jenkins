@@ -92,7 +92,7 @@ pipeline {
   }
   post {
     failure {
-      Notify() // DRY wrapper function to sends notifications like Slack messages, emails etc. Uppercase N because lowercase clashes with java keyword
+      Notify() // DRY wrapper function to send notifications like Slack messages, emails etc. Uppercase N because lowercase clashes with java keyword
     }
     fixed {
       Notify()
