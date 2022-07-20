@@ -23,30 +23,33 @@
 // if Slack still cannot resolve the email address, then returns the username instead
 
 def call(){
-  // this returns nothing - probably because Committers emails don't always match Slack emails
+  // this returns nothing - probably because Committers emails don't always match Slack emails - so doing more advanced handling below with emailTranform() fallback
   //List userIds = slackUserIdsFromCommitters()
-  //env.USERTAGS = userIds.collect { "<@$it>" }.join(' ')
+  //String userTags = userIds.collect { "<@$it>" }
 
   Map logCommitters = gitLogBrokenCommitters()
   List userTags = []
   logCommitters.each {
     String email = it.value
+    // echo's the username that is being tried
     String userId = slackUserIdFromEmail(email)
     if(!userId){
-      echo "Slack ID not found for email '$email'"
+      //echo "Slack ID not found for email '$email'"
       String originalEmail = email
       email = emailTransform(email)
       if(email != originalEmail){
-        echo "Trying to resolve Slack user using transformed email '$email'"
+        // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed
+        //echo "Trying to resolve Slack user using transformed email '$email'"
         userId = slackUserIdFromEmail(email)
       }
     }
     if(userId){
-      userTags.add("@$userId")
+      userTags.add("<@$userId>")
     } else {
       String name = it.key
       echo "Email '$email' didn't resolve to any Slack user, using name '$name' instead"
-      userTags.add(name)
+      // the @ doesn't work, but makes firstname/lastname groupings across whitespace a little more obvious
+      userTags.add("@$name")
     }
   }
   return userTags
