@@ -1,0 +1,53 @@
+//
+//  Author: Hari Sekhon
+//  Date: 2022-07-20 12:44:11 +0100 (Wed, 20 Jul 2022)
+//
+//  vim:ts=2:sts=2:sw=2:et
+//
+//  https://github.com/HariSekhon/Jenkins
+//
+//  License: see accompanying Hari Sekhon LICENSE file
+//
+//  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+//
+//  https://www.linkedin.com/in/HariSekhon
+//
+
+// ========================================================================== //
+//                         E m a i l   T r a n s f o r m
+// ========================================================================== //
+
+// Munges an email from one format to another based on rules available in the environment for maximum portability
+//
+// Rules:
+//
+//  1. If EMAIL_TRANSFORMS environment variable is set, for each newline separated 'key=value' pair, replaces the key with the value in the email address via regex match. Powerful, use carefully
+//  2. If EMAIL_DOMAIN_TRANSFORM environment variable is set, replaces anything after the @ symbol with that domain
+//     - XXX: warning - this can lead to collisions if 2 different people have the same username prefix portions of email addresses from different domains eg. john@domain1.com and john@domain2.com both get munged to john@$EMAIL_DOMAIN
+
+//@NonCPS
+def call(String email) {
+  def matcher
+  if(env.EMAIL_TRANSFORMS){
+    String emailTransformList = env.EMAIL_TRANSFORMS.trim().split('\n').collect{ it.trim() }
+    Map emailTransforms = emailTransformList.collectEntries {
+      // ==~ anchored match returns boolean
+      if( ! it || ! it ==~ /^[^=]+=[^=]+$/){
+        return [:]
+      }
+      String key = it.split('=')[0]
+      String value = it.split('=')[-1]
+      return [key: value]
+    }
+    emailTransforms.each {
+      email = email.replaceAll(/"$key"/, "$value")
+    }
+    if(env.EMAIL_DOMAIN_TRANSFORM){
+      newDomain = env.EMAIL_DOMAIN_TRANSFORM.trim()
+      if(newDomain){
+        email = email.replaceFirst(/@.*$/, "$newDomain")
+      }
+    }
+  }
+  return email
+}
