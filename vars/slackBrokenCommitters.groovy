@@ -27,13 +27,13 @@ def call(){
     //env.USERTAGS = userIds.collect { "<@$it>" }.join(' ')
 
     Map logCommitters = gitLogBrokenCommitters()
-    List userTags
+    List userTags = []
     logCommitters.each {
-      def userId = slackUserIdFromEmail(it.value)
+      String userId = slackUserIdFromEmail(it.value)
       if(userId){
         userTags.add("@$userId")
       } else {
-        userTags.add(it.name)
+        userTags.add(it.key)
       }
     }
     return userTags
