@@ -31,6 +31,12 @@
 //        }
 //      }
 
+// matcher is non-serializable and will result in this exception in Jenkins due to it wanting to be able to save state to disk for durability/resume:
+//
+//  Caused: java.io.NotSerializableException: java.util.regex.Matcher
+//
+// this annotation tells it not to try to save the local variables of this function
+@NonCPS
 def call() {
   // gets a List in ['username<email>'] format
   List logCommittersList = sh (
