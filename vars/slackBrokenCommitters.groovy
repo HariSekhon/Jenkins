@@ -19,7 +19,8 @@
 
 // returns a List of Slack userIds from gitLogBrokenCommitters
 //
-// if a git log committer's email address is not resolved to a Slack userId, then returns the username instead
+// if a git log committer's email address is not resolved to a Slack userId, then attempts to use emailTransform() rules and tries using that transformed email address
+// if Slack still cannot resolve the email address, then returns the username instead
 
 def call(){
   // this returns nothing - probably because Committers emails don't always match Slack emails
@@ -30,12 +31,17 @@ def call(){
   List userTags = []
   logCommitters.each {
     String email = it.value
-    email = emailTransform(email)
     String userId = slackUserIdFromEmail(email)
     if(userId){
       userTags.add("@$userId")
     } else {
-      userTags.add(it.key)
+      email = emailTransform(email)
+      userId = slackUserIdFromEmail(email)
+      if(userId){
+        userTags.add("@$userId")
+      } else {
+        userTags.add(it.key)
+      }
     }
   }
   return userTags
