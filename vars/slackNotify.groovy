@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 //
 //  Author: Hari Sekhon
 //  Date: 2022-07-19 15:59:50 +0100 (Tue, 19 Jul 2022)
@@ -32,17 +31,6 @@ def call(String channel='') {
 
   script {
 
-    //env.LOG_COMMITTERS = gitLogBrokenCommitters()
-    //committer_emails = env.LOG_COMMITTERS.split()
-    //slack_users = []
-    //committer_emails.each {
-    //  def userId = slackUserIdFromEmail(email)
-    //  slack_users.add(userId)
-    //}
-
-    List userIds = slackUserIdsFromCommitters()
-    env.USERTAGS = userIds.collect { "<@$it>" }.join(' ')
-
     env.BUILD_RESULT = currentBuild.result ?: 'SUCCESS'
 
     //if(env.BUILD_RESULT == 'SUCCESS'){
@@ -60,12 +48,15 @@ def call(String channel='') {
         env.SLACK_COLOR = 'danger'
     }
 
-    env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
-    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS"
-    if(env.USERTAGS){
-      env.SLACK_MESSAGE += " - $USERTAGS"
+    if(env.SLACK_COLOR != 'good'){
+      env.SLACK_USERTAGS = slackBrokenCommitters.join(' ')
+      if(env.SLACK_USERTAGS){
+        env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
+      }
     }
 
+    env.SLACK_LINKS  = "Pipeline <$JOB_DISPLAY_URL|$JOB_NAME> - <$RUN_DISPLAY_URL|Build #$BUILD_NUMBER>"
+    env.SLACK_MESSAGE = "Job $BUILD_RESULT - $SLACK_LINKS $SLACK_USERTAGS"
   }
 
   slackSend (
