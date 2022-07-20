@@ -14,9 +14,12 @@
 //
 
 // ========================================================================== //
-//           Maps a list of ['Username <email>'] to a Map of [user:email] format
+//                          M a p   U s e r   E m a i l
 // ========================================================================== //
 
+// Processes a List of ['Username <email>']
+//        to a Map  of [username:email]
+//
 // see gitLogBrokenCommitters.groovy for example usage
 
 // Limitation: usernames that have used more than one email addresses will overwrite with the last email in the list
