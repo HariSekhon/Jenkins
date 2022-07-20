@@ -21,15 +21,19 @@
 //
 // Rules:
 //
-//  1. If EMAIL_TRANSFORMS environment variable is set, for each newline separated 'key=value' pair, replaces the key with the value in the email address via regex match. Powerful, use carefully
+//  1. If EMAIL_TRANSFORMS environment variable is set, for each comma separated 'key=value' pair, replaces the key with the value in the email address via regex match. Powerful, use carefully
 //  2. If EMAIL_DOMAIN_TRANSFORM environment variable is set, replaces anything after the @ symbol with that domain
 //     - XXX: warning - this can lead to collisions if 2 different people have the same username prefix portions of email addresses from different domains eg. john@domain1.com and john@domain2.com both get munged to john@$EMAIL_DOMAIN
 
 //@NonCPS
 def call(String email) {
+  String originalEmail = email
+  // define matcher locally so @NonCPS excludes from serialization
   def matcher
   if(env.EMAIL_TRANSFORMS){
-    String emailTransformList = env.EMAIL_TRANSFORMS.trim().split('\n').collect{ it.trim() }
+    // would have preferred newline split but Jenkins global env var doesn't allow newlines, even pasted multiline becomes join(' ') in UI,
+    // and not DRY to define in pipelines where we can use actual multiline strings
+    String emailTransformList = env.EMAIL_TRANSFORMS.trim().split(',').collect{ it.trim() }
     Map emailTransforms = emailTransformList.collectEntries {
       // ==~ anchored match returns boolean
       if( ! it || ! it ==~ /^[^=]+=[^=]+$/){
@@ -40,14 +44,17 @@ def call(String email) {
       return [key: value]
     }
     emailTransforms.each {
-      email = email.replaceAll(/"$key"/, "$value")
+      email = email.replaceAll(/$it.key/, "$value")
     }
-    if(env.EMAIL_DOMAIN_TRANSFORM){
-      newDomain = env.EMAIL_DOMAIN_TRANSFORM.trim()
-      if(newDomain){
-        email = email.replaceFirst(/@.*$/, "$newDomain")
-      }
+  }
+  if(env.EMAIL_DOMAIN_TRANSFORM){
+    String newDomain = env.EMAIL_DOMAIN_TRANSFORM.trim()
+    if(newDomain){
+      email = email.replaceFirst(/@.+$/, "@$newDomain")
     }
+  }
+  if(email != originalEmail){
+    echo "Transformed email from '$originalEmail' to '$email'"
   }
   return email
 }
