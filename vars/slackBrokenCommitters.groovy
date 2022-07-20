@@ -22,9 +22,19 @@
 // if a git log committer's email address is not resolved to a Slack userId, then attempts to use emailTransform() rules and tries using that transformed email address
 // if Slack still cannot resolve the email address, then returns the username instead
 
+// XXX: requires botUser mode and the users:read and users:read.email API scopes, see:
+//
+//        https://plugins.jenkins.io/slack/#plugin-content-user-id-look-up
+//
+//      Go here:
+//
+//        https://api.slack.com/apps
+//
+//      then jenkins app, ensure 'users:read' and 'users:read.email' API scopes, click 'Reinstall App' at the top to make the permissions take effect before the slackUserIdFromEmail() resolution will work - otherwise will return 'null'
+
 def call(){
   // this returns nothing - probably because Committers emails don't always match Slack emails - so doing more advanced handling below with emailTranform() fallback
-  //List userIds = slackUserIdsFromCommitters()
+  //List userIds = slackUserIdsFromCommitters(botUser: true)
   //String userTags = userIds.collect { "<@$it>" }
 
   Map logCommitters = gitLogBrokenCommitters()
@@ -32,7 +42,7 @@ def call(){
   logCommitters.each {
     String email = it.value
     // echo's the username that is being tried
-    String userId = slackUserIdFromEmail(email)
+    String userId = slackUserIdFromEmail(email: email, botUser: true)
     if(!userId){
       //echo "Slack ID not found for email '$email'"
       String originalEmail = email
@@ -40,9 +50,12 @@ def call(){
       if(email != originalEmail){
         // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed
         //echo "Trying to resolve Slack user using transformed email '$email'"
+
+        //userId = slackUserIdFromEmail(email: email, botUser: true)  // makes not difference
         userId = slackUserIdFromEmail(email)
       }
     }
+    //echo "userId = $userId" // null even with the right email address
     if(userId){
       userTags.add("<@$userId>")
     } else {
