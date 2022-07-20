@@ -87,7 +87,6 @@ def call(Map args = [
       APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
       //TF_LOG = "$DEBUG"
-      SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
 
     stages {
@@ -255,17 +254,10 @@ def call(Map args = [
 
     post {
       failure {
-        script {
-          env.LOG_COMMITTERS = gitLogBrokenCommitters()
-        }
-        slackSend color: 'danger',
-          message: "Terragrunt Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
-          botUser: true
+        Notify()
       }
       fixed {
-        slackSend color: 'good',
-          message: "Terragrunt Job Fixed - ${env.SLACK_MESSAGE}",
-          botUser: true
+        Notify()
       }
     }
 
