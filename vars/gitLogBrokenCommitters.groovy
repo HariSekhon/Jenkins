@@ -20,6 +20,8 @@
 // abstracted from previous pipelines gitMergePipeline, terraformPipe, jenkinsBackupJobConfigsPipeline
 
 // returns Map of committers since last successful build, in format ['username': 'email']
+//
+// Limitation: users that have just changed email addresses will only use the lexiographically later email address
 
 // Example Usage:
 //
@@ -31,12 +33,6 @@
 //        }
 //      }
 
-// matcher is non-serializable and will result in this exception in Jenkins due to it wanting to be able to save state to disk for durability/resume:
-//
-//  Caused: java.io.NotSerializableException: java.util.regex.Matcher
-//
-// this annotation tells it not to try to save the local variables of this function
-@NonCPS
 def call() {
   // gets a List in ['username<email>'] format
   List logCommittersList = sh (
@@ -53,18 +49,9 @@ def call() {
       sort -fu
     '''
   ).trim().split('\n').collect{ it.trim() }
-  echo "Inferred Git committers since last successful build via git log to be: $logCommittersList"
+  echo "Inferred Git committers List since last successful build via git log to be: $logCommittersList"
   // gets a Map in ['user': 'email'] format
-  Map logCommitters = [:]
-  logCommittersList.each {
-    if((match = it =~ /^(.+)<(.+)>$/)){
-      username = match.group(1)
-      email = match.group(2)
-      logCommitters.put(username, email)
-    } else {
-      warning("failed to parse username<email>: $it")
-    }
-  }
-  echo "Inferred Git committers since last successful build via git log to be: $logCommitters"
+  Map logCommitters = mapUserEmails(logCommittersList)
+  echo "Inferred Git committers Map since last successful build via git log to be: $logCommitters"
   return logCommitters
 }
