@@ -96,6 +96,8 @@ pipeline {
     }
     fixed {
       Notify()
+      // or call individual notification functions like
+      //slackNotify()
     }
   }
 }
