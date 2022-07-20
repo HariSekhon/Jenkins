@@ -49,7 +49,7 @@ def call(String channel='') {
     }
 
     if(env.SLACK_COLOR != 'good'){
-      env.SLACK_USERTAGS = slackBrokenCommitters.join(' ')
+      env.SLACK_USERTAGS = slackBrokenCommitters().join(' ')
       if(env.SLACK_USERTAGS){
         env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
       }
