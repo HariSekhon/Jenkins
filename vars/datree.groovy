@@ -45,7 +45,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   withEnv(["DIR=${args.dir ?: '.'}", "KUSTOMIZE=${args.kustomize}", "ARGS=${args.args}"]){
     // needs to be bash for pipefail detection
     sh (
-      label "$label",
+      label: "$label",
       script: '''#!/usr/bin/env bash
         set -euxo pipefail
 
