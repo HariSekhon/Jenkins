@@ -32,16 +32,21 @@ def call(){
   logCommitters.each {
     String email = it.value
     String userId = slackUserIdFromEmail(email)
+    if(!userId){
+      echo "Slack ID not found for email '$email'"
+      String originalEmail = email
+      email = emailTransform(email)
+      if(email != originalEmail){
+        echo "Trying to resolve Slack user using transformed email '$email'"
+        userId = slackUserIdFromEmail(email)
+      }
+    }
     if(userId){
       userTags.add("@$userId")
     } else {
-      email = emailTransform(email)
-      userId = slackUserIdFromEmail(email)
-      if(userId){
-        userTags.add("@$userId")
-      } else {
-        userTags.add(it.key)
-      }
+      String name = it.key
+      echo "Email '$email' didn't resolve to any Slack user, using name '$name' instead"
+      userTags.add(name)
     }
   }
   return userTags
