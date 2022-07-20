@@ -74,7 +74,6 @@ def call(Map args = [
 
     environment {
       DIR = "${args.dir ?: '.'}"
-      SLACK_MESSAGE = "Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
     }
 
     stages {
@@ -237,17 +236,10 @@ def call(Map args = [
 
     post {
       failure {
-        script {
-          env.LOG_COMMITTERS = gitLogBrokenCommitters()
-        }
-        slackSend color: 'danger',
-          message: "Job FAILED - ${env.SLACK_MESSAGE} - @here ${env.LOG_COMMITTERS}",
-          botUser: true
+        Notify()
       }
       fixed {
-        slackSend color: 'good',
-          message: "Job Fixed - ${env.SLACK_MESSAGE}",
-          botUser: true
+        Notify()
       }
     }
 
