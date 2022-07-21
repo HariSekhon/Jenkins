@@ -36,7 +36,8 @@ Jenkinsfile:
 
 pipeline {
   stages {
-    stage('My Example'){
+  
+    stage('Simple Example'){
       steps {
         // call any function from this libary by its filename under vars/... without the .groovy extension
         //
@@ -45,43 +46,26 @@ pipeline {
         // calls vars/printEnv.groovy
         printEnv()
 
-        // log in to GCP cloud with a service account key
-        gcpActivateServiceAccount()
+        // run logins for anything you have environment variable secrets/tokens for,
+        // including AWS, GCP, DockerHub, GHCR, ECR, GCR, GAR, ACR, GitLab, Quay
+        // see examples of individual service login functions in the next Stage
+        login()
 
-        // log in to DockerHub
-        dockerLogin()
-
-        // log in to AWS Elastic Container Registry
-        dockerLoginECR()
-
-        // log in to Google Container Registry
-        dockerLoginGCR()
-
-        // show all your authentications and who you're logged in as
+        // show all the cloud systems you're logged in to and who you're logged in as
         printAuth()
 
         // launch a GCP Cloud Build job, by default against your cloudbuild.yaml if no args given
         gcpCloudBuild()
 
-        // run a script with locks to prevent another script or deployment happening at same time
-        // newer runs will wait to acquire the locks, older pending runs will be skipped
-        // third arg is optional to time out this script after 30 minutes
-        scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
-
         // download tools to $HOME/bin
         downloadTerraform('1.2.3')
         downloadJenkinsCLI()
-        // OR
-        // download, extract and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
-        // here ${version} is a variable previously defined, while {os} and {arch} with no dollar sign are auto-inferred placeholders
-        installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
-        installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
 
         // prompts for human click approval before proceeding to next step ie. production deployment
         approval()
 
-        // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize, images served from GCR registry
-        gitKustomizeImage(["$GCR_REGISTRY/$GCR_PROJECT/app1", "$GCR_REGISTRY/$GCR_PROJECT/app2"])
+        // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize
+        gitKustomizeImage(['myrepo/app1', 'myrepo/app2'])
 
         // deploy to Kubernetes via ArgoCD
         argoDeploy('my-app')
@@ -89,19 +73,64 @@ pipeline {
         // see groovy files under vars/ for more documentation, details and many more useful functions
       }
     }
+    
+    stage('Advanced Example'){
+      steps {
+        // run individual login functions instead of login()
+        
+        // log in to GCP cloud with a service account key
+        gcpActivateServiceAccount()
+        // set up GOOGLE_APPLICATION_CREDENTIALS keyfile for 3rd party apps like Terraform
+        gcpSetupApplicationCredentials()
+        
+        // log in to DockerHub
+        dockerLogin()
+        
+        // log in to AWS Elastic Container Registry
+        dockerLoginECR()
+        
+        // log in to Google Container Registry
+        dockerLoginGCR()
+        
+        // flexible custom targeted binary downloads instead of convenience functions like downloadTerraform(), downloadJenkinsCLI():
+        //
+        // download, extract and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
+        // here ${version} is a variable previously defined, while {os} and {arch} with no dollar sign are auto-inferred placeholders
+        installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
+        installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
+       
+        // run a script with locks to prevent another script or deployment happening at same time
+        // newer runs will wait to acquire the locks, older pending runs will be skipped
+        // third arg is optional to time out this script after 30 minutes
+        scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
+        
+        // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize, images served from GCR registry
+        gitKustomizeImage(["$GCR_REGISTRY/$GCR_PROJECT/app1", "$GCR_REGISTRY/$GCR_PROJECT/app2"])
+        
+        // parallelize syncs for deployments
+        argoSync('app1')
+        argoSync('app2')
+        // waits on each app being fully deployed and passing healthchecks
+        argoDeploy('app1')
+        argoDeploy('app2')
+      }
+    }
+    
   }
+  
+  // send notifications on broken builds and recoveries
   post {
     failure {
       // finds Git committers who broke build,
       // resolves their Slack user IDs and
       // actively notifies them with @user1 @user2 tags
       slackNotify()
-
-      // calls one or more notify functions to send Slack messages, emails etc. such as slackNotify()
-      // Uppercase N because lowercase clashes with java keyword
-      Notify()
     }
     fixed {
+      // calls one or more notify functions to send Slack messages, emails etc.
+      // such as slackNotify()
+      // Uppercase N because lowercase clashes with java keyword
+      // Use Notify() instead of multiple calls to different notify functions
       Notify()
     }
   }
