@@ -46,7 +46,7 @@ def call(app, timeoutMinutes=5){
                 script: '''
                   set -eux
 
-                  argocd app sync "$APP" --grpc-web --force
+                  argocd app sync "$APP" --grpc-web --force --timeout "$TIMEOUT_SECONDS"
                 '''
               )
               // convert exitCode boolean for waitUntil()
