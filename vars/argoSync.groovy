@@ -27,6 +27,9 @@
 //
 // The ArgoCD app must be passed as the first argument
 
+// ArgoCD sync usually takes 20-60 secs even for a large app full of different deployments and many cronjobs,
+// so 5 minute timeout default should be more than enough for all sane use cases
+
 def call(app, timeoutMinutes=5){
   String label = "ArgoCD Sync - App: '$app'"
   int timeoutSeconds = timeoutMinutes * 60
