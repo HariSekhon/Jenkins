@@ -65,7 +65,7 @@ pipeline {
         approval()
 
         // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize
-        gitKustomizeImage(["myrepo/app1", "myrepo/app2"])
+        gitKustomizeImage(['myrepo/app1', 'myrepo/app2'])
 
         // deploy to Kubernetes via ArgoCD
         argoDeploy('my-app')
