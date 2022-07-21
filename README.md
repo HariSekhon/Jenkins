@@ -92,10 +92,14 @@ pipeline {
   }
   post {
     failure {
-      Notify() // DRY wrapper function to send notifications like Slack messages, emails etc. Uppercase N because lowercase clashes with java keyword
-      // or
-      // finds Git committers who broke build, resolves their Slack user IDs and actively notifies them in channel with @user1 @user2 etc.
+      // finds Git committers who broke build,
+      // resolves their Slack user IDs and
+      // actively notifies them with @user1 @user2 tags
       slackNotify()
+
+      // calls one or more notify functions for Slack messages, emails etc.
+      // Uppercase N because lowercase clashes with java keyword
+      Notify()
     }
     fixed {
       Notify()
