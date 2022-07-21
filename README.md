@@ -108,8 +108,8 @@ pipeline {
         gitKustomizeImage(["$GCR_REGISTRY/$GCR_PROJECT/app1", "$GCR_REGISTRY/$GCR_PROJECT/app2"])
         
         // parallelize syncs for deployments
-        argoSync("app1")
-        argoSync("app2")
+        argoSync('app1')
+        argoSync('app2')
         // waits on each app being fully deployed and passing healthchecks
         argoDeploy('app1')
         argoDeploy('app2')
