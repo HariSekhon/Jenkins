@@ -125,12 +125,12 @@ pipeline {
       // resolves their Slack user IDs and
       // actively notifies them with @user1 @user2 tags
       slackNotify()
-
-      // calls one or more notify functions to send Slack messages, emails etc. such as slackNotify()
-      // Uppercase N because lowercase clashes with java keyword
-      Notify()
     }
     fixed {
+      // calls one or more notify functions to send Slack messages, emails etc.
+      // such as slackNotify()
+      // Uppercase N because lowercase clashes with java keyword
+      // Use Notify() instead of multiple calls to different notify functions
       Notify()
     }
   }
