@@ -43,8 +43,8 @@ def call(app, timeoutMinutes=5){
               int exitCode = sh (
                 label: "$label",
                 returnStatus: true,
-                script: '''#!/usr/bin/env bash
-                  set -euxo pipefail
+                script: '''
+                  set -eux
 
                   argocd app sync "$APP" --grpc-web --force
                 '''
