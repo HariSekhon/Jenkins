@@ -36,7 +36,7 @@ Jenkinsfile:
 
 pipeline {
   stages {
-  
+
     stage('Simple Example'){
       steps {
         // call any function from this libary by its filename under vars/... without the .groovy extension
@@ -73,51 +73,53 @@ pipeline {
         // see groovy files under vars/ for more documentation, details and many more useful functions
       }
     }
-    
+
     stage('Advanced Example'){
       steps {
         // run individual login functions instead of login()
-        
+
         // log in to GCP cloud with a service account key
         gcpActivateServiceAccount()
         // set up GOOGLE_APPLICATION_CREDENTIALS keyfile for 3rd party apps like Terraform
         gcpSetupApplicationCredentials()
-        
+
         // log in to DockerHub
         dockerLogin()
-        
+
         // log in to AWS Elastic Container Registry
         dockerLoginECR()
-        
+
         // log in to Google Container Registry
         dockerLoginGCR()
-        
+
         // flexible custom targeted binary downloads instead of convenience functions like downloadTerraform(), downloadJenkinsCLI():
         //
         // download, extract and install a specific version of a binary to /usr/local/bin if root or $HOME/bin if run as a user
         // here ${version} is a variable previously defined, while {os} and {arch} with no dollar sign are auto-inferred placeholders
         installBinary(url: "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_{os}_{arch}.zip", binary: 'terraform')
         installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
-       
+
         // run a script with locks to prevent another script or deployment happening at same time
         // newer runs will wait to acquire the locks, older pending runs will be skipped
         // third arg is optional to time out this script after 30 minutes
         scriptLockExecute('/path/to/script.sh', ['deployment lock', 'script lock'], 30)
-        
+
         // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize, images served from GCR registry
         gitKustomizeImage(["$GCR_REGISTRY/$GCR_PROJECT/app1", "$GCR_REGISTRY/$GCR_PROJECT/app2"])
-        
-        // parallelize syncs for deployments
+
+        // parallelizes deployments by triggering syncs before deployment wait
+        // if you want to save an extra 30 secs, use 2 parallel stages for these 2 syncs
         argoSync('app1')
         argoSync('app2')
+
         // waits on each app being fully deployed and passing healthchecks
         argoDeploy('app1')
         argoDeploy('app2')
       }
     }
-    
+
   }
-  
+
   // send notifications on broken builds and recoveries
   post {
     failure {
