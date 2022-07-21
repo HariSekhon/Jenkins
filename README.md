@@ -97,7 +97,7 @@ pipeline {
       // actively notifies them with @user1 @user2 tags
       slackNotify()
 
-      // calls one or more notify functions for Slack messages, emails etc.
+      // calls one or more notify functions to send Slack messages, emails etc. such as slackNotify()
       // Uppercase N because lowercase clashes with java keyword
       Notify()
     }
