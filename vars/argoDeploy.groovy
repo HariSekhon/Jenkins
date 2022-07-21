@@ -49,8 +49,8 @@ def call(app, timeoutMinutes=10){
                 // but when applied in CI/CD and run every time to try to patch over that problem,
                 // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
                 returnStatus: true,
-                script: '''#!/usr/bin/env bash
-                  set -euxo pipefail
+                script: '''
+                  set -eux
 
                   # might cause performance issues and 504 timeouts
                   #
