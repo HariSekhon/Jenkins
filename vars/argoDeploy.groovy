@@ -32,6 +32,9 @@ def call(app, timeoutMinutes=10){
     milestone ordinal: null, label: "Milestone: $label"
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
+
+        argoSync("$app")
+
         waitUntil(initialRecurrencePeriod: 5000){
           withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
             //echo "$label"
@@ -63,7 +66,8 @@ def call(app, timeoutMinutes=10){
                   #argocd --grpc-web app get "$APP" --refresh > /dev/null
 
                   # needed in case auto-sync isn't enabled - above workaround isn't enough
-                  argocd app sync "$APP" --grpc-web --force
+                  # done in argoSync() function now to be able to parallelize app deployments by pre-calling Sync
+                  #argocd app sync "$APP" --grpc-web --force
 
                   # workaround for issue:
                   #
