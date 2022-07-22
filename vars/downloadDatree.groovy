@@ -20,6 +20,13 @@
 //def call(version = '1.5.1') {
 //  withEnv(["VERSION=${version}"]){
 def call() {
+  installPackages(
+    [
+      'bash',
+      'curl',
+      'unzip'
+    ]
+  )
   sh (
     label: 'Download Datree',
     script: '''
