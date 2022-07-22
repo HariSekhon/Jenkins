@@ -66,7 +66,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
             datree kustomize test $ARGS || exit 1
             popd
             echo
-          fi
+          done
         else
           find "$DIR" -type f -name '*.yaml' -o -type -f -name '*.yml' -print0 |
           xargs -0 datree test --only-k8s-files $ARGS
