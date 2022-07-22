@@ -68,14 +68,14 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
           while read kustomization; do
             dir="$(dirname "$kustomization")"
             pushd "$dir"
-            datree kustomize test $ARGS || exit 1
+            datree kustomize test ${ARGS:-} || exit 1
             popd
             echo
           done
         else
           find "$DIR" -type f -iname '*.yaml' \
                    -o -type f -iname '*.yml' -print0 |
-          xargs -0 datree test --only-k8s-files $ARGS
+          xargs -0 datree test --only-k8s-files ${ARGS:-}
         fi
       '''
     )
