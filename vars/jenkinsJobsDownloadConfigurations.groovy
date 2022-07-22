@@ -33,7 +33,7 @@
 //
 // the rest of the speed loss must be Jenkins withEnv + new shell overheads of 'sh' x49
 
-def call(Map args = [jobs=[], exclude_jobs[]]) {
+def call(Map args = [ jobs=[], excludeJobs[] ]) {
 
   // avoiding using regex due to non-serialization and need to use @NonCPS annotation which breaks groovy checks, which then have to be disabled, leaving the whole function unvalidated
   defaultExcludedJobs = [
@@ -42,7 +42,7 @@ def call(Map args = [jobs=[], exclude_jobs[]]) {
   ]
 
   jobs = args.jobs
-  excludedJobs = args.exclude_jobs ?: defaultExcludedJobs
+  excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
   if(!jobs){
       jobs = sh (
