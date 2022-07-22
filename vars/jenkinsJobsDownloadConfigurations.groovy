@@ -35,6 +35,7 @@
 
 def call(Map args = [jobs=[], exclude_jobs[]]) {
 
+  // avoiding using regex due to non-serialization and need to use @NonCPS annotation which breaks groovy checks, which then have to be disabled, leaving the whole function unvalidated
   defaultExcludedJobs = [
     'test',
     'Test'
