@@ -33,10 +33,19 @@
 //
 // the rest of the speed loss must be Jenkins withEnv + new shell overheads of 'sh' x49
 
-def call(jobs=[]) {
+def call(Map args = [jobs=[], exclude_jobs[]]) {
+
+  defaultExcludedJobs = [
+    'test',
+    'Test'
+  ]
+
+  jobs = args.jobs
+  excludedJobs = args.exclude_jobs ?: defaultExcludedJobs
+
   if(!jobs){
       jobs = sh (
-        label: "List Jobs",
+        label: "List Jobs via CLI",
         returnStdout: true,
         script: '''
           set -eux
@@ -44,10 +53,29 @@ def call(jobs=[]) {
         '''
       ).tokenize('\n')
   }
-  //jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
-  //echo jobs2.toString()
-  //echo jobs2.size().toString()
-  echo "Downloading configurations for ${jobs.size()} Jenkins jobs"
+  numJobs  = jobs.size()
+
+  echo "List jobs via Jenkins API"
+  jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+  numJobs2 = jobs2.size()
+
+  // put these inside jobs != jobs2
+  echo "jobs from CLI = $jobs"
+  echo "jobs from API = $jobs2"
+  echo "number of jobs from CLI = $numJobs"
+  echo "number of jobs from API = $numJobs2"
+  if(jobs != jobs2){
+    error("ERROR: job lists don't watch between CLI and API results")
+  }
+  assert numJobs == numJobs2
+
+  jobs -= excludedJobs
+  numExcludedJobs = numJobs - jobs.size()
+  if(numExcludedJobs != 0){
+    echo "$numExcludedJobs jobs excluded"
+  }
+
+  echo "Downloading configurations for $numJobs Jenkins jobs"
   jobs.eachWithIndex{ it, index ->
     withEnv(["JOB=$it"]){
       sh (
