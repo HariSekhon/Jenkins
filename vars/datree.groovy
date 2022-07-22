@@ -52,6 +52,16 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   kustomize = args.kustomize ?: 'false'
   args = args.args ?: ''
 
+  datreeExists = sh(
+    label: 'Check Datree CLI available',
+    returnStatus: true,
+    script: 'command -v datree'
+  )
+
+  if(datreeExists != 0 ){
+    downloadDatree()
+  }
+
   String label = "Datree Test"
 
   milestone ordinal: null, label: "$label"
