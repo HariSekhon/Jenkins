@@ -62,10 +62,9 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
     downloadDatree()
   }
 
+  String label = "Datree Test"
   if(kustomize){
-    String label = "Datree Kustomize Test"
-  } else {
-    String label = "Datree Test"
+    label = "Datree Kustomize Test"
   }
 
   milestone ordinal: null, label: "$label"
