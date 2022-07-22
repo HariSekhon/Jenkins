@@ -48,11 +48,15 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   //
   //sh 'datree test **.y*ml --only-k8s-files
 
+  dir = args.dir ?: '.'
+  kustomize = args.kustomize ?: 'false'
+  args = args.args ?: ''
+
   String label = "Datree Test"
 
   milestone ordinal: null, label: "$label"
 
-  withEnv(["DIR=${args.dir ?: '.'}", "KUSTOMIZE=${args.kustomize}", "ARGS=${args.args}"]){
+  withEnv(["DIR=$dir", "KUSTOMIZE=$kustomize", "ARGS=$args"]){
     // needs to be bash for pipefail detection
     sh (
       label: "$label",
