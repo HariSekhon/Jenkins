@@ -52,13 +52,13 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   kustomize = args.kustomize ?: 'false'
   args = args.args ?: ''
 
-  datreeExists = sh(
+  boolean datreeExists = sh(
     label: 'Check Datree CLI available',
     returnStatus: true,
     script: 'command -v datree'
-  )
+  ) == 0
 
-  if(datreeExists != 0 ){
+  if(!datreeExists){
     downloadDatree()
   }
 
