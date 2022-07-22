@@ -51,6 +51,10 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   }
 
   if(!jobs){
+      jenkins_cli_jar = new File("${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}")
+      if(! jenkins_cli_jar.exists() ){
+        downloadJenkinsCLI()
+      }
       jobs = sh (
         label: "List Jobs via CLI",
         returnStdout: true,
