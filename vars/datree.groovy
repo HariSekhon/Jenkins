@@ -46,7 +46,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   //
   //  https://github.com/datreeio/datree/issues/618
   //
-  //sh 'datree test **.y*ml --only-k8s-files
+  //sh 'datree test **/*.y*ml --only-k8s-files
 
   dir = args.dir ?: '.'
   kustomize = args.kustomize ?: 'false'
