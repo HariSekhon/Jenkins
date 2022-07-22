@@ -62,19 +62,19 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   }
   numJobs  = jobs.size()
 
-  echo "List jobs via Jenkins API"
-  jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
-  numJobs2 = jobs2.size()
+  // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use staticMethod jenkins.model.Jenkins getInstance
+  //echo "List jobs via Jenkins API"
+  //jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+  //numJobs2 = jobs2.size()
 
-  // put these inside jobs != jobs2
-  echo "jobs from CLI = $jobs"
-  echo "jobs from API = $jobs2"
-  echo "number of jobs from CLI = $numJobs"
-  echo "number of jobs from API = $numJobs2"
-  if(jobs != jobs2){
-    error("ERROR: job lists don't watch between CLI and API results")
-  }
-  assert numJobs == numJobs2
+  //echo "jobs from CLI = $jobs"
+  //echo "jobs from API = $jobs2"
+  //echo "number of jobs from CLI = $numJobs"
+  //echo "number of jobs from API = $numJobs2"
+  //if(jobs != jobs2){
+  //  error("ERROR: job lists don't watch between CLI and API results")
+  //}
+  //assert numJobs == numJobs2
 
   jobs -= excludedJobs
   numExcludedJobs = numJobs - jobs.size()
