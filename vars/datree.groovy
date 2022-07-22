@@ -33,6 +33,14 @@
 //    }
 //
 
+// if you set
+//
+//  kustomize: true
+//  args: '-- --enable-helm'
+//
+// it'll show errors materialized from external helm charts
+// you'll then end up spending your life writing patches for all the imperfections of upstream projects
+
 def call(Map args = [dir: '.', kustomize: false, args: '']) {
   // relies on recursive shell expansion, which doesn't work on older versions of Bash:
   //
@@ -52,9 +60,13 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
         set -euxo pipefail
 
         if [ "$KUSTOMIZE" = true ]; then
-          pushd "$DIR"
-          datree kustomize test
-          popd
+          find "$DIR" -type f -name 'kustoization.y*ml' |
+          while read kustomization; do
+            pushd "$(dirname "$kustomization")"
+            datree kustomize test $ARGS || exit 1
+            popd
+            echo
+          fi
         else
           find "$DIR" -type f -name '*.yaml' -o -type -f -name '*.yml' -print0 |
           xargs -0 datree test --only-k8s-files $ARGS
