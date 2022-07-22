@@ -20,6 +20,8 @@
 
 // https://hub.datree.io/cicd-examples/jenkins-pipeline
 //
+// Requirement: DATREE_TOKEN must be set in the environment
+//
 // You may want to wrap this in an error handled stage to surface the problems but not fail the pipeline:
 //
 //    stage('Datree Test') {
