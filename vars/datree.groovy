@@ -73,7 +73,8 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
             echo
           done
         else
-          find "$DIR" -type f -name '*.yaml' -o -type -f -name '*.yml' -print0 |
+          find "$DIR" -type f -iname '*.yaml' \
+                   -o -type f -iname '*.yml' -print0 |
           xargs -0 datree test --only-k8s-files $ARGS
         fi
       '''
