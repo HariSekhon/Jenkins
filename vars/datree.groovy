@@ -50,7 +50,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
 
   String label = "Datree Test"
 
-  milestone "$label"
+  milestone ordinal: null, label "$label"
 
   withEnv(["DIR=${args.dir ?: '.'}", "KUSTOMIZE=${args.kustomize}", "ARGS=${args.args}"]){
     // needs to be bash for pipefail detection
