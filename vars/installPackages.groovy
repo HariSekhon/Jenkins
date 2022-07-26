@@ -21,7 +21,7 @@
 
 def call(packages=[]){
   String label = "Install Packages on agent '$HOSTNAME'"
-  lock(resource: label){
+  lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
       withEnv(["PACKAGES=${packages.join(' ')}"]){
         sh '''
