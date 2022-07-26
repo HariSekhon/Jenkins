@@ -28,6 +28,7 @@ def call() {
     ]
   )
   String label = "Download Datree on agent '$HOSTNAME'"
+  echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     sh (
       label: "$label",
