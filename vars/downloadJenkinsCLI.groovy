@@ -23,6 +23,7 @@
 
 def call() {
   String label = "Download Jenkins CLI on agent '$HOSTNAME'"
+  echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
       // TODO: add destination arg to follow ${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}
