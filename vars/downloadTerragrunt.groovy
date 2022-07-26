@@ -26,10 +26,13 @@
 // Adapted from DevOps Bash Tools setup/install_terragrunt.sh
 
 def call(version) {
-  timeout(time: 5, unit: 'MINUTES') {
-    installBinary(
-      binary: 'terragrunt',
-      url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}"
-    )
+  String label = "Download Terragrunt on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    timeout(time: 5, unit: 'MINUTES') {
+      installBinary(
+        binary: 'terragrunt',
+        url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}"
+      )
+    }
   }
 }
