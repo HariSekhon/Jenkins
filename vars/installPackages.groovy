@@ -20,32 +20,35 @@
 // Adapted from the more advanced DevOps Bash tools repo's install_packages.sh and supporting scripts
 
 def call(packages=[]){
-  timeout(time: 5, unit: 'MINUTES') {
-    withEnv(["PACKAGES=${packages.join(' ')}"]){
-      sh '''
-        set -eux
+  String label = "Install Packages on agent '$HOSTNAME'"
+  lock(resource: label){
+    timeout(time: 5, unit: 'MINUTES') {
+      withEnv(["PACKAGES=${packages.join(' ')}"]){
+        sh '''
+          set -eux
 
-        export DEBIAN_FRONTEND=noninteractive
+          export DEBIAN_FRONTEND=noninteractive
 
-        sudo=""
-        # adapted from DevOps Bash tools lib/utils.sh am_root() function
-        if ! [ "${EUID:-${UID:-$(id -u)}}" -eq 0 ]; then
-          sudo=sudo
-        fi
+          sudo=""
+          # adapted from DevOps Bash tools lib/utils.sh am_root() function
+          if ! [ "${EUID:-${UID:-$(id -u)}}" -eq 0 ]; then
+            sudo=sudo
+          fi
 
-        if command -v apt-get >/dev/null; then
-          $sudo apt-get update
-          $sudo apt-get install -y $PACKAGES
-        elif command -v apk >/dev/null; then
-          $sudo apk update
-          $sudo apk add $PACKAGES
-        elif command -v yum >/dev/null; then
-          $sudo yum install -y $PACKAGES
-        else
-          echo "ERROR: No recognized package manager found to install packages with"
-          exit 1
-        fi
-      '''
+          if command -v apt-get >/dev/null; then
+            $sudo apt-get update
+            $sudo apt-get install -y $PACKAGES
+          elif command -v apk >/dev/null; then
+            $sudo apk update
+            $sudo apk add $PACKAGES
+          elif command -v yum >/dev/null; then
+            $sudo yum install -y $PACKAGES
+          else
+            echo "ERROR: No recognized package manager found to install packages with"
+            exit 1
+          fi
+        '''
+      }
     }
   }
 }
