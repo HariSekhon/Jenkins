@@ -20,6 +20,7 @@
 // obsolete - Kics doesn't support downloadable binaries after 1.5.1
 def call(version = '1.5.1') {
   String label = "Download KICS on agent '$HOSTNAME'"
+  echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     withEnv(["VERSION=${version}"]){
       sh (
