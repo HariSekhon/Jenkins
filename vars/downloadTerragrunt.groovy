@@ -27,6 +27,7 @@
 
 def call(version) {
   String label = "Download Terragrunt on agent '$HOSTNAME'"
+  echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
       installBinary(
