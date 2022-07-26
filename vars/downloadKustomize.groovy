@@ -24,21 +24,27 @@
 //    https://github.com/HariSekhon/Kubernetes-configs
 
 def call(version='4.3.0'){
-  timeout(time: 2, unit: 'MINUTES') {
-    withEnv(["VERSION=$version"]) {
-      String label = "Download Kustomize version $version"
-      echo "$label"
-      sh (
-        label: "$label",
-        script: '''#!/usr/bin/env bash
-          set -euxo pipefail
-          echo "Downloading Kustomize version $VERSION"
-          curl -sSL -o /tmp/kustomize.$$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz
-          tar zxvf /tmp/kustomize.$$.tgz kustomize -O > /tmp/kustomize.$$
-          chmod +x /tmp/kustomize.$$
-          mv -iv /tmp/kustomize.$$ /usr/local/bin/kustomize
-        '''
-      )
+  String label = "Download Kustomize on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    timeout(time: 2, unit: 'MINUTES') {
+      withEnv(["VERSION=$version"]) {
+        echo "$label"
+        sh (
+          label: "$label, version '$version'",
+          script: '''
+            set -eux
+
+            echo "Downloading Kustomize version $VERSION"
+
+            curl -sSL -o /tmp/kustomize.$$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz
+
+            tar zxvf /tmp/kustomize.$$.tgz kustomize -O > /tmp/kustomize.$$
+            chmod +x /tmp/kustomize.$$
+
+            mv -fv /tmp/kustomize.$$ /usr/local/bin/kustomize
+          '''
+        )
+      }
     }
   }
 }
