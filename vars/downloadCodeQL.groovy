@@ -21,7 +21,7 @@
 // adapted from DevOps Bash tools script setup/install_github_codeql.sh
 
 def call() {
-  String label = 'Download CodeQL'
+  String label = "Download CodeQL on agent '$HOSTNAME'"
   lock(resource: label){
     milestone ordinal: null, label: "Milestone: $label"
     sh (
