@@ -22,7 +22,7 @@
 
 def call() {
   String label = "Download CodeQL on agent '$HOSTNAME'"
-  lock(resource: label){
+  lock(resource: "$label"){
     sh (
       label: "$label",
       script: '''
