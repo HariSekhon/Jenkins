@@ -76,6 +76,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
 
   jobs -= excludedJobs
   int numExcludedJobs = numJobs - jobs.size()
+  numJobs = jobs.size()
   if(numExcludedJobs != 0){
     echo "$numExcludedJobs jobs excluded"
   }
