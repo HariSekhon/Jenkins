@@ -22,7 +22,7 @@
 
 def call() {
   String label = 'Download CodeQL'
-  lock(resource: label, inversePrecedence: true){
+  lock(resource: label){
     milestone ordinal: null, label: "Milestone: $label"
     sh (
       label: "$label",
