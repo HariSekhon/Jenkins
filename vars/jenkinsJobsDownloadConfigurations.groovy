@@ -36,19 +36,13 @@
 def call(Map args = [ jobs: [], excludeJobs: [] ]) {
 
   // avoiding using regex due to non-serialization and need to use @NonCPS annotation which breaks groovy checks, which then have to be disabled, leaving the whole function unvalidated
-  defaultExcludedJobs = [
+  List defaultExcludedJobs = [
     'test',
     'Test'
   ]
 
-  jobs = args.jobs ?: []
-  excludedJobs = args.excludeJobs ?: defaultExcludedJobs
-  if(! jobs instanceof List){
-    error('jobs argument needs to be a List')
-  }
-  if(! excludedJobs instanceof List){
-    error('excludedJobs argument needs to be a List')
-  }
+  List jobs = args.jobs ?: []
+  List excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
   if(!jobs){
       jenkinsCliJar = new File("$JENKINS_CLI_JAR" ?: "$HOME/bin/jenkins-cli.jar")
@@ -64,12 +58,12 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
         '''
       ).tokenize('\n')
   }
-  numJobs  = jobs.size()
+  int numJobs = jobs.size()
 
   // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use staticMethod jenkins.model.Jenkins getInstance
   //echo "List jobs via Jenkins API"
-  //jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
-  //numJobs2 = jobs2.size()
+  //List jobs2 = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+  //int numJobs2 = jobs2.size()
 
   //echo "jobs from CLI = $jobs"
   //echo "jobs from API = $jobs2"
@@ -81,7 +75,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   //assert numJobs == numJobs2
 
   jobs -= excludedJobs
-  numExcludedJobs = numJobs - jobs.size()
+  int numExcludedJobs = numJobs - jobs.size()
   if(numExcludedJobs != 0){
     echo "$numExcludedJobs jobs excluded"
   }
