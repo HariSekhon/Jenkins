@@ -30,10 +30,13 @@
 //    installPackages(['curl', 'unzip'])
 
 def call(version) {
-  timeout(time: 5, unit: 'MINUTES') {
-    installBinary(
-      binary: 'terraform',
-      url: "https://releases.hashicorp.com/terraform/$version/terraform_${version}_{os}_{arch}.zip"
-    )
+  String label = "Download Terraform on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    timeout(time: 5, unit: 'MINUTES') {
+      installBinary(
+        binary: 'terraform',
+        url: "https://releases.hashicorp.com/terraform/$version/terraform_${version}_{os}_{arch}.zip"
+      )
+    }
   }
 }
