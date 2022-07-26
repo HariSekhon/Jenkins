@@ -22,7 +22,11 @@
 // Adapted from DevOps Bash Tools jenkins_cli.sh, install_binary.sh, install_packages.sh and lib/utils.sh
 
 def call() {
-  timeout(time: 5, unit: 'MINUTES') {
-    installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
+  String label = "Download Jenkins CLI on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    timeout(time: 5, unit: 'MINUTES') {
+      // TODO: add destination arg to follow ${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}
+      installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
+    }
   }
 }
