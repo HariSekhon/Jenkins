@@ -169,7 +169,7 @@ def call(Map args = [
           dir("$DIR"){
             withEnv(args.env ?: []){
               withCredentials(args.creds ?: []){
-                jenkinsJobsDownloadConfigurations(args.jobs ?: [])
+                jenkinsJobsDownloadConfigurations(jobs: args.jobs ?: [])
               }
             }
           }
