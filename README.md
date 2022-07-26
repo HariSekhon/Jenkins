@@ -54,6 +54,9 @@ pipeline {
         // show all the cloud systems you're logged in to and who you're logged in as
         printAuth()
 
+        // uses whichever package manager is available - portable, used by other functions too
+        installPackages(['curl', 'unzip'])
+
         // launch a GCP Cloud Build job, by default against your cloudbuild.yaml if no args given
         gcpCloudBuild()
 
