@@ -19,29 +19,32 @@
 
 // obsolete - Kics doesn't support downloadable binaries after 1.5.1
 def call(version = '1.5.1') {
-  withEnv(["VERSION=${version}"]){
-    sh (
-      label: 'Download KICS',
-      script: '''
-        set -eux
+  String label = "Download KICS on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    withEnv(["VERSION=${version}"]){
+      sh (
+        label: "$label",
+        script: '''
+          set -eux
 
-        mkdir -p ~/bin
+          mkdir -p ~/bin
 
-        cd ~/bin
+          cd ~/bin
 
-        export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
+          export PATH="$PATH:$HOME/bin:$HOME/bin/bash-tools"
 
-        if [ -d bash-tools ]; then
-          # pushd not available in sh
-          cd bash-tools
-          git pull
-          cd ..
-        else
-          git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
-        fi
+          if [ -d bash-tools ]; then
+            # pushd not available in sh
+            cd bash-tools
+            git pull
+            cd ..
+          else
+            git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
+          fi
 
-        bash-tools/setup/install_kics.sh
-      '''
-    )
+          bash-tools/setup/install_kics.sh
+        '''
+      )
+    }
   }
 }
