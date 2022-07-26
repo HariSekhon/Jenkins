@@ -45,7 +45,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   List excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
   if(!jobs){
-      jenkinsCliJar = new File(env.$JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar")
+      jenkinsCliJar = new File(env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar")
       if(! jenkinsCliJar.exists() ){
         downloadJenkinsCLI()
       }
