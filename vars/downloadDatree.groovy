@@ -27,13 +27,16 @@ def call() {
       'unzip'
     ]
   )
-  sh (
-    label: 'Download Datree',
-    script: '''
-      set -eux
+  String label = "Download Datree on agent '$HOSTNAME'"
+  lock(resource: "$label"){
+    sh (
+      label: "$label",
+      script: '''
+        set -eux
 
-      curl https://get.datree.io |
-      /usr/bin/env bash
-    '''
-  )
+        curl https://get.datree.io |
+        /usr/bin/env bash
+      '''
+    )
+  }
 }
