@@ -25,6 +25,7 @@
 
 def call(version='4.3.0'){
   String label = "Download Kustomize on agent '$HOSTNAME'"
+  echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 2, unit: 'MINUTES') {
       withEnv(["VERSION=$version"]) {
