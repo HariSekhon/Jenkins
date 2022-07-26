@@ -23,7 +23,6 @@
 def call() {
   String label = "Download CodeQL on agent '$HOSTNAME'"
   lock(resource: label){
-    milestone ordinal: null, label: "Milestone: $label"
     sh (
       label: "$label",
       script: '''
