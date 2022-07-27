@@ -715,6 +715,21 @@ pipeline {
     }
 
     // ========================================================================== //
+    //                          P r e - B u i l d   H o o k
+    // ========================================================================== //
+
+    stage('Pre-Build Hook') {
+      when {
+        expression {
+          fileExists 'jenkins/preBuildHook.sh'
+        }
+      }
+      steps {
+        sh 'jenkins/preBuildHook.sh'
+      }
+    }
+
+    // ========================================================================== //
     // Parallelize build via multiple sub-stages if possible:
     // https://www.jenkins.io/doc/book/pipeline/syntax/#parallel
     stage('Build') {
@@ -768,6 +783,21 @@ pipeline {
 //        }
         // saves artifacts to Jenkins master for basic reporting and archival - not a substitute for Nexus / Artifactory
         // archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+      }
+    }
+
+    // ========================================================================== //
+    //                         P o s t - B u i l d   H o o k
+    // ========================================================================== //
+
+    stage('Post-Build Hook') {
+      when {
+        expression {
+          fileExists 'jenkins/postBuildHook.sh'
+        }
+      }
+      steps {
+        sh 'jenkins/postBuildHook.sh'
       }
     }
 
