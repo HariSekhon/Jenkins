@@ -81,9 +81,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
                    -o -type f -name 'kustomization.yaml'|
           while read kustomization; do
             dir="$(dirname "$kustomization")"
-            pushd "$dir"
-            datree kustomize test ${ARGS:-} || exit 1
-            popd
+            datree kustomize test "$dir" ${ARGS:-} || exit 1
             echo
           done
         else
