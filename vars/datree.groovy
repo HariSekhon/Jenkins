@@ -59,11 +59,12 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   ) == 0
 
   if(!datreeExists){
+    echo "Datree CLI not found, downloading..."
     downloadDatree()
   }
 
   String label = "Datree Test"
-  if(kustomize){
+  if("$kustomize" == "true"){
     label = "Datree Kustomize Test"
   }
 
