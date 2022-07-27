@@ -773,20 +773,22 @@ pipeline {
           sh 'make'
           // or
           sh './gcp_ci_build.sh'  // script in https://github.com/HariSekhon/DevOps-Bash-tools
-        //  retry(3) {
-        //    //sh 'apt update -q'
-        //    //sh 'apt install -qy make'
-        //    //sh 'make init'
-        //    sh """
-        //      setup/ci_bootstrap.sh &&
-        //      make init
-        //    """
-        //  }
-        //}
-        //}
+
+          //retry(3) {
+          //  //sh 'apt update -q'
+          //  //sh 'apt install -qy make'
+          //  //sh 'make init'
+          //  sh """
+          //    setup/ci_bootstrap.sh &&
+          //    make init
+          //  """
+          //}
+        }
+
         //timeout(time: 180, unit: 'MINUTES') {
         //  sh 'make ci'
         //}
+
         // saves artifacts to Jenkins master for basic reporting and archival - not a substitute for Nexus / Artifactory
         // archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
