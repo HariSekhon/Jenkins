@@ -718,6 +718,8 @@ pipeline {
     //                          P r e - B u i l d   H o o k
     // ========================================================================== //
 
+    // see also: https://www.jenkins.io/doc/book/managing/groovy-hook-scripts/
+
     stage('Pre-Build Hook') {
       when {
         expression {
@@ -730,17 +732,21 @@ pipeline {
     }
 
     // ========================================================================== //
+    //                                   B u i l d
+    // ========================================================================== //
+
     // Parallelize build via multiple sub-stages if possible:
     // https://www.jenkins.io/doc/book/pipeline/syntax/#parallel
+
     stage('Build') {
       // only apply env to this stage
       environment {
         DEBUG = '1'
       }
       // specify agent at stage level to build on different environments
-//      agent {
-//        label 'linux'
-//      }
+      //agent {
+      //  label 'linux'
+      //}
 
       steps {
         // forbids older builds from starting
@@ -767,20 +773,20 @@ pipeline {
           sh 'make'
           // or
           sh './gcp_ci_build.sh'  // script in https://github.com/HariSekhon/DevOps-Bash-tools
-//          retry(3) {
-////            sh 'apt update -q'
-////            sh 'apt install -qy make'
-////            sh 'make init'
-//            sh """
-//              setup/ci_bootstrap.sh &&
-//              make init
-//            """
-//          }
-//        }
-        }
-//        timeout(time: 180, unit: 'MINUTES') {
-//          sh 'make ci'
-//        }
+        //  retry(3) {
+        //    //sh 'apt update -q'
+        //    //sh 'apt install -qy make'
+        //    //sh 'make init'
+        //    sh """
+        //      setup/ci_bootstrap.sh &&
+        //      make init
+        //    """
+        //  }
+        //}
+        //}
+        //timeout(time: 180, unit: 'MINUTES') {
+        //  sh 'make ci'
+        //}
         // saves artifacts to Jenkins master for basic reporting and archival - not a substitute for Nexus / Artifactory
         // archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
