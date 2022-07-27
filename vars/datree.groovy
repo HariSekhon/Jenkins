@@ -78,16 +78,14 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
         set -euxo pipefail
 
         if [ "$KUSTOMIZE" = true ]; then
-          find "$DIR" -type f -name 'kustomization.yml' \
-                   -o -type f -name 'kustomization.yaml'|
+          find "$DIR" -type f -name 'kustomization.y*ml' |
           while read kustomization; do
             dir="$(dirname "$kustomization")"
             datree kustomize test "$dir" ${ARGS:-} || exit 1
             echo
           done
         else
-          find "$DIR" -type f -iname '*.yaml' \
-                   -o -type f -iname '*.yml' -print0 |
+          find "$DIR" -type f -iname '*.y*ml' -print0 |
           xargs -0 --no-run-if-empty \
             datree test --only-k8s-files ${ARGS:-}
         fi
