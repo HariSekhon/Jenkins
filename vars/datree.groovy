@@ -77,7 +77,8 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
         set -euxo pipefail
 
         if [ "$KUSTOMIZE" = true ]; then
-          find "$DIR" -type f -name 'kustoization.y*ml' |
+          find "$DIR" -type f -name 'kustomization.yml' \
+                   -o -type f -name 'kustomization.yaml'|
           while read kustomization; do
             dir="$(dirname "$kustomization")"
             pushd "$dir"
