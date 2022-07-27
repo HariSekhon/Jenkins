@@ -53,7 +53,13 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   }
   // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
   //jenkinsCliJarFile = new File(jenkinsCliJar)
-  if(! (new File(jenkinsCliJar)).exists() ){
+  //if(! (new File(jenkinsCliJar)).exists() ){
+  jenkinsCliJarExists = sh(
+    label: 'Check Jenkins CLI jar exists',
+    returnStatus: true,
+    script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
+  ) == 0
+  if(!jenkinsCliJarExists){
     echo "$jenkinsCliJar not found, downloading..."
     downloadJenkinsCLI()
   }
@@ -64,7 +70,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
         returnStdout: true,
         script: '''
           set -eux
-          java -jar ${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar} ${JENKINS_CLI_ARGS:-} list-jobs
+          java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} list-jobs
         '''
       ).tokenize('\n')
   }
