@@ -331,6 +331,10 @@ pipeline {
     ARGOCD_SERVER = 'argocd.domain.com'
     ARGOCD_AUTH_TOKEN = credentials('argocd-auth-token')
 
+    // can be used by downloadJenkinsCLI() and other jenkins*() functions from vars/
+    // careful, $HOME could evaluate to jenkins user in pipeline on Jenkins server but could evaluate to root in agents, especially Kubernetes ages running several pods, some of which need root
+    //JENKINS_CLI_JAR = "$HOME/bin/jenkins-cli.jar"
+
     TF_IN_AUTOMATION = 1  // changes output to suppress CLI suggestions for related commands
     //TF_WORKSPACE = "$ENV"  // run the same automation against multiple environments
 
