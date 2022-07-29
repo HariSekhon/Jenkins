@@ -25,7 +25,7 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 - [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline master config
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library functions
 
-Spliced from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
+Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
 ## QuickStart
 
