@@ -1,4 +1,4 @@
-# Jenkinsfile & Jenkins Shared Library
+# Jenkins - Advanced Jenkinsfile & Groovy Shared Library
 
 [![GitHub stars](https://img.shields.io/github/stars/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/network)
