@@ -79,7 +79,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
 
         if [ "$KUSTOMIZE" = true ]; then
           find "$DIR" -type f -name 'kustomization.y*ml' |
-          while read kustomization; do
+          while read -r kustomization; do
             dir="$(dirname "$kustomization")"
             datree kustomize test "$dir" ${ARGS:-} || exit 1
             echo
