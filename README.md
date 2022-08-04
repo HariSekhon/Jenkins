@@ -1,4 +1,4 @@
-# Jenkinsfile & Jenkins Shared Library
+# Jenkins - Advanced Jenkinsfile & Groovy Shared Library
 
 [![GitHub stars](https://img.shields.io/github/stars/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/network)
@@ -22,8 +22,8 @@
 
 Advanced Jenkinsfile & Jenkins Shared Library.
 
-- [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - Jenkins Pipeline master config
-- [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Jenkins Shared Library functions
+- [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - epic Jenkinsfile template - full of real-world tricks from production
+- [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Groovy Shared Library reusable functions
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
