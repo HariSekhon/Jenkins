@@ -296,6 +296,8 @@ pipeline {
     AWS_ACCESS_KEY  = credentials('aws') // AWS_ACCESS_KEY_ID should be in Username field and AWS_SECRET_ACCESS_KEY in the Password field
     // AWS_ACCESS_KEY_USR
     // AWS_ACCESS_KEY_PSW
+    // for better naming you can do a withCredentials block like this:
+    // withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')])
 
     AWS_ACCOUNT_ID = credentials('aws-account-id') // or better yet just generate it from access keys via 'aws sts get-caller-identity | jq -r .Account'
     AWS_DEFAULT_REGION = 'eu-west-2'
