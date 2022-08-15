@@ -288,7 +288,14 @@ pipeline {
     GCP_SERVICEACCOUNT_KEY = credentials('gcp-serviceaccount-key')
     GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"  // needed if calling gcpSetupApplicationCredentials() eg. for Terraform Pipeline
     DIGITALOCEAN_ACCESS_TOKEN = credentials('digitalocean-access-token') // picked up automatically by Digital Ocean CLI 'doctl'
-    GITHUB_TOKEN           = credentials('github-token')  // user/token credential, will create env vars $GITHUB_TOKEN_USR and $GITHUB_TOKEN_PSW
+
+    // Username/Password credentials - creates Environment Variables of these names suffixed with _USR and _PSW
+    GITHUB_TOKEN    = credentials('github-token')
+    // GITHUB_TOKEN_USR
+    // GITHUB_TOKEN_PSW
+    AWS_ACCESS_KEY  = credentials('aws') // AWS_ACCESS_KEY_ID should be in Username field and AWS_SECRET_ACCESS_KEY in the Password field
+    // AWS_ACCESS_KEY_USR
+    // AWS_ACCESS_KEY_PSW
 
     AWS_ACCOUNT_ID = credentials('aws-account-id') // or better yet just generate it from access keys via 'aws sts get-caller-identity | jq -r .Account'
     AWS_DEFAULT_REGION = 'eu-west-2'
