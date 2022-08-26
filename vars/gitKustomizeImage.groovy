@@ -64,7 +64,8 @@ def call(Map args = [
   args.repo = args.repo ?: ''
   args.timeoutMinutes = args.timeout ?: 5
   args.version = args.version ?: "$GIT_COMMIT"
-  String label = "Git Kustomize Image Version - Dir: '${args.dir}'"
+  assert args.repo != ''
+  String label = "Git Kustomize Image Version - Repo: '${args.repo}', Dir: '${args.dir}'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: null, label: "Milestone: $label"
@@ -84,9 +85,16 @@ def call(Map args = [
               GIT_USERNAME="\$(git config user.name)"
               GIT_EMAIL="\$(git config user.email)"
 
-              git clone --branch "${args.branch}" "${args.repo}" repo
+              repo_dir="${args.repo}"
+              repo_dir="\${repo_dir##*/}"
 
-              cd "repo/${args.dir}"
+              if ! [ -d "\$repo_dir" ]; then
+                git clone --branch "${args.branch}" "${args.repo}" "\$repo_dir"
+              fi
+
+              cd "\$repo_dir/${args.dir}"
+
+              git pull
 
               git config user.name "\$GIT_USERNAME"
               git config user.email "\$GIT_EMAIL"
