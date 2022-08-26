@@ -66,12 +66,19 @@ def call(Map args = [
   args.version = args.version ?: "$GIT_COMMIT"
   assert args.repo != ''
   // Lock should be on the Owner/Repo format, not including the protocol prefix because some pipelines may use git@github.com while others use https://github.com
+  //
   // git@github.com:HariSekhon/Kubernetes -> HariSekhon/Kubernetes
   String owner_repo = args.repo.split(':')[-1]
+  //
   // https://github.com/HariSekhon/Kubernetes -> HariSekhon/Kubernetes
   owner_repo = owner_repo.split('/')[-2,-1].join('/')
+  //
   // HariSekhon/Kubernetes.git -> HariSekhon/Kubernetes
   owner_repo = owner_repo.split('\\.')[0]
+  //
+  // normalize to lowercase so different users don't bypass the lock via capitalization. Branch and Dir are case sensitive, so those would fail naturally and don't need normalizing
+  owner_repo = owner_repo.toLowerCase()
+  //
   String label = "Git Kustomize Image Version - Repo: '$owner_repo', Branch: '$args.branch', Dir: '$args.dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
