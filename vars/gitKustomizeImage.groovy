@@ -65,7 +65,14 @@ def call(Map args = [
   args.timeoutMinutes = args.timeout ?: 5
   args.version = args.version ?: "$GIT_COMMIT"
   assert args.repo != ''
-  String label = "Git Kustomize Image Version - Repo: '${args.repo}', Dir: '${args.dir}'"
+  // Lock should be on the Owner/Repo format, not including the protocol prefix because some pipelines may use git@github.com while others use https://github.com
+  // git@github.com:HariSekhon/Kubernetes -> HariSekhon/Kubernetes
+  String owner_repo = args.repo.split(':')[-1]
+  // https://github.com/HariSekhon/Kubernetes -> HariSekhon/Kubernetes
+  owner_repo = owner_repo.split('/')[-2,-1].join('/')
+  // HariSekhon/Kubernetes.git -> HariSekhon/Kubernetes
+  owner_repo = owner_repo.split('\\.')[0]
+  String label = "Git Kustomize Image Version - Repo: '$owner_repo', Branch: '$args.branch', Dir: '$args.dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
     milestone ordinal: null, label: "Milestone: $label"
@@ -93,6 +100,8 @@ def call(Map args = [
               fi
 
               cd "\$repo_dir/${args.dir}"
+
+              git checkout "${args.branch}"
 
               git pull
 
