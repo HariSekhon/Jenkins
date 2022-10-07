@@ -163,6 +163,9 @@ pipeline {
     // https://www.jenkins.io/doc/book/pipeline/syntax/#parallel
     parallelsAlwaysFailFast()
 
+    // do not allow more than 3 builds to run in a minute
+    rateLimitBuilds(throttle: [count: 3, durationName: 'minute', userBoost: false])
+
     // only keep last 100 pipeline logs and artifacts
     buildDiscarder(logRotator(numToKeepStr: '100'))
 
@@ -300,7 +303,7 @@ pipeline {
     // withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')])
 
     AWS_ACCOUNT_ID = credentials('aws-account-id') // or better yet just generate it from access keys via 'aws sts get-caller-identity | jq -r .Account'
-    AWS_DEFAULT_REGION = 'eu-west-2'
+    AWS_DEFAULT_REGION = 'eu-west-2' // consider setting this as a global variable in Jenkins instead of in each Jenkinsfile
     AWS_ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     //AWS_DEFAULT_OUTPUT = 'json'
     //AWS_MAX_ATTEMPTS = 3
@@ -410,6 +413,9 @@ pipeline {
       steps {
         milestone(ordinal: null, label: "Milestone: Checkout")
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/HariSekhon/DevOps-Bash-tools']]])
+        container('git') {
+          git credentialsId: 'GitHub', url: 'https://github.com/HariSekhon/Jenkins.git', branch: 'master'
+        }
       }
     }
 
