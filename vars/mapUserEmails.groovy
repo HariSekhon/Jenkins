@@ -47,7 +47,9 @@ def call(List userEmailList) {
       }
       userEmails.put(username, email)
     } else {
-      echo("WARNING: failed to parse username<email>: $it")
+      if(it){
+        echo("WARNING: failed to parse username<email>: $it")
+      }
     }
   }
   return userEmails
