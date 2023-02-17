@@ -37,8 +37,7 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
 
   echo "Creating GitHub repo '$ownerRepo' release: $release"
 
-  String jsonOutput = sh(
-    returnStdout: true,
+  sh(
     label: 'Create GitHub Release',
     script: """
       # do not set -x here as it'll expose your GITHUB_TOKEN in the logs
@@ -61,6 +60,5 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
             }'
     """
   )
-
 
 }
