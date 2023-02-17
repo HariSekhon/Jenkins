@@ -26,16 +26,8 @@
 
 def call(String repo='') {
 
-  String repo_url = env.GIT_URL
-
-  // strip any git@github.com: prefix
-  String owner_repo = repo_url.split(':')[-1]
-
-  // take the last two components from "https://github.com/<owner>/<repo>" to leave just "<owner>/<repo>"
-  owner_repo = owner_repo.split('/')[-2,-1].join('/')
-
   // if repo not given, assume own repo
-  owner_repo = repo ?: owner_repo
+  owner_repo = repo ?: gitOwnerRepo()
 
   echo "Querying GitHub API for latest release tag of repo: $owner_repo"
 
