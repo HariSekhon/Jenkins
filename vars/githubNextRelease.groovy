@@ -26,6 +26,8 @@
 //
 // Requires GITHUB_TOKEN credential to be defined in the environment
 
+// https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-the-latest-release
+
 def call(String repo='') {
 
   // if repo not given, assume own repo
