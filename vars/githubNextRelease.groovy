@@ -22,6 +22,8 @@
 //
 // Expects release version format such as semver 1.2.3 or YYYY.NN eg. 2023.1
 //
+// XXX: does not currently support alphabetic naming convention prefixes/suffixes like v1.0 or kustomize/v5.0.0
+//
 // Requires GITHUB_TOKEN credential to be defined in the environment
 
 def call(String repo='') {
@@ -33,7 +35,7 @@ def call(String repo='') {
 
   String jsonOutput = sh(
     returnStdout: true,
-		label: 'Query GitHub Releases',
+		label: 'Query GitHub Latest Release',
     script: """
       set -eux
       set -o pipefail 2>/dev/null || :
@@ -46,6 +48,7 @@ def call(String repo='') {
 
   String currentVersion = json.tag_name
 
+  // XXX: GitHub json.tag_name is a string and so this won't carry through any alphabetic naming conventions prefixes/suffixes such a v1.0 or kustomize/v5.0.0 - something to be improved
   List versionComponents = currentVersion.findAll( /\d+/ ).collect{ it.toInteger() }
 
   echo "Latest release is: ${versionComponents.join('.')}"
