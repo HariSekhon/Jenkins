@@ -44,7 +44,7 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
       # set -x is useful for debugging but could expose your GITHUB_TOKEN in the logs, although Jenkins should redact it
       set -x
       #set -o pipefail 2>/dev/null || :
-      curl \
+      curl -sS \
         -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer \$GITHUB_TOKEN"\
