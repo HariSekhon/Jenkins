@@ -29,7 +29,7 @@
 def call(String repo='') {
 
   // if repo not given, assume own repo
-  ownerRepo = repo ?: gitOwnerRepo()
+  String ownerRepo = repo ?: gitOwnerRepo()
 
   echo "Querying GitHub API for latest release tag of repo: $ownerRepo"
 
