@@ -29,7 +29,7 @@
 def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
 
   // if repo not given, assume own repo
-  String ownerRepo = arg.repo ?: gitOwnerRepo()
+  String ownerRepo = args.repo ?: gitOwnerRepo()
 
   String release = args.release ?: githubNextRelease()
 
