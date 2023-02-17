@@ -36,7 +36,7 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
   String target_ref = args.target_ref ?: env.GIT_COMMIT
 
   if(target_ref == ''){
-    error 'No target_ref passed and could not find GIT_COMMIT environment variable"
+    error 'No target_ref passed and could not find GIT_COMMIT environment variable'
   }
 
   echo "Creating GitHub repo '$ownerRepo' release: $release"
