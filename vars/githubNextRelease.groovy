@@ -40,7 +40,7 @@ def call(String repo='') {
 		label: 'Query GitHub Latest Release',
     script: """
       # do not set -x here as it'll expose your GITHUB_TOKEN in the logs
-      set -eu
+      set -eux
       set -o pipefail 2>/dev/null || :
       curl -H "Authorization: Bearer \$GITHUB_TOKEN" "https://api.github.com/repos/$ownerRepo/releases/latest"
     """
