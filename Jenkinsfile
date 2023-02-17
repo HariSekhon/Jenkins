@@ -516,7 +516,8 @@ pipeline {
           env.DOCKER_IMAGES = [
             "$APP-php",
             "$APP-nginx",
-            "$APP-solr",
+            "$APP-cache",
+            "$APP-sql-proxy",
           ].collect{"$GCR_REGISTRY/$GCR_PROJECT/$it"}.join(',')
         }
         printEnv()
