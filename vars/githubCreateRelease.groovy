@@ -54,7 +54,7 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
               "tag_name":"$release",
               "target_commitish": "$target_ref",
               "name": "$release",
-              "body": "Description of the release",
+              "body": "Jenkins auto-incremented release",
               "draft": false,
               "prerelease": false,
               "generate_release_notes": false
