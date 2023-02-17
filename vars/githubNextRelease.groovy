@@ -27,33 +27,33 @@
 def call(String repo='') {
 
   // if repo not given, assume own repo
-  owner_repo = repo ?: gitOwnerRepo()
+  ownerRepo = repo ?: gitOwnerRepo()
 
   echo "Querying GitHub API for latest release tag of repo: $owner_repo"
 
-  String json_output = sh(
+  String jsonOutput = sh(
     returnStdout: true,
 		label: 'Query GitHub Releases',
     script: """
       set -eux
       set -o pipefail 2>/dev/null || :
-      curl -H "Authorization: Bearer \$GITHUB_TOKEN" "https://api.github.com/repos/$owner_repo/releases/latest"
+      curl -H "Authorization: Bearer \$GITHUB_TOKEN" "https://api.github.com/repos/$ownerRepo/releases/latest"
     """
   )
 
-  def json = new groovy.json.JsonSlurper().parseText(json_output)
+  def json = new groovy.json.JsonSlurper().parseText(jsonOutput)
   assert json instanceof Map
 
   String currentVersion = json.tag_name
 
-  List version_components = currentVersion.findAll( /\d+/ ).collect{ it.toInteger() }
+  List versionComponents = currentVersion.findAll( /\d+/ ).collect{ it.toInteger() }
 
-  echo "Latest release is: ${version_components.join('.')}"
+  echo "Latest release is: ${versionComponents.join('.')}"
 
   // increment the last number by one
-  version_components[-1] = version_components[-1] + 1
+  versionComponents[-1] = versionComponents[-1] + 1
 
-  newRelease = version_components.join('.')
+  newVersion = versionComponents.join('.')
 
   echo "New release is: $newVersion"
 
