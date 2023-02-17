@@ -37,11 +37,12 @@ def call(String repo='') {
 
   String jsonOutput = sh(
     returnStdout: true,
-		label: 'Query GitHub Latest Release',
+    label: 'Query GitHub Latest Release',
     script: """
-      # do not set -x here as it'll expose your GITHUB_TOKEN in the logs
-      set -eux
-      set -o pipefail 2>/dev/null || :
+      set -eu
+      # set -x is useful for debugging but could expose your GITHUB_TOKEN in the logs, although Jenkins should redact it
+      set -x
+      #set -o pipefail 2>/dev/null || :
       curl -H "Authorization: Bearer \$GITHUB_TOKEN" "https://api.github.com/repos/$ownerRepo/releases/latest"
     """
   )
