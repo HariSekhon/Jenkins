@@ -517,10 +517,6 @@ pipeline {
             "$APP-php",
             "$APP-nginx",
             "$APP-solr",
-            "queue-consumer",
-            "pro-app",
-            "consumer-app",
-            "refund-request",
           ].collect{"$GCR_REGISTRY/$GCR_PROJECT/$it"}.join(',')
         }
         printEnv()
