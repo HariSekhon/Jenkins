@@ -30,14 +30,14 @@ def call(String dockerImageRegistryPath, String dockerImageTag) {
     label: "GCloud list tags",
     script: """
       set -eux
-      gcloud container images list-tags '$docker_image_registry_path' --filter='tags:$dockerImageTag' --format=text
+      gcloud container images list-tags '$dockerImageRegistryPath' --filter='tags:$dockerImageTag' --format=text
     """
   )
   if(stdout){
-    echo "Docker image '$docker_image_registry_path:$dockerImageTag' exists"
+    echo "Docker image '$dockerImageRegistryPath:$dockerImageTag' exists"
     return true
   } else {
-    echo "Docker image '$docker_image_registry_path:$dockerImageTag' does not exist"
+    echo "Docker image '$dockerImageRegistryPath:$dockerImageTag' does not exist"
     return false
   }
 }
