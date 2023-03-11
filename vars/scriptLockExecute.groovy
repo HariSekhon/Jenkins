@@ -28,6 +28,10 @@ def call(String scriptPath, List<String> locks, int timeoutMinutes=60){
     extraLocks.add([resource: lock])
   }
   lock(extra: extraLocks, inversePrecedence: true){
+    // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+    //
+    //  "Using a milestone step inside parallel is not allowed"
+    //
     milestone label: "Milestone: Running script: $scriptPath"
     retry(2){
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
