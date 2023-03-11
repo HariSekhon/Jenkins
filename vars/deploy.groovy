@@ -21,6 +21,10 @@ def call(){
   String label = "Deploy App, Environment: " + "$ENVIRONMENT".capitalize()
   echo "Acquiring Deployment Lock: $label"
   lock(resource: label, inversePrecedence: true){
+    // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+    //
+    //  "Using a milestone step inside parallel is not allowed"
+    //
     milestone ordinal: null, label: "Milestone: $label"
     retry(2){
       timeout(time: 20, unit: 'MINUTES') {
