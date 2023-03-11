@@ -33,6 +33,10 @@
 //                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$GIT_COMMIT"])
 
 def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
+  // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+  //
+  //  "Using a milestone step inside parallel is not allowed"
+  //
   milestone ordinal: null, label: "Milestone: Build"
   echo "Building from branch '$GIT_BRANCH'"
   // set defaults if these args aren't passed
