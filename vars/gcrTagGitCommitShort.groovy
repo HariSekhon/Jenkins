@@ -22,17 +22,17 @@
 //
 // Requires GCloud SDK CLI to be installed and authenticated
 
-def call(List<String> DOCKER_IMAGE_REGISTRY_PATHS) {
+def call(List<String> dockerImageRegistryPaths) {
   if ( ! env.GIT_COMMIT_SHORT ) {
     gitCommitShort()
   }
-  for(String docker_image_registry_path in DOCKER_IMAGE_REGISTRY_PATHS){
-    if(gcrDockerImageExists(docker_image_registry_path, env.GIT_COMMIT_SHORT)){
+  for(String dockerImageRegistryPath in dockerImageRegistryPaths){
+    if(gcrDockerImageExists(dockerImageRegistryPath, env.GIT_COMMIT_SHORT)){
       continue
     }
-    if(!gcrDockerImageExists(docker_image_registry_path, env.GIT_COMMIT)){
-      error "Docker image '$docker_image_registry_path' full SHA '$GIT_COMMIT' tag does not exist, cannot tag with short SHA!"
+    if(!gcrDockerImageExists(dockerImageRegistryPath, env.GIT_COMMIT)){
+      error "Docker image '$dockerImageRegistryPath' full SHA '$GIT_COMMIT' tag does not exist, cannot tag with short SHA!"
     }
-    gcrDockerImageExists("$docker_image_registry_path:$GIT_COMMIT", env.GIT_COMMIT_SHORT)
+    gcrDockerImageExists("$dockerImageRegistryPath:$GIT_COMMIT", env.GIT_COMMIT_SHORT)
   }
 }
