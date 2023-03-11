@@ -23,13 +23,12 @@
 // Written for gcrTagGitCommitShort() to be able to create a convenience tag of short git commit
 
 def call(String dockerImageRegistryPathTag, String newTag) {
-  String dockerImageRegistryPath = dockerImageRegistryPathTag.split(':')[0]
-  echo "Tagging docker image '$dockerImageRegistryPath' with new tag '$dockerImageTag'"
+  echo "Tagging docker image '$dockerImageRegistryPathTag' with new tag '$newTag'"
   sh (
     label: "GCloud add tag",
     script: """
       set -eux
-      gcloud container images add-tag --quiet "$dockerImageRegistryPathTag" "$dockerImageRegistryPath":"$GIT_COMMIT_SHORT"
+      gcloud container images add-tag --quiet "$newTag" "$dockerImageRegistryPathTag"
     """
   )
 }
