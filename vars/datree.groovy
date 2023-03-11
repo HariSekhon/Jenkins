@@ -68,6 +68,10 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
     label = "Datree Kustomize Test"
   }
 
+  // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+  //
+  //  "Using a milestone step inside parallel is not allowed"
+  //
   milestone ordinal: null, label: "$label"
 
   withEnv(["DIR=$dir", "KUSTOMIZE=$kustomize", "ARGS=$args"]){
