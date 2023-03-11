@@ -20,6 +20,10 @@
 def call(){
   echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
   echo "Building from branch '${env.GIT_BRANCH}' for '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
+  // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+  //
+  //  "Using a milestone step inside parallel is not allowed"
+  //
   milestone ordinal: null, label: "Milestone: Build"
   retry(2){
     timeout(time: 40, unit: 'MINUTES') {
