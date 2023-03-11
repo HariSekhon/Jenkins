@@ -21,6 +21,8 @@
 // Tags a given GCR Docker Image registry path and commit with a new alternative tag
 //
 // Written for gcrTagGitCommitShort() to be able to create a convenience tag of short git commit
+//
+// XXX: WARNING: this will overwrite the given newTag - you should first run gcrDockerImageExists() to check if it exists and perhaps skip retagging, eg. see gcrTagGitCommitShort()
 
 def call(String dockerImageRegistryPathTag, String newTag) {
   String dockerImageRegistryPath = dockerImageRegistryPathTag.split(':')[0]
