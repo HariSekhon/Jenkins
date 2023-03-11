@@ -35,6 +35,10 @@ def call(app, timeoutMinutes=5){
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
   lock(resource: label, inversePrecedence: true){
+    // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+    //
+    //  "Using a milestone step inside parallel is not allowed"
+    //
     milestone ordinal: null, label: "Milestone: $label"
     container('argocd') {
       timeout(time: timeoutMinutes, unit: 'MINUTES') {
