@@ -39,6 +39,10 @@
 // ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
 def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
+  // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+  //
+  //  "Using a milestone step inside parallel is not allowed"
+  //
   milestone ordinal: null, label: "Milestone: Approval"
   args.timeout = args.timeout ?: 60
   args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
