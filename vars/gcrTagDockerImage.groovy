@@ -25,7 +25,7 @@
 def call(String dockerImageRegistryPathTag, String newTag) {
   echo "Tagging docker image '$dockerImageRegistryPathTag' with new tag '$dockerImageTag'"
   sh (
-    label: "GCloud add tag"
+    label: "GCloud add tag",
     script: """
       set -eux
       gcloud container images add-tag --quiet "$docker_image_registry_path":"$GIT_COMMIT" "$docker_image_registry_path":"$GIT_COMMIT_SHORT"
