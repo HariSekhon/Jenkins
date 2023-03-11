@@ -24,6 +24,9 @@
 
 def call(String dockerImageRegistryPath, String dockerImageTag) {
   echo "Checking docker image '$dockerImageRegistryPath' tag '$dockerImageTag' exists"
+  if(dockerImageRegistryPath.contains(':')){
+    dockerImageRegistryPath = dockerImageRegistryPath.split(':')[0]
+  }
   String stdout = sh (
     // GCloud SDK returns zero whether found or not, so check the stdout for content
     returnStdout: true,
