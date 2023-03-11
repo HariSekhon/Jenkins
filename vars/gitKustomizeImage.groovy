@@ -82,6 +82,10 @@ def call(Map args = [
   String label = "Git Kustomize Image Version - Repo: '$ownerRepo', Branch: '$args.branch', Dir: '$args.dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock(resource: label, inversePrecedence: true){
+    // XXX: prevents calling in a parallel stage otherwise you'll get this error:
+    //
+    //  "Using a milestone step inside parallel is not allowed"
+    //
     milestone ordinal: null, label: "Milestone: $label"
     timeout(time: args.timeoutMinutes, unit: 'MINUTES'){
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
