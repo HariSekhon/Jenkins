@@ -18,13 +18,31 @@
 //                           Generate GIT_COMMIT_SHORT
 // ========================================================================== //
 
-// Generates the GIT_COMMIT_SHORT environment variable and returns it
+// Generates the GIT_COMMIT_SHORT environment variable from GIT_COMMIT and returns it
+//
+// If GIT_COMMIT is not set, attempts to also create that first from the Git Log
 //
 // Useful for auto-versioning dev builds to deploy automatically without generating too many release versions via githubCreateRelease.groovy for every git push
 //
 // https://www.jenkins.io/doc/pipeline/examples/#gitcommit
 
 def call() {
-    env.GIT_COMMIT_SHORT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
-    return env.GIT_COMMIT_SHORT
+  if ( ! env.GIT_COMMIT ){
+    echo "GIT_COMMIT environment variable not found, attempting to populate from git log"
+    env.GIT_COMMIT = sh(
+      returnStdout: true,
+      script: "git log -n 1 --pretty=format:'%H'"
+    ).trim()
+    if ( ! env.GIT_COMMIT ){
+      error "Failed to determine GIT_COMMIT"
+    }
+  }
+  int commitLength = env.GIT_COMMIT.length()
+  if (commitLength != 40) {
+    error "GIT_COMMIT environment variable is of unexpected length, expected 40 characters, got '$commitLength' characters in '$GIT_COMMIT'"
+  }
+  // avoid this call if GIT_COMMIT is already set
+  //env.GIT_COMMIT_SHORT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+  env.GIT_COMMIT_SHORT = env.GIT_COMMIT.substring(0, 7)
+  return env.GIT_COMMIT_SHORT
 }
