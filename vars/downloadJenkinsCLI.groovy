@@ -26,8 +26,8 @@ def call() {
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
-      jar_path = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
-      installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar", destination: "$jar_path")
+      // TODO: add destination arg to follow ${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}
+      installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
     }
   }
 }
