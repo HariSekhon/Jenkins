@@ -28,7 +28,7 @@
 //    // runs pipeline using Terraform 1.2.3, plans for any branch but only applies for branch 'master' with required approval, uses 'gcloud-sdk' container specified in 'ci/jenkins-pod.yaml' from the root of the repo:
 //
 //      jenkinsBackupJobConfigsPipeline(
-//        dir: '/jobs',
+//        dir: 'jobs',
 //        env: ["JENKINS_USER_ID=hari.sekhon@domain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],
 //        creds: [string(credentialsId: 'hari-api-token', variable: 'JENKINS_API_TOKEN')],
 //        container: 'gcloud-sdk',
