@@ -59,7 +59,7 @@ def call() {
 
   echo "Deleting any XML files which don't have a corresponding current Jenkins Job"
   xmlFileList.each { filename ->
-    String jobName = fileBaseName.split('\\.xml$')[0]
+    String jobName = filename.split('\\.xml$')[0]
     if ( ! jobList.contains(jobName) ){
       sh (
         label: "Deleting $fileBaseName",
