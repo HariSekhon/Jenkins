@@ -45,7 +45,15 @@ def call() {
     '''
   ).tokenize('\n')
 
-  def baseDir = new File('.');
+  // DIR() {} containing section only seems to apply to shell and not the JVM runtime which gets / directory instead of the one we asked for
+  String pwd = sh(
+    returnStdout: true,
+    script: '''
+      set -eux
+      pwd
+    '''
+  )
+  def baseDir = new File(pwd);
   echo "Getting list of XML files in current directory: ${baseDir.canonicalPath}"
   // not handling recursion because Jenkins jobs are backed up to a single directory, not subdirectories
   // see adjacent jenkinsJobsDownloadConfigurations.groovy
