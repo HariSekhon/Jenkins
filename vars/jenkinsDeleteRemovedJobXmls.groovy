@@ -58,19 +58,27 @@ def call() {
     }
   }
 
+  if(!xmlFileList){
+    error "No XML files found in current directory: ${baseDir.canonicalPath}"
+  }
+
+  echo "Found ${xmlFileList.size()} XML files in current directory"
+
   echo "Deleting any XML files which don't have a corresponding current Jenkins Job"
   xmlFileList.each { filename ->
-    echo "Checking file '$filename' for corresponding Jenkins job"
-    String jobName = filename.split('\\.xml$')[0]
-    if ( ! jobList.contains(jobName) ){
-      echo "Jenkins job '$jobName' not found"
-      sh (
-        label: "Deleting $fileBaseName",
-        script: """
-          set -eux
-          rm -fv "$filename"
-        """
-      )
+    withEnv(["FILENAME=$filename"]){
+      echo "Checking file '$filename' for corresponding Jenkins job"
+      String jobName = filename.split('\\.xml$')[0]
+      if ( ! jobList.contains(jobName) ){
+        echo "Jenkins job '$jobName' not found"
+        sh (
+          label: "Deleting $filename",
+          script: '''
+            set -eux
+            rm -fv "$PWD/$FILENAME"
+          '''
+        )
+      }
     }
   }
 }
