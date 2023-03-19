@@ -51,7 +51,7 @@ def call() {
   def fileList = baseDir.listFiles()
 
   // return basenames of only xml files
-  List<String> xmlFileList = fileList.each { filename ->
+  List<String> xmlFileList = fileList.collect { filename ->
     if( filename.toString().endsWith('.xml') ){
       filename.name.split('/')[-1]
     }
