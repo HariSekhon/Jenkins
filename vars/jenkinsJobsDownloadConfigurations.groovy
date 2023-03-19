@@ -41,8 +41,8 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
     'Test'
   ]
 
-  List jobs = args.jobs ?: []
-  List excludedJobs = args.excludeJobs ?: defaultExcludedJobs
+  List<String> jobs = args.jobs ?: []
+  List<String> excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
   // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
   //jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
@@ -57,7 +57,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   //jenkinsCliJarFile = new File(jenkinsCliJar)
   //if(! (new File(jenkinsCliJar)).exists() ){
   //
-  jenkinsCliJarExists = sh(
+  Boolean jenkinsCliJarExists = sh(
     label: 'Check Jenkins CLI jar exists',
     returnStatus: true,
     script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
