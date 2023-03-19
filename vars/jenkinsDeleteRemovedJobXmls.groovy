@@ -50,16 +50,15 @@ def call() {
   // see adjacent jenkinsJobsDownloadConfigurations.groovy
   def fileList = baseDir.listFiles()
 
-  // only consider files ending in .xml
+  // return basenames of only xml files
   List<String> xmlFileList = fileList.each { filename ->
     if( filename.toString().endsWith('.xml') ){
-      filename
+      filename.name.split('/')[-1]
     }
   }
 
   echo "Deleting any XML files which don't have a corresponding current Jenkins Job"
   xmlFileList.each { filename ->
-    String fileBaseName = filename.name.split('/')[-1]
     String jobName = fileBaseName.split('\\.xml$')[0]
     if ( ! jobList.contains(jobName) ){
       sh (
