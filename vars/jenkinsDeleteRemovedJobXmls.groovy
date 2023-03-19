@@ -46,21 +46,24 @@ def call() {
   ).tokenize('\n')
 
   def baseDir = new File('.');
+  echo "Getting list of XML files in current directory: ${baseDir.canonicalPath}"
   // not handling recursion because Jenkins jobs are backed up to a single directory, not subdirectories
   // see adjacent jenkinsJobsDownloadConfigurations.groovy
   def fileList = baseDir.listFiles()
 
   // return basenames of only xml files
   List<String> xmlFileList = fileList.collect { filename ->
-    if( filename.toString().endsWith('.xml') ){
+    if( filename.name.endsWith('.xml') ){
       filename.name.split('/')[-1]
     }
   }
 
   echo "Deleting any XML files which don't have a corresponding current Jenkins Job"
   xmlFileList.each { filename ->
+    echo "Checking file '$filename' for corresponding Jenkins job"
     String jobName = filename.split('\\.xml$')[0]
     if ( ! jobList.contains(jobName) ){
+      echo "Jenkins job '$jobName' not found"
       sh (
         label: "Deleting $fileBaseName",
         script: """
