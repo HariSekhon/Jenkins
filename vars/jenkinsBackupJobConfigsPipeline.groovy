@@ -176,6 +176,19 @@ def call(Map args = [
         }
       }
 
+      stage('Delete Removed Job Configurations') {
+        steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          dir("$DIR"){
+            withEnv(args.env ?: []){
+              withCredentials(args.creds ?: []){
+                jenkinsDeleteRemovedJobXmls()
+              }
+            }
+          }
+        }
+      }
+
       stage('Git Commit') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
