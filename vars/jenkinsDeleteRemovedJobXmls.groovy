@@ -66,7 +66,7 @@ def call() {
         label: "Deleting $fileBaseName",
         script: """
           set -eux
-          rm -fv '$filename"
+          rm -fv "$filename"
         """
       )
     }
