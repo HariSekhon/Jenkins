@@ -53,18 +53,29 @@ def call() {
       pwd
     '''
   )
-  def baseDir = new File(pwd);
-  echo "Getting list of XML files in current directory: ${baseDir.canonicalPath}"
+  echo "Getting list of XML files in current directory: ${pwd}"
   // not handling recursion because Jenkins jobs are backed up to a single directory, not subdirectories
   // see adjacent jenkinsJobsDownloadConfigurations.groovy
-  def fileList = baseDir.listFiles()
+  ////def baseDir = new File('.');  // gets / directory of the runtime instead of DIR(){} from Jenkins
+  //def baseDir = new File(pwd);
+  // XXX: for some reason this returns no files even though File(pwd) is set to the real current shell directory full of *.xml files that ls and find return
+  //def fileList = baseDir.listFiles()
 
-  // return basenames of only xml files
-  List<String> xmlFileList = fileList.collect { filename ->
-    if( filename.name.endsWith('.xml') ){
-      filename.name.split('/')[-1]
-    }
-  }
+  //echo "filtering XML files:"
+  //// return basenames of only xml files
+  //List<String> xmlFileList = fileList.collect { filename ->
+  //  if( filename.name.endsWith('.xml') ){
+  //    filename.name.split('/')[-1]
+  //  }
+  //}
+
+  List xmlFileList = sh(
+    returnStdout: true,
+    script: '''
+      set -eux
+      find . -maxdepth 1 -name '*.xml'
+    '''
+  ).tokenize('\n')
 
   if(!xmlFileList){
     error "No XML files found in current directory: ${baseDir.canonicalPath}"
