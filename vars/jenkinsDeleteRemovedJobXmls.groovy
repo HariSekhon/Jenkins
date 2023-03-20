@@ -14,7 +14,7 @@
 //
 
 // ========================================================================== //
-//                      Download Jenkins Job Configurations
+//                       Delete Removed Jenkins Job Configs
 // ========================================================================== //
 
 // Deletes any XML files in the current directory that do not match Jenkins Jobs found on the server
