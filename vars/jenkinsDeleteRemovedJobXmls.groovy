@@ -87,7 +87,8 @@ def call() {
   xmlFileList.each { filename ->
     withEnv(["FILENAME=$filename"]){
       echo "Checking file '$filename' for corresponding Jenkins job"
-      String jobName = filename.split('\\.xml$')[0]
+      String fileBaseName = filename.split('/')[-1]
+      String jobName = fileBaseName.split('\\.xml$')[0]
       if ( ! jobList.contains(jobName) ){
         echo "Jenkins job '$jobName' not found"
         sh (
