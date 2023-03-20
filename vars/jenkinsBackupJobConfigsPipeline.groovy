@@ -200,7 +200,7 @@ def call(Map args = [
                   script: '''
                     set -eux
 
-                    git add *.xml
+                    git add .
 
                     git diff
 
