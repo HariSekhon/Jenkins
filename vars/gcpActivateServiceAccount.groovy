@@ -32,6 +32,7 @@ def call(key='', timeoutMinutes=2){
         env.CLOUDSDK_CORE_DISABLE_PROMPTS = 1
       }
       echo "$label"
+      // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#interpolation-of-sensitive-environment-variables
       withEnv(["GCP_SERVICEACCOUNT_KEY=$key"]){
         sh (
           label: "$label",
