@@ -20,6 +20,10 @@
 
 // Tags the current GIT_COMMIT tagged Docker image in Google Container Registry with the Git Short Commit which is a bit more user friendly when using not explicitly versioned CI/CD deployments
 //
+// Call with a string split like for an env var:
+//
+//    gcrTagGitCommitShort(env.DOCKER_IMAGES.split(',') as List)
+//
 // Requires GCloud SDK CLI to be installed and authenticated
 
 def call(List<String> dockerImageRegistryPaths) {
