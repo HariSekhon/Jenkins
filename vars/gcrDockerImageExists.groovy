@@ -33,8 +33,10 @@ def call(String dockerImageRegistryPath, String dockerImageTag) {
     label: "GCloud list tags",
     script: """
       set -eux
-      gcloud container images list-tags '$dockerImageRegistryPath' --filter='tags:$dockerImageTag' --format=text
+      gcloud container images list-tags '$dockerImageRegistryPath' --filter='tags ~ ^$dockerImageTag$' --format=text
     """
+    // XXX: do not do --filter='tags:$dockerImageTag' - this will match a partial substring such that an image
+    //      with only a long hashref tag will be matched by a check for the short hashref, defeating adjacent gcrTagGitCommitShort.groovy
   )
   if(stdout){
     echo "Docker image '$dockerImageRegistryPath:$dockerImageTag' exists"
