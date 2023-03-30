@@ -24,12 +24,16 @@
 //
 // Requires GCloud SDK CLI to be installed and authenticated
 
-def call(List<String> dockerImageRegistryPaths, int waitMinutes=10) {
+def call(List<String> dockerImageRegistryPaths, String dockerTag='', int waitMinutes=10) {
   timeout(time: waitMinutes, unit: 'MINUTES'){
     waitUntil {
       for(String dockerImageRegistryPath in dockerImageRegistryPaths){
         if(!dockerImageRegistryPath.contains(':')){
-          error("gcrDockerImagesExistWait() passed docker image registry path without a tag suffix, which will usually be true after even 1 build: $dockerImageRegistryPath")
+          if(dockerTag){
+            dockerImageRegistryPath.contains += ":$dockerTag"
+          } else {
+            error("gcrDockerImagesExistWait() passed docker image registry path without a tag suffix, which will usually be true after even 1 build: $dockerImageRegistryPath")
+          }
         }
         if(!gcrDockerImageExists(dockerImageRegistryPath)){
           sleep(
