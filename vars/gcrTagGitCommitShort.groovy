@@ -33,6 +33,6 @@ def call(List<String> dockerImageRegistryPaths) {
     if(!gcrDockerImageExists(dockerImageRegistryPath, env.GIT_COMMIT)){
       error "Docker image '$dockerImageRegistryPath' full SHA '$GIT_COMMIT' tag does not exist, cannot tag with short SHA!"
     }
-    gcrDockerImageTag("$dockerImageRegistryPath:$GIT_COMMIT", env.GIT_COMMIT_SHORT)
+    gcrTagDockerImage("$dockerImageRegistryPath:$GIT_COMMIT", env.GIT_COMMIT_SHORT)
   }
 }
