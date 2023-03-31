@@ -26,6 +26,7 @@
 
 def call(List<String> dockerImageRegistryPaths, String dockerTag='', int waitMinutes=10) {
   timeout(time: waitMinutes, unit: 'MINUTES'){
+    echo "Waiting for $waitMinutes minutes for GCR docker images to become available"
     waitUntil {
       for(String dockerImageRegistryPath in dockerImageRegistryPaths){
         String tag = dockerTag
