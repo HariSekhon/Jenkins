@@ -28,14 +28,14 @@ def call(List<String> dockerImageRegistryPaths, String dockerTag='', int waitMin
   timeout(time: waitMinutes, unit: 'MINUTES'){
     waitUntil {
       for(String dockerImageRegistryPath in dockerImageRegistryPaths){
-        if(!dockerImageRegistryPath.contains(':')){
-          if(dockerTag){
-            dockerImageRegistryPath.contains += ":$dockerTag"
-          } else {
-            error("gcrDockerImagesExistWait() passed docker image registry path without a tag suffix, which will usually be true after even 1 build: $dockerImageRegistryPath")
-          }
+        String tag = dockerTag
+        if(dockerImageRegistryPath.contains(':')){
+          tag = dockerImageRegistryPath.split(':')[-1]
         }
-        if(!gcrDockerImageExists(dockerImageRegistryPath)){
+        if(!tag){
+          error("gcrDockerImagesExistWait() passed docker image registry path without a tag suffix, which will usually be true after even 1 build: $dockerImageRegistryPath")
+        }
+        if(!gcrDockerImageExists(dockerImageRegistryPath, tag)){
           sleep(
             time: 10,
             unit: 'SECONDS'  // default is SECONDS
