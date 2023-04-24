@@ -23,6 +23,6 @@ def call(bin){
   sh(
     label: "Check if '$bin' command is available in \$PATH ($PATH)",
     returnStatus: true,
-    script: "command -v '$bin'"
+    script: "command -v '$bin' || type -P '$bin' || which '$bin'"
   )
 }
