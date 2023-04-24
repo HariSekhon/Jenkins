@@ -17,7 +17,7 @@
 //                         T e r r a f o r m   A p p l y
 // ========================================================================== //
 
-def call(timeoutMinutes=30){
+def call(timeoutMinutes=60){
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Apply - $unique"
