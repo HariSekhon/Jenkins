@@ -35,7 +35,7 @@ def call(targets=[], fail=true, timeoutMinutes=10){
     }
   }
   container('trivy') {
-    timeout(time: timeoutMinuntes, unit: 'MINUTES') {
+    timeout(time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         for(target in targets){
           withEnv(["TARGET=$target"]){
