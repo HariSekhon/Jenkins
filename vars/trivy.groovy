@@ -19,7 +19,9 @@
 
 // Security scanner
 
-// Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise
+// Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise)
+
+// Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
 
 def call(targets=[], fail=true, timeoutMinutes=10){
   label 'Trivy'
