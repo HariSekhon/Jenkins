@@ -20,7 +20,13 @@
 // Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 
 def call(key='', timeoutMinutes=2){
-  key = key ?: env.GCP_SERVICEACCOUNT_KEY ?: error('gcpActivateServiceAccount: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment')
+  if (key) {
+    env.GCP_SERVICEACCOUNT_KEY = credentials(key)
+  } else {
+    if (!env.GCP_SERVICEACCOUNT_KEY) {
+      error('gcpActivateServiceAccount: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment')
+    }
+  }
   retry(2){
     timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Activating GCP Service Account credential'
@@ -32,23 +38,20 @@ def call(key='', timeoutMinutes=2){
         env.CLOUDSDK_CORE_DISABLE_PROMPTS = 1
       }
       echo "$label"
-      // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#interpolation-of-sensitive-environment-variables
-      withEnv(["GCP_SERVICEACCOUNT_KEY=$key"]){
-        sh (
-          label: "$label",
-          // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
-          //script: '''#!/usr/bin/env bash
-          // but many docker containers like Trivy don't have Bash :'-(
-          script: '''#!/bin/sh
-            set -eu  # XXX: don't set -x as it'll expose the Service Account key credential
-            # base64 --decode is portable across Linux and Mac, but unfortunately busybox as found in Trivy container only supports -d
-            echo "$GCP_SERVICEACCOUNT_KEY" | base64 -d > /tmp/gcp_serviceaccount_key.json
-            #gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
-            gcloud auth activate-service-account --key-file=/tmp/gcp_serviceaccount_key.json
-            gcloud auth list
-          '''
-        )
-      }
+      sh (
+        label: "$label",
+        // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
+        //script: '''#!/usr/bin/env bash
+        // but many docker containers like Trivy don't have Bash :'-(
+        script: '''#!/bin/sh
+          set -eu  # XXX: don't set -x as it'll expose the Service Account key credential
+          # base64 --decode is portable across Linux and Mac, but unfortunately busybox as found in Trivy container only supports -d
+          echo "$GCP_SERVICEACCOUNT_KEY" | base64 -d > /tmp/gcp_serviceaccount_key.json
+          #gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
+          gcloud auth activate-service-account --key-file=/tmp/gcp_serviceaccount_key.json
+          gcloud auth list
+        '''
+      )
     }
   }
 }
