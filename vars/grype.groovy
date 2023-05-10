@@ -46,11 +46,11 @@ def call (targetList=[], fail=true, timeoutMinutes=10) {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {
             echo "Grype scanning image '$TARGET' - informational only to see all issues"
-            sh ' grype "$TARGET" --fail-on high --scope AllLayers '
+            sh ' grype "$TARGET" --fail-on high --scope all-layers '
 
             if (fail) {
               echo "Grypescanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-              sh ' grype "$TARGET" --fail-on high --scope AllLayers '
+              sh ' grype "$TARGET" --fail-on high --scope all-layers '
             }
           }
         }
