@@ -41,7 +41,8 @@ def call(key='', timeoutMinutes=2){
           // but many docker containers like Trivy don't have Bash :'-(
           script: '''#!/bin/sh
             set -eu  # XXX: don't set -x as it'll expose the Service Account key credential
-            echo "$GCP_SERVICEACCOUNT_KEY" | base64 --decode > /tmp/gcp_serviceaccount_key.json
+            # base64 --decode is portable across Linux and Mac, but unfortunately busybox as found in Trivy container only supports -d
+            echo "$GCP_SERVICEACCOUNT_KEY" | base64 -d > /tmp/gcp_serviceaccount_key.json
             #gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
             gcloud auth activate-service-account --key-file=/tmp/gcp_serviceaccount_key.json
             gcloud auth list
