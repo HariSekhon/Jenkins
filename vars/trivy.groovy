@@ -23,10 +23,12 @@
 
 // Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
 
-def call(targets=[], fail=true, timeoutMinutes=10){
+def call(target_list=[], fail=true, timeoutMinutes=10){
   label 'Trivy'
-  if(!targets){
-    if(env.DOCKER_IMAGE){
+  if (target_list) {
+    targets = target_list
+  } else {
+    if (env.DOCKER_IMAGE) {
       String tag = 'latest'
       if(env.DOCKER_TAG){
         tag = env.DOCKER_TAG
@@ -39,12 +41,12 @@ def call(targets=[], fail=true, timeoutMinutes=10){
   container('trivy') {
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
-        for(target in targets){
+        for (target in targets) {
           withEnv(["TARGET=$target"]){
             echo "Trivy scanning image '$TARGET' - informational only to see all issues"
             sh ' trivy image --no-progress "$TARGET" '
 
-            if(fail){
+            if (fail) {
               echo "Trivy scanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
               sh ' trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET" '
             }
