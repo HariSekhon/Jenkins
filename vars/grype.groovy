@@ -19,13 +19,40 @@
 
 // https://github.com/anchore/grype
 
-def call(target, timeoutMinutes=10){
+// Security scanner
+
+// Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise)
+
+// Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
+
+def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
+  if (targetList) {
+    targets = targetList
+  } else {
+    if (env.DOCKER_IMAGE) {
+      String tag = 'latest'
+      if (env.DOCKER_TAG) {
+        tag = env.DOCKER_TAG
+      }
+      targets = ["$DOCKER_IMAGE:$tag"]
+    } else {
+      error "No targets passed to grype() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
+    }
+  }
   container('grype') {
-    timeout(time: timeoutMinuntes, unit: 'MINUTES') {
+    timeout(time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
-        withEnv(["TARGET=$target"]) {
-          sh '''grype '$TARGET' --fail-on high --scope AllLayers'''
+        for (target in targets) {
+          withEnv (["TARGET=$target"]) {
+            echo "Grype scanning image '$TARGET' - informational only to see all issues"
+            sh ' grype "$TARGET" --fail-on high --scope AllLayers '
+
+            if (fail) {
+              echo "Grypescanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
+              sh ' grype "$TARGET" --fail-on high --scope AllLayers '
+            }
+          }
         }
       }
     }
