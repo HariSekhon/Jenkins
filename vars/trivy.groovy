@@ -23,7 +23,7 @@
 
 // Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
 
-def call(targetList=[], fail=true, timeoutMinutes=10){
+def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
   if (targetList) {
     targets = targetList
