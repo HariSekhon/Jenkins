@@ -37,9 +37,13 @@ def call(key='', timeoutMinutes=2){
         sh (
           label: "$label",
           // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
-          script: '''#!/usr/bin/env bash
-            set -euxo pipefail
-            gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
+          //script: '''#!/usr/bin/env bash
+          // but many docker containers like Trivy don't have Bash :'-(
+          script: '''#!/bin/sh
+            set -eu  # XXX: don't set -x as it'll expose the Service Account key credential
+            echo "$GCP_SERVICEACCOUNT_KEY" | base64 --decode > /tmp/gcp_serviceaccount_key.json
+            #gcloud auth activate-service-account --key-file=<(base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY")
+            gcloud auth activate-service-account --key-file=/tmp/gcp_serviceaccount_key.json
             gcloud auth list
           '''
         )
