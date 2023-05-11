@@ -30,10 +30,10 @@ def call() {
       installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
       sh (
         label: "Jenkins CLI Version",
-        script: '''
+        script: """
           set -eu
-          java -jar ~/bin/jenkins-cli.jar version
-        '''
+          java -jar ~/bin/jenkins-cli.jar -s "$JENKINS_URL" -webSocket version
+        """
       )
     }
   }
