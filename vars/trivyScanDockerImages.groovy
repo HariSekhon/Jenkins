@@ -50,10 +50,10 @@ def call (Map args = [imageList=[], fail=true, timeoutMinutes=10]) {
       for (image in imageList) {
         withEnv (["IMAGE=$image"]) {
           echo "Trivy scanning image '$IMAGE' - informational only to see all issues"
-          trivy('image --no-progress "$IMAGE"')
+          trivy("image --no-progress '$IMAGE'")
           if (fail) {
             echo "Trivy scanning image '$IMAGE' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-            trivy('image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$IMAGE"')
+            trivy("image --no-progress --exit-code 1 --severity HIGH,CRITICAL '$IMAGE'")
           }
         }
       }
