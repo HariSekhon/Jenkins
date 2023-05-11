@@ -21,8 +21,8 @@
 
 // Usage:
 //
-//    // if you're running on a Jenkins agent that already has the trivy binary bundled just call it
-//    // otherwise download trivy first
+//    // if you're running on a Jenkins agent that already has the trivy binary bundled just call it otherwise download trivy first
+//    // Downloading Trivy only takes 7 seconds in testing
 //    downloadTrivy()
 //    trivy('whatever CLI args you want to pass to trivy')
 //
