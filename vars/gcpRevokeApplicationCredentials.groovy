@@ -23,9 +23,9 @@
 //
 // Not needed on Kubernetes agents which are ephemeral
 
-def call(timeoutMinutes=1){
-  retry(2){
-    timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
+def call(timeoutMinutes=1) {
+  retry (2) {
+    timeout (time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Deleting GCP Application Credential Key'
       echo "$label"
       sh (
