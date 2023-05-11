@@ -43,6 +43,7 @@ def call(version) {
         label: "Terragrunt Version",
         script: '''
           set -eu
+          export PATH="$PATH:"~/bin
           terragrunt version
         '''
       )
