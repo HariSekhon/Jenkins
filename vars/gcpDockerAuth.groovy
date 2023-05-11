@@ -29,6 +29,6 @@
 // if passing blank for GAR registries, garAuthDocker() will auto-determine all registries
 // if passing blank for GCR registries, will use hardcoded default list taken from documentation
 def call(gar_registries='', gcr_registries='') {
-  garAuthDocker(gar_registries)
-  gcrAuthDocker(gcr_registries)
+  garDockerAuth(gar_registries)
+  gcrDockerAuth(gcr_registries)
 }
