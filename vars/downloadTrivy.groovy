@@ -36,7 +36,7 @@ def call(version='latest'){
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 3, unit: 'MINUTES') {
-      withEnv(["VERSION=$version"]) {
+      //withEnv(["VERSION=$version"]) {
         echo "$label"
         sh (
           label: "$label, version '$version'",
@@ -45,7 +45,7 @@ def call(version='latest'){
             curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$version'
           """
         )
-      }
+      //}
     }
   }
 }
