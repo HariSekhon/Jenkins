@@ -39,10 +39,10 @@ def call(version='latest'){
       withEnv(["VERSION=$version"]) {
         echo "$label"
         sh (
-          label: "$label, version '$version'",
+          label: "$label, version '$VERSION'",
           script: """
             set -eux
-            curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin '$version'
+            curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
           """
         )
       }
