@@ -39,7 +39,7 @@
 def call (imageList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
   if (imageList) {
-    if (! imageList instanceOf List) {
+    if (! imageList instanceof List) {
       error "non-list passed as first arg to trivyScanDockerImages() function"
     }
     images = imageList
