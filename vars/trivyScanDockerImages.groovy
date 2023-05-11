@@ -31,6 +31,8 @@
 //
 //      catchError(stageResult: 'FAILURE') {
 //        trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+//        // or
+//        trivyScanDockerImages(env.DOCKER_IMAGES.split(',') as List)
 //      }
 //
 
