@@ -27,13 +27,18 @@
 
 def call(version) {
   String label = "Download Terragrunt on agent '$HOSTNAME'"
+  if (!version) {
+    error "version arg not given to downloadTerragrunt()"
+  }
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
-      installBinary(
-        binary: 'terragrunt',
-        url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}"
-      )
+      withEnv(["VERSION=$version"]){
+        installBinary(
+          binary: 'terragrunt',
+          url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$VERSION/terragrunt_{os}_{arch}"
+        )
+      }
       sh (
         label: "Terragrunt Version",
         script: '''
