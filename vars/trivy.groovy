@@ -41,7 +41,7 @@
 
 def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
-  fail = args.fail == false ?: true
+  fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
   if (args.targets) {
     targets = args.targets
@@ -62,11 +62,17 @@ def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {
             echo "Trivy scanning image '$TARGET' - informational only to see all issues"
-            sh ' trivy image --no-progress "$TARGET" '
+            sh (
+              label: "Trivy",
+              script: ' trivy image --no-progress "$TARGET" '
+            )
 
             if (fail) {
               echo "Trivy scanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-              sh ' trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET" '
+              sh (
+                label: "Trivy",
+                script: ' trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET" '
+              )
             }
           }
         }
