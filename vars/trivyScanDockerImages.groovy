@@ -36,7 +36,7 @@
 //      }
 //
 
-def call (imageList=[], fail=true, timeoutMinutes=10) {
+def call (imageList=[], fail=true, timeoutMinutes=30) {
   label 'Trivy'
   if (imageList) {
     if (imageList instanceof String) {
