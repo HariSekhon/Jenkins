@@ -52,6 +52,9 @@
 def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
   if (targetList) {
+    if (! targetList instanceOf List) {
+      error "non-list passed as first arg to grype() function"
+    }
     targets = targetList
   } else {
     if (env.DOCKER_IMAGE) {
