@@ -30,20 +30,21 @@
 // ArgoCD sync usually takes 20-60 secs even for a large app full of different deployments and many cronjobs,
 // so 5 minute timeout default should be more than enough for all sane use cases
 
-def call(app, timeoutMinutes=5){
+def call (app, timeoutMinutes=5) {
   String label = "ArgoCD Sync - App: '$app'"
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
-  lock(resource: label, inversePrecedence: true){
+  lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
     //
     //  "Using a milestone step inside parallel is not allowed"
     //
     milestone ordinal: null, label: "Milestone: $label"
-    container('argocd') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
-        waitUntil(initialRecurrencePeriod: 5000){
-          withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
+    // let caller decide if wrapping this in a container('argocd') or using downloadArgo.groovy to save RAM
+    //container ('argocd') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
+        waitUntil (initialRecurrencePeriod: 5000) {
+          withEnv (["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
             // Blue Ocean doesn't hide script with this label, even though it does for argoDeploy(), so echo explicitly
             echo "$label"
             script {
@@ -62,6 +63,6 @@ def call(app, timeoutMinutes=5){
           }
         }
       }
-    }
+    //}
   }
 }
