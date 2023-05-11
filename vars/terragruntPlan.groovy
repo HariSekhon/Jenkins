@@ -17,20 +17,20 @@
 //                         T e r r a g r u n t   P l a n
 // ========================================================================== //
 
-def call(timeoutMinutes=10){
+def call (timeoutMinutes=10) {
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terragrunt Plan - $unique"
   // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
   String lockString = "Terraform - $unique"
   echo "Acquiring Terragrunt Plan Lock: $lockString"
-  lock(resource: lockString, inversePrecedence: true) {
+  lock (resource: lockString, inversePrecedence: true) {
     // forbids older plans from starting
     milestone(ordinal: null, label: "Milestone: $label")
 
     // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terragrunt') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           dir("$terraformDir") {
@@ -50,7 +50,7 @@ def call(timeoutMinutes=10){
             script {
               logList = currentBuild.rawBuild.getLog(100)
               logString = logList.join('\n')
-              if(logString.contains('Your infrastructure matches the configuration')){
+              if (logString.contains('Your infrastructure matches the configuration')) {
                 env.TERRAFORM_CHANGES = false
               } else {
                 env.TERRAFORM_CHANGES = true

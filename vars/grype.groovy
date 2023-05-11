@@ -30,7 +30,7 @@
 // - if pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent) run in the trivy container before calling this function eg.
 //
 //      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
-//        container('trivy'){
+//        container('trivy') {
 //          gcpSetupApplicationCredentials()
 //        }
 //      }
@@ -74,7 +74,7 @@ def call (targetList=[], fail=true, timeoutMinutes=30) {
   }
   // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
   //container('grype') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {

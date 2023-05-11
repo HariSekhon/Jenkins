@@ -26,7 +26,7 @@
 
 // https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
 
-def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
+def call (Map args = [ repo: '', release: '', target_ref: '' ]) {
 
   // if repo not given, assume own repo
   String ownerRepo = args.repo ?: gitOwnerRepo()
@@ -35,13 +35,13 @@ def call(Map args = [ repo: '', release: '', target_ref: '' ]) {
 
   String target_ref = args.target_ref ?: env.GIT_COMMIT
 
-  if(!target_ref?.trim()){
+  if (!target_ref?.trim()) {
     error 'No target_ref passed and could not find GIT_COMMIT environment variable'
   }
 
   echo "Creating GitHub repo '$ownerRepo' release: $release"
 
-  sh(
+  sh (
     label: 'Create GitHub Release',
     script: """
       set -eu

@@ -24,14 +24,14 @@
 //
 // Usage:
 //
-//  container('pipenv'){
+//  container('pipenv') {
 //    pipenvInstall('checkov')
 //    sh 'pipenv run checkov ...'
 //  }
 //
 
-def call(pip_package) {
-  withEnv(["PACKAGE=$pip_package"]){
+def call (pip_package) {
+  withEnv(["PACKAGE=$pip_package"]) {
     sh (
       label: 'Pipenv Install',
       script: '''

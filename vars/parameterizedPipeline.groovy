@@ -39,7 +39,7 @@ def call (project, environ, credential) {
     options {
       buildDiscarder(logRotator(numToKeepStr: '100'))
       timestamps()
-      timeout(time: 1, unit: 'HOURS')
+      timeout (time: 1, unit: 'HOURS')
     }
 
     stages {
@@ -48,11 +48,11 @@ def call (project, environ, credential) {
         steps {
           milestone ordinal: null, label: "Milestone: Build"
           echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-          timeout(time: 1, unit: 'MINUTES') {
+          timeout (time: 1, unit: 'MINUTES') {
             sh script: 'env | sort', label: 'Environment'
           }
-          retry(2){
-            timeout(time: 40, unit: 'MINUTES') {
+          retry (2) {
+            timeout (time: 40, unit: 'MINUTES') {
               // script from DevOps Bash tools repo
               // external script needs to exist in the source repo, not the shared library repo
               //
@@ -66,9 +66,9 @@ def call (project, environ, credential) {
       stage('Deploy') {
         steps {
           milestone ordinal: null, label: "Milestone: Deploy"
-          lock(resource: "Deploy K8s Apps - '" + "${environ}".capitalize() + "' Environment", inversePrecedence: true){
-            retry(2){
-              timeout(time: 20, unit: 'MINUTES') {
+          lock (resource: "Deploy K8s Apps - '" + "${environ}".capitalize() + "' Environment", inversePrecedence: true) {
+            retry (2) {
+              timeout (time: 20, unit: 'MINUTES') {
                 // script from DevOps Bash tools repo
                 // external script needs to exist in the source repo, not the shared library repo
                 //

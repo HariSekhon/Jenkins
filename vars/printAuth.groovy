@@ -29,8 +29,8 @@
 //
 //      printAuth()
 
-def call(){
-  timeout(time: 2, unit: 'MINUTES') {
+def call () {
+  timeout (time: 2, unit: 'MINUTES') {
     echo 'Showing logged in status for any platforms we have CLIs available for'
 
     sh (

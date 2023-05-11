@@ -29,13 +29,13 @@
 //
 // channel can be configured at the global Jenkins level when Slack integration is configured, or overridden via the first argument
 
-def call(String channel='') {
+def call (String channel='') {
 
   env.BUILD_RESULT = currentBuild.result ?: 'SUCCESS'
 
-  //if(env.BUILD_RESULT == 'SUCCESS'){
-  //if(['UNSTABLE', 'ABORTED'].contains(env.BUILD_RESULT)){
-  switch(env.BUILD_RESULT){
+  //if (env.BUILD_RESULT == 'SUCCESS') {
+  //if (['UNSTABLE', 'ABORTED'].contains(env.BUILD_RESULT)) {
+  switch(env.BUILD_RESULT) {
     case 'SUCCESS':
       env.SLACK_COLOR = 'good'
       env.BUILD_RESULT = env.BUILD_RESULT.toLowerCase().capitalize()
@@ -49,10 +49,10 @@ def call(String channel='') {
   }
 
   env.SLACK_USERTAGS = ''
-  if(env.SLACK_COLOR != 'good'){
+  if (env.SLACK_COLOR != 'good') {
     env.SLACK_USERTAGS = slackBrokenCommitters().join(' ')
   }
-  if(env.SLACK_USERTAGS){
+  if (env.SLACK_USERTAGS) {
     env.SLACK_USERTAGS = '- ' + env.SLACK_USERTAGS
   }
 

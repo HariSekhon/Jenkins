@@ -19,22 +19,22 @@
 
 // Runs a given script with one or more given locks to prevent more than 1 copy of the script ever executing or to prevent a script from running during a deployment, or deployments starting while a script is running
 
-def call(String scriptPath, List<String> locks, int timeoutMinutes=60){
+def call (String scriptPath, List<String> locks, int timeoutMinutes=60) {
   // generate a list in this format
-  //lock(extra: [[resource: 'lock1'], [resource: 'lock2']])
+  //lock (extra: [[resource: 'lock1'], [resource: 'lock2']])
   List<Map> extraLocks = []
-  for (lock in locks){
+  for (lock in locks) {
     echo "Acquiring Lock: $lock"
     extraLocks.add([resource: lock])
   }
-  lock(extra: extraLocks, inversePrecedence: true){
+  lock (extra: extraLocks, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
     //
     //  "Using a milestone step inside parallel is not allowed"
     //
     milestone label: "Milestone: Running script: $scriptPath"
-    retry(2){
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    retry (2) {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
         // external script needs to exist in the source repo, not the shared library repo
         sh "$scriptPath"
       }

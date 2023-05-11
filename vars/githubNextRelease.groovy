@@ -28,14 +28,14 @@
 
 // https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-the-latest-release
 
-def call(String repo='') {
+def call (String repo='') {
 
   // if repo not given, assume own repo
   String ownerRepo = repo ?: gitOwnerRepo()
 
   echo "Querying GitHub API for latest release tag of repo: $ownerRepo"
 
-  String jsonOutput = sh(
+  String jsonOutput = sh (
     returnStdout: true,
     label: 'Query GitHub Latest Release',
     script: """

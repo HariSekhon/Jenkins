@@ -27,7 +27,7 @@
 //    trivy('whatever CLI args you want to pass to trivy')
 //
 //    // if you've set up a Trivy container in your Jenkins agent pod like: https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
-//    container('trivy'){
+//    container('trivy') {
 //      trivy('whatever CLI args you want to pass to trivy')
 //    }
 //
@@ -39,7 +39,7 @@
 //   then set up the GCP application credentials key file in the trivy container before calling this function eg.
 //
 //      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
-//        container('trivy'){
+//        container('trivy') {
 //          gcpSetupApplicationCredentials()
 //        }
 //      }

@@ -17,7 +17,7 @@
 //                         T e r r a g r u n t   I n i t
 // ========================================================================== //
 
-def call(timeoutMinutes=10){
+def call (timeoutMinutes=10) {
   String label = 'Terragrunt Init'
 
   // forbids older inits from starting
@@ -25,7 +25,7 @@ def call(timeoutMinutes=10){
 
   // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
   //container('terragrunt') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
 

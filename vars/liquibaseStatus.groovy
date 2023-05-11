@@ -23,12 +23,12 @@
 //  LIQUIBASE_CREDENTIALS - type usernamePassword to implicitly expand to LIQUIBASE_CREDENTIALS_USR/LIQUIBASE_CREDENTIALS_PSW
 //  LIQUIBASE_CHANGELOG_FILE - xml file
 
-def call(timeoutMinutes=20){
+def call (timeoutMinutes=20) {
   label 'Liquibase Status'
 
   // XXX: set Liquibase version in the docker image tag in jenkins-agent-pod.yaml
   container('liquibase') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         sh label: 'Liquibase Version',
           script: 'liquibase --version'

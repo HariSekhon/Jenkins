@@ -21,7 +21,7 @@
 //
 //    ssh-keyscan bitbucket.org
 
-def call() {
+def call () {
   sshKnownHosts("""
 # bitbucket.org:22 SSH-2.0-conker_3aee7f2e9e d387e8eb814e
 # bitbucket.org:22 SSH-2.0-conker_3aee7f2e9e 29a8875ef620

@@ -17,20 +17,20 @@
 //                        T e r r a g r u n t   A p p l y
 // ========================================================================== //
 
-def call(timeoutMinutes=30){
+def call (timeoutMinutes=30) {
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terragrunt Apply - $unique"
   // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
   String lockString  = "Terraform - $unique"
   echo "Acquiring Terragrunt Apply Lock: $lockString"
-  lock(resource: lockString, inversePrecedence: true) {  // use same lock between Terraform / Terragrunt for safety
+  lock (resource: lockString, inversePrecedence: true) {  // use same lock between Terraform / Terragrunt for safety
     // forbids older applys from starting
     milestone(ordinal: null, label: "Milestone: $label")
 
     // terragrunt docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terragrunt') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch

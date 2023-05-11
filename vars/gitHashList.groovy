@@ -24,9 +24,9 @@
 //
 // Requires 'git' to be in the $PATH
 
-def call(shortRef=false) {
+def call (shortRef=false) {
   format = '%H'
-  if(shortRef){
+  if (shortRef) {
     format = '%h'
   }
   // could limit this with 'git log -n NN' but only takes 0.5 secs for nearly 30,000 in local git testing

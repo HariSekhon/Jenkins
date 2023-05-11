@@ -32,7 +32,7 @@
 //    gcpCloudBuild(dockerImages: ["$GCR_REGISTRY/$GCR_PROJECT/myapp:$GIT_COMMIT",
 //                                 "$GCR_REGISTRY/$GCR_PROJECT/myapp2:$GIT_COMMIT"])
 
-def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
+def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) {
   // XXX: prevents calling in a parallel stage otherwise you'll get this error:
   //
   //  "Using a milestone step inside parallel is not allowed"
@@ -43,8 +43,8 @@ def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
   args.args = args.args ?: ''
   args.timeoutMinutes = args.timeoutMinutes ?: 60
   args.skipIfDockerImagesExist = args.skipIfDockerImagesExist ?: []
-  retry(2){
-    timeout(time: "${args.timeoutMinutes}", unit: 'MINUTES') {
+  retry (2) {
+    timeout (time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
         if ( args.skipIfDockerImagesExist != [] ) {
@@ -52,7 +52,7 @@ def call(Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]){
           String labelCheckingImages = 'Checking if Docker images exist in GCR'
           //echo "$labelCheckingImages"
           dockerImagesExist =
-            sh(
+            sh (
               label: "$labelCheckingImages",
               returnStatus: true,
               script: """#!/usr/bin/env bash

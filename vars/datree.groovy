@@ -41,7 +41,7 @@
 // it'll show errors materialized from external helm charts
 // you'll then end up spending your life writing patches for all the imperfections of upstream projects
 
-def call(Map args = [dir: '.', kustomize: false, args: '']) {
+def call (Map args = [dir: '.', kustomize: false, args: '']) {
   // relies on recursive shell expansion, which doesn't work on older versions of Bash:
   //
   //  https://github.com/datreeio/datree/issues/618
@@ -52,19 +52,19 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   kustomize = args.kustomize ?: 'false'
   args = args.args ?: ''
 
-  boolean datreeExists = sh(
+  boolean datreeExists = sh (
     label: 'Check Datree CLI available',
     returnStatus: true,
     script: 'command -v datree'
   ) == 0
 
-  if(!datreeExists){
+  if (!datreeExists) {
     echo "Datree CLI not found, downloading..."
     downloadDatree()
   }
 
   String label = "Datree Test"
-  if("$kustomize" == "true"){
+  if ("$kustomize" == "true") {
     label = "Datree Kustomize Test"
   }
 
@@ -74,7 +74,7 @@ def call(Map args = [dir: '.', kustomize: false, args: '']) {
   //
   milestone ordinal: null, label: "$label"
 
-  withEnv(["DIR=$dir", "KUSTOMIZE=$kustomize", "ARGS=$args"]){
+  withEnv(["DIR=$dir", "KUSTOMIZE=$kustomize", "ARGS=$args"]) {
     // needs to be bash for pipefail detection
     sh (
       label: "$label",

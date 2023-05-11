@@ -23,12 +23,12 @@
 //    gcrAuthDocker.groovy
 //    garAuthDocker.groovy
 
-def call(user='', pass='', registry='') {
+def call (user='', pass='', registry='') {
   user = user ?: env.DOCKERHUB_USER ?: error('dockerLogin: username not specified and DOCKERHUB_USER not set in the environment')
   password = password ?: env.DOCKERHUB_TOKEN ?: error('dockerLogin: password/token not specified and DOCKERHUB_TOKEN not set in the environment')
   echo "Docker Login: $user"
   echo "Docker Registry: ${registry ?: 'DockerHub'}"
-  withEnv(["USER=$user", "PASS=$pass", "REGISTRY=$registry"]){
+  withEnv(["USER=$user", "PASS=$pass", "REGISTRY=$registry"]) {
     // Bourne compatible
     //sh '''
     //  set -eux

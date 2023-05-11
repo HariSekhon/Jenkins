@@ -33,7 +33,7 @@
 //
 // the rest of the speed loss must be Jenkins withEnv + new shell overheads of 'sh' x49
 
-def call(Map args = [ jobs: [], excludeJobs: [] ]) {
+def call (Map args = [ jobs: [], excludeJobs: [] ]) {
 
   // avoiding using regex due to non-serialization and need to use @NonCPS annotation which breaks groovy checks, which then have to be disabled, leaving the whole function unvalidated
   List defaultExcludedJobs = [
@@ -47,7 +47,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
   //jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
   //
-  //if(env.JENKINS_CLI_JAR){
+  //if (env.JENKINS_CLI_JAR) {
   //  jenkinsCliJar = env.JENKINS_CLI_JAR
   //} else {
   //  jenkinsCliJar = "$HOME/bin/jenkins-cli.jar"
@@ -55,7 +55,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   //
   // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
   //jenkinsCliJarFile = new File(jenkinsCliJar)
-  //if(! (new File(jenkinsCliJar)).exists() ){
+  //if (! (new File(jenkinsCliJar)).exists() ) {
   //
   Boolean jenkinsCliJarExists = sh (
     label: 'Check Jenkins CLI jar exists',
@@ -89,7 +89,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   //echo "jobs from API = $jobs2"
   //echo "number of jobs from CLI = $numJobs"
   //echo "number of jobs from API = $numJobs2"
-  //if(jobs != jobs2){
+  //if (jobs != jobs2) {
   //  error("ERROR: job lists don't watch between CLI and API results")
   //}
   //assert numJobs == numJobs2
@@ -97,7 +97,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   jobs -= excludedJobs
   int numExcludedJobs = numJobs - jobs.size()
   numJobs = jobs.size()
-  if(numExcludedJobs != 0){
+  if (numExcludedJobs != 0) {
     echo "$numExcludedJobs jobs excluded"
   }
 

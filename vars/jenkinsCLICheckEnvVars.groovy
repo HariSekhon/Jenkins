@@ -17,7 +17,7 @@
 //                  Check Environment Variables for Jenkins CLI
 // ========================================================================== //
 
-def call() {
+def call () {
   sh (
     label: 'Check Environment Variables for Jenkins CLI',
     script: '''#!/usr/bin/env bash

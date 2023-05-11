@@ -24,7 +24,7 @@
 //    APP
 //    ENVIRONMENT
 
-def call(String scriptPath, int timeoutMinutes=60){
+def call (String scriptPath, int timeoutMinutes=60) {
   String app = env.APP.toLowerCase()
   String environment = env.ENVIRONMENT.toLowerCase()
   String Environment = env.ENVIRONMENT.capitalize()

@@ -23,15 +23,15 @@
 //
 // This is to clean up Git commits to remove old jobs that have been renamed or deleted
 
-def call() {
+def call () {
 
-  Boolean jenkinsCliJarExists = sh(
+  Boolean jenkinsCliJarExists = sh (
     label: 'Check Jenkins CLI jar exists',
     returnStatus: true,
     script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
   ) == 0
 
-  if(!jenkinsCliJarExists){
+  if (!jenkinsCliJarExists) {
     echo "$jenkinsCliJar not found, downloading..."
     downloadJenkinsCLI()
   }
@@ -46,7 +46,7 @@ def call() {
   ).tokenize('\n')
 
   // DIR() {} containing section only seems to apply to shell and not the JVM runtime which gets / directory instead of the one we asked for
-  String pwd = sh(
+  String pwd = sh (
     returnStdout: true,
     script: '''
       set -eux
@@ -56,7 +56,7 @@ def call() {
   echo "Getting list of XML files in current directory: ${pwd}"
   // not handling recursion because Jenkins jobs are backed up to a single directory, not subdirectories
   // see adjacent jenkinsJobsDownloadConfigurations.groovy
-  ////def baseDir = new File('.');  // gets / directory of the runtime instead of DIR(){} from Jenkins
+  ////def baseDir = new File('.');  // gets / directory of the runtime instead of DIR() {} from Jenkins
   //def baseDir = new File(pwd);
   // XXX: for some reason this returns no files even though File(pwd) is set to the real current shell directory full of *.xml files that ls and find return
   //def fileList = baseDir.listFiles()
@@ -64,12 +64,12 @@ def call() {
   //echo "filtering XML files:"
   //// return basenames of only xml files
   //List<String> xmlFileList = fileList.collect { filename ->
-  //  if( filename.name.endsWith('.xml') ){
+  //  if ( filename.name.endsWith('.xml') ) {
   //    filename.name.split('/')[-1]
   //  }
   //}
 
-  List xmlFileList = sh(
+  List xmlFileList = sh (
     returnStdout: true,
     script: '''
       set -eux
@@ -77,7 +77,7 @@ def call() {
     '''
   ).tokenize('\n')
 
-  if(!xmlFileList){
+  if (!xmlFileList) {
     error "No XML files found in current directory: ${baseDir.canonicalPath}"
   }
 
@@ -85,11 +85,11 @@ def call() {
 
   echo "Deleting any XML files which don't have a corresponding current Jenkins Job"
   xmlFileList.each { filename ->
-    withEnv(["FILENAME=$filename"]){
+    withEnv(["FILENAME=$filename"]) {
       echo "Checking file '$filename' for corresponding Jenkins job"
       String fileBaseName = filename.split('/')[-1]
       String jobName = fileBaseName.split('\\.xml$')[0]
-      if ( ! jobList.contains(jobName) ){
+      if ( ! jobList.contains(jobName) ) {
         echo "Jenkins job '$jobName' not found"
         sh (
           label: "Deleting $filename",

@@ -28,8 +28,8 @@
 //
 // Alternatively, do what I do for my GitHub repos and use a git submodule or clone another repo locally to use its tools
 
-def call(file, dir = '.') {
-  withEnv(["FILE=$file"]){
+def call (file, dir = '.') {
+  withEnv(["FILE=$file"]) {
     def scriptContents = libraryResource "$dir/$file"
     writeFile file: "$file",
               text: scriptContents

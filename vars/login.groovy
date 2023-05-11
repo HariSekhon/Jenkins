@@ -48,7 +48,7 @@
 //
 //      login()
 
-def call() {
+def call () {
   echo 'Running Logins for any platforms we have environment credentials for'
 
   script {
@@ -62,7 +62,7 @@ def call() {
         dockerLoginGHCR()
       }
       if (isCommandAvailable('gh')) {
-        sh(
+        sh (
           label: 'GitHub CLI Auth Status',
           script: 'gh auth status'
         )

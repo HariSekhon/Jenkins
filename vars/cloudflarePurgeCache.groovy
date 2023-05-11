@@ -23,13 +23,13 @@
 //    CLOUDFLARE_ZONE_ID
 //    CLOUDFLARE_API_KEY  // see master ../Jenkinsfile for how to load this from a Jenkins secret
 
-def call(){
+def call () {
   String label = "Cloudflare Purge Cache - '" + "${env.ENVIRONMENT}".capitalize() + "' Environment"
   echo "Acquiring Cloudflare Lock: $label"
-  lock(resource: label, inversePrecedence: true){
+  lock (resource: label, inversePrecedence: true) {
     milestone ordinal: null, label: "Milestone: $label"
-    retry(2){
-      timeout(time: 1, unit: 'MINUTES') {
+    retry (2) {
+      timeout (time: 1, unit: 'MINUTES') {
         echo "$label"
         sh (
           label: "$label",

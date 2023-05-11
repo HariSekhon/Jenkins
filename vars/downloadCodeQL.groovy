@@ -20,10 +20,10 @@
 
 // adapted from DevOps Bash tools script setup/install_github_codeql.sh
 
-def call() {
+def call () {
   String label = "Download CodeQL on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
-  lock(resource: "$label"){
+  lock (resource: "$label") {
     sh (
       label: "$label",
       script: '''

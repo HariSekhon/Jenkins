@@ -40,7 +40,7 @@
 //
 //       checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-ssh-key', url: 'git@github.com:myorg/terraform']] ]
 
-def call(Map args = [
+def call (Map args = [
                       version: 'latest',
                       dir: '.',
                       args: '',
@@ -50,7 +50,7 @@ def call(Map args = [
                       checkout: [],
                       container: null,
                       yamlFile: 'ci/jenkins-pod.yaml'
-                     ] ){
+                     ] ) {
 
   args.version ?: error('Terragrunt version not specified')
   args.dir = args.dir ?: '.'
@@ -72,7 +72,7 @@ def call(Map args = [
       buildDiscarder(logRotator(numToKeepStr: '100'))
       disableConcurrentBuilds()
       timestamps()
-      timeout(time: 2, unit: 'HOURS')
+      timeout (time: 2, unit: 'HOURS')
     }
 
     // backup to catch GitHub -> Jenkins webhook failures
@@ -93,12 +93,12 @@ def call(Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.env){
+          withEnv(args.env) {
             sh 'whoami'
             script {
               // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
               // get accurate $HOME from running container
-              home = sh(returnStdout: true, label: 'Get $HOME', script: 'echo "$HOME"').trim()
+              home = sh (returnStdout: true, label: 'Get $HOME', script: 'echo "$HOME"').trim()
               echo "Setting PATH to include $home/bin"
               env.PATH = "$home/bin:${env.PATH}"
             }
@@ -121,8 +121,8 @@ def call(Map args = [
 
       stage('Auth') {
         steps {
-          withEnv(args.env){
-            withCredentials(args.creds){
+          withEnv(args.env) {
+            withCredentials(args.creds) {
               // tries everything
               login()
               // or call something simpler if you know what environment you're executing in
@@ -134,8 +134,8 @@ def call(Map args = [
 
       stage('Install Packages') {
         steps {
-          withEnv(args.env){
-            timeout(time: 5, unit: 'MINUTES') {
+          withEnv(args.env) {
+            timeout (time: 5, unit: 'MINUTES') {
               installPackages(['curl', 'unzip'])
             }
           }
@@ -144,7 +144,7 @@ def call(Map args = [
 
       stage('Download Terragrunt Version') {
         steps {
-          withEnv(args.env){
+          withEnv(args.env) {
             downloadTerragrunt("$TERRAFORM_VERSION")
           }
         }
@@ -152,7 +152,7 @@ def call(Map args = [
 
       stage('Terragrunt Version') {
         steps {
-          withEnv(args.env){
+          withEnv(args.env) {
             sh 'terragrunt version'
           }
         }
@@ -162,7 +162,7 @@ def call(Map args = [
         stage('Terragrunt Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              withEnv(args.env){
+              withEnv(args.env) {
                 terragruntFmt()
               }
             }
@@ -174,8 +174,8 @@ def call(Map args = [
 
       stage('Terragrunt Init') {
         steps {
-          withEnv(args.env){
-            withCredentials(args.creds){
+          withEnv(args.env) {
+            withCredentials(args.creds) {
               terragruntInit()
             }
           }
@@ -184,7 +184,7 @@ def call(Map args = [
 
       stage('Terragrunt Validate') {
         steps {
-          withEnv(args.env){
+          withEnv(args.env) {
             terragruntValidate()
           }
         }
@@ -192,8 +192,8 @@ def call(Map args = [
 
       stage('Terragrunt Plan') {
         steps {
-          withEnv(args.env){
-            withCredentials(args.creds){
+          withEnv(args.env) {
+            withCredentials(args.creds) {
               terragruntPlan(args.args)
             }
           }
@@ -219,7 +219,7 @@ def call(Map args = [
         }
         steps {
           //approval(args.approval_args)
-          withEnv(args.env){
+          withEnv(args.env) {
             approval()
           }
         }
@@ -242,8 +242,8 @@ def call(Map args = [
           }
         }
         steps {
-          withEnv(args.env){
-            withCredentials(args.creds){
+          withEnv(args.env) {
+            withCredentials(args.creds) {
               terragruntApply(args.args)
             }
           }

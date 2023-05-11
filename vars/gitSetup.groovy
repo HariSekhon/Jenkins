@@ -23,7 +23,7 @@
 //
 //    Manage Jenkins -> Configure System -> Global properties -> Environment Variables -> Add -> GIT_EMAIL
 
-def call() {
+def call () {
   String label = "Setting up local Git repo for Jenkins"
   echo "$label"
   sh (

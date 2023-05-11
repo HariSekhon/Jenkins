@@ -33,21 +33,21 @@
 
 // https://www.jenkins.io/doc/book/pipeline/cps-method-mismatches/
 @NonCPS
-def call(List userEmailList) {
+def call (List userEmailList) {
   // returns a Map in ['user': 'email'] format
   Map userEmails = [:]
   // matcher needs local def, otherwise @NonCPS annotation doesn't exclude it
   def matcher
   userEmailList.each {
-    if((matcher = it =~ /^(.+)<(.+)>$/)){
+    if ((matcher = it =~ /^(.+)<(.+)>$/)) {
       username = matcher.group(1).trim()
       email = matcher.group(2).trim()
-      if(!username){
+      if (!username) {
         username = email
       }
       userEmails.put(username, email)
     } else {
-      if(it){
+      if (it) {
         echo("WARNING: failed to parse username<email>: $it")
       }
     }

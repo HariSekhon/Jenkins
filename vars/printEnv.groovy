@@ -19,8 +19,8 @@
 
 // Call this at the start of every pipeline to make debugging easier by having this info always available
 
-def call(){
-  timeout(time: 1, unit: 'MINUTES') {
+def call () {
+  timeout (time: 1, unit: 'MINUTES') {
     String label = 'Environment'
     sh (
       label: "$label",

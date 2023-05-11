@@ -24,7 +24,7 @@
 //
 // XXX: WARNING: this will overwrite the given newTag - you should first run gcrDockerImageExists() to check if it exists and perhaps skip retagging, eg. see gcrTagGitCommitShort()
 
-def call(String dockerImageRegistryPathTag, String newTag) {
+def call (String dockerImageRegistryPathTag, String newTag) {
   String dockerImageRegistryPath = dockerImageRegistryPathTag.split(':')[0]
   echo "Tagging docker image '$dockerImageRegistryPathTag' with new tag '$newTag'"
   sh (

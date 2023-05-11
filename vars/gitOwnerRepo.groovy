@@ -20,7 +20,7 @@
 
 // Returns the name of the current Git repo in the <owner>/<repo> format by inferring from it the GIT_URL environment variable
 
-def call() {
+def call () {
   String repoUrl = env.GIT_URL
 
   // strip any git@github.com: prefix

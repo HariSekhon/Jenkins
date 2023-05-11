@@ -17,20 +17,20 @@
 //                          T e r r a f o r m   P l a n
 // ========================================================================== //
 
-def call(args='', timeoutMinutes=10){
+def call (args='', timeoutMinutes=10) {
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Plan - $unique"
   // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
   String lockString = "Terraform - $unique"
   echo "Acquiring Terraform Plan Lock: $lockString"
-  lock(resource: lockString, inversePrecedence: true) {
+  lock (resource: lockString, inversePrecedence: true) {
     // forbids older plans from starting
     milestone(ordinal: null, label: "Milestone: $label")
 
     // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terraform') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // terraform docker image doesn't have bash
@@ -50,12 +50,12 @@ def call(args='', timeoutMinutes=10){
             script {
               // manager is not available
               // hudson.remoting.ProxyException: groovy.lang.MissingPropertyException: No such property: manager for class: terraformPlan
-              //if(manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')){
+              //if (manager.logContains('.*No changes\\. Your infrastructure matches the configuration.*')) {
               // there are escape codes around 'No changes' that would break this matching
-              //if(currentBuild.rawBuild.getLog(100).contains('No changes\\. Your infrastructure matches the configuration')){
+              //if (currentBuild.rawBuild.getLog(100).contains('No changes\\. Your infrastructure matches the configuration')) {
               logList = currentBuild.rawBuild.getLog(100)
               logString = logList.join('\n')
-              if(logString.contains('Your infrastructure matches the configuration')){
+              if (logString.contains('Your infrastructure matches the configuration')) {
                 env.TERRAFORM_CHANGES = false
               } else {
                 env.TERRAFORM_CHANGES = true

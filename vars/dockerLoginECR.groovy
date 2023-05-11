@@ -24,16 +24,16 @@
 //    AWS_DEFAULT_REGION
 //    AWS_ACCOUNT_ID  // should be set by awsAuth() if jq is available
 
-def call() {
+def call () {
   env.AWS_ACCOUNT_ID ?: error('dockerLoginECR: AWS_ACCOUNT_ID not set in the environment')
   env.AWS_DEFAULT_REGION ?: error('dockerLoginECR: AWS_DEFAULT_REGION not set in the environment')
-  ECR_TOKEN = sh(
+  ECR_TOKEN = sh (
                 label: 'Generating ECR Authentication Token',
                 returnStdout: true,
                 script: 'aws ecr get-login-password --region "$AWS_DEFAULT_REGION"'
               )
   script {
-    if(! ECR_TOKEN){
+    if (! ECR_TOKEN) {
       error('dockerLoginECR: Failed to generate ECR_TOKEN')
     }
   }

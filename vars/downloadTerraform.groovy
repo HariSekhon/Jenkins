@@ -34,15 +34,15 @@
 //    https://github.com/hashicorp/terraform/releases
 //
 
-def call(version) {
+def call (version) {
   String label = "Download Terraform on agent '$HOSTNAME'"
   if (!version) {
     error "version arg not given to downloadTerraform()"
   }
   echo "Acquiring Lock: $label"
-  lock(resource: "$label"){
-    timeout(time: 5, unit: 'MINUTES') {
-      withEnv(["VERSION=$version"]){
+  lock (resource: "$label") {
+    timeout (time: 5, unit: 'MINUTES') {
+      withEnv(["VERSION=$version"]) {
         installBinary(
           binary: 'terraform',
           url: "https://releases.hashicorp.com/terraform/$VERSION/terraform_${VERSION}_{os}_{arch}.zip"

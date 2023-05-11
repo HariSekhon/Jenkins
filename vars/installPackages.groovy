@@ -19,12 +19,12 @@
 
 // Adapted from the more advanced DevOps Bash tools repo's install_packages.sh and supporting scripts
 
-def call(packages=[]){
+def call (packages=[]) {
   String label = "Install Packages on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
-  lock(resource: "$label"){
-    timeout(time: 5, unit: 'MINUTES') {
-      withEnv(["PACKAGES=${packages.join(' ')}"]){
+  lock (resource: "$label") {
+    timeout (time: 5, unit: 'MINUTES') {
+      withEnv(["PACKAGES=${packages.join(' ')}"]) {
         sh '''
           set -eux
 

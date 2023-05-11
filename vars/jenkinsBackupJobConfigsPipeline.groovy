@@ -39,7 +39,7 @@
 //
 //       checkout: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github-ssh-key', url: 'git@github.com:myorg/jenkins']] ]
 
-def call(Map args = [
+def call (Map args = [
                       jobs: [],
                       dir: '.',
                       checkout: [],
@@ -49,7 +49,7 @@ def call(Map args = [
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
                       yamlFile: 'ci/jenkins-pod.yaml',
                       timeoutMinutes: 5
-                     ] ){
+                     ] ) {
 
   pipeline {
 
@@ -64,7 +64,7 @@ def call(Map args = [
       buildDiscarder(logRotator(numToKeepStr: '100'))
       disableConcurrentBuilds()
       timestamps()
-      timeout(time: 30, unit: 'MINUTES')
+      timeout (time: 30, unit: 'MINUTES')
     }
 
     // backup to catch GitHub -> Jenkins webhook failures
@@ -80,7 +80,7 @@ def call(Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.env ?: []){
+          withEnv(args.env ?: []) {
             printEnv()
             sh 'whoami'
           }
@@ -110,8 +110,8 @@ def call(Map args = [
       stage('Auth Env Check') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env ?: []) {
+            withCredentials(args.creds ?: []) {
               jenkinsCLICheckEnvVars()
             }
           }
@@ -121,8 +121,8 @@ def call(Map args = [
       stage('Install Packages') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []){
-            timeout(time: 5, unit: 'MINUTES') {
+          withEnv(args.env ?: []) {
+            timeout (time: 5, unit: 'MINUTES') {
               // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
               // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
               installPackages(
@@ -140,7 +140,7 @@ def call(Map args = [
       stage('Download Jenkins CLI') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []){
+          withEnv(args.env ?: []) {
             downloadJenkinsCLI()
           }
         }
@@ -149,8 +149,8 @@ def call(Map args = [
       stage('Jenkins CLI Version') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []){
-            withCredentials(args.creds ?: []){
+          withEnv(args.env ?: []) {
+            withCredentials(args.creds ?: []) {
               sh (
                 label: 'Version',
                 script: '''
@@ -166,9 +166,9 @@ def call(Map args = [
       stage('Download Jenkins Job Configurations') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          dir("$DIR"){
-            withEnv(args.env ?: []){
-              withCredentials(args.creds ?: []){
+          dir("$DIR") {
+            withEnv(args.env ?: []) {
+              withCredentials(args.creds ?: []) {
                 jenkinsJobsDownloadConfigurations(jobs: args.jobs ?: [])
               }
             }
@@ -179,9 +179,9 @@ def call(Map args = [
       stage('Delete Removed Job Configurations') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          dir("$DIR"){
-            withEnv(args.env ?: []){
-              withCredentials(args.creds ?: []){
+          dir("$DIR") {
+            withEnv(args.env ?: []) {
+              withCredentials(args.creds ?: []) {
                 jenkinsDeleteRemovedJobXmls()
               }
             }
@@ -192,9 +192,9 @@ def call(Map args = [
       stage('Git Commit') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          dir("$DIR"){
-            withEnv(args.env ?: []){
-              withCredentials(args.creds ?: []){
+          dir("$DIR") {
+            withEnv(args.env ?: []) {
+              withCredentials(args.creds ?: []) {
                 sh (
                   label: 'Git Commit',
                   script: '''
@@ -220,9 +220,9 @@ def call(Map args = [
       stage('Git Push') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          dir("$DIR"){
-            withEnv(args.env ?: []){
-              withCredentials(args.creds ?: []){
+          dir("$DIR") {
+            withEnv(args.env ?: []) {
+              withCredentials(args.creds ?: []) {
                 // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
                 sshagent (credentials: ['github-ssh-key']) {
                   sh (

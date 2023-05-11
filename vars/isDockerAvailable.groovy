@@ -21,6 +21,6 @@
 //
 // XXX: could extend to check that Docker server is responding too
 
-def call(){
+def call () {
   isCommandAvailable('docker')
 }

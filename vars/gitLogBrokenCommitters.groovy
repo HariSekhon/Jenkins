@@ -33,7 +33,7 @@
 //        }
 //      }
 
-def call() {
+def call () {
   // gets a List in ['username<email>'] format
   List logCommittersList = sh (
     label: 'Get Git Log Committers Since Last Successful Build',

@@ -38,7 +38,7 @@
 // submitter = comma separated list of users/groups by name or email address that are permitted to authorize
 // ok        = what the ok button should say, defaults to 'Proceed' if empty/unspecified
 
-def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
+def call (Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']) {
   // XXX: prevents calling in a parallel stage otherwise you'll get this error:
   //
   //  "Using a milestone step inside parallel is not allowed"
@@ -46,7 +46,7 @@ def call(Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:'']){
   milestone ordinal: null, label: "Milestone: Approval"
   args.timeout = args.timeout ?: 60
   args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
-  timeout(time: args.timeout, unit: args.timeoutUnits) {
+  timeout (time: args.timeout, unit: args.timeoutUnits) {
     input (
       message: """Are you sure you want to release this build?
 

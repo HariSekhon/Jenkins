@@ -27,7 +27,7 @@
 //    installPackages(['curl', 'tar', 'unzip'])
 
 // binary should be path to the binary after being unpacked, including any intermediate directory paths in an unpacked tarball or zip package
-def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeoutUnits: 'MINUTES']) {
+def call (Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeoutUnits: 'MINUTES']) {
 
   args.url = args.url ?: error('URL not specified')
   args.binary = args.binary ?: args.url.tokenize('/')[-1]
@@ -35,13 +35,13 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
   args.timeout = args.timeout ?: 15
   args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
 
-  timeout(time: args.timeout, unit: args.timeoutUnits) {
+  timeout (time: args.timeout, unit: args.timeoutUnits) {
 
     // avoiding using Bash specific constructs like ${var//}
     //script {
-    //  os = sh(returnStdout: true, label: 'Determine OS', script: 'uname -s').trim().toLowerCase()
-    //  arch = sh(returnStdout: true, label: 'Determine Architecture', script: 'uname -m').trim()
-    //  if(arch == 'x86_64'){
+    //  os = sh (returnStdout: true, label: 'Determine OS', script: 'uname -s').trim().toLowerCase()
+    //  arch = sh (returnStdout: true, label: 'Determine Architecture', script: 'uname -m').trim()
+    //  if (arch == 'x86_64') {
     //    arch = 'amd64' // files are conventionally named amd64 not x86_64
     //  }
     //  args.url = args.url.replaceAll('\\{os\\}' , "$os")
@@ -55,7 +55,7 @@ def call(Map args = [url: '', binary: '', overwrite: false, timeout: 15, timeout
         //"OS=$os",
         //"ARCH=$arch",
       ]
-    ){
+    ) {
       sh (
         // Blue Ocean UI doesn't put a space between from and url not matter what I do, must be a minor bug
         label: "Install Binary '$BINARY' from:  ${env.URL}", // using $URL or ${args.url} here prints 'class java.net.URL'

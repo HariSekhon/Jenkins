@@ -37,14 +37,14 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call(Map args = [
+def call (Map args = [
                       dockerImages: [],
                       repo: '',
                       dir: '',
                       version: "$GIT_COMMIT",
                       branch: 'main',
                       timeoutMinutes: 5
-                     ]){
+                     ]) {
   // these get blocked in Jenkins Groovy Sandbox
   //if (!args.dockerImages) {
   //  throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
@@ -81,17 +81,17 @@ def call(Map args = [
   //
   String label = "Git Kustomize Image Version - Repo: '$ownerRepo', Branch: '$args.branch', Dir: '$args.dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
-  lock(resource: label, inversePrecedence: true){
+  lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
     //
     //  "Using a milestone step inside parallel is not allowed"
     //
     milestone ordinal: null, label: "Milestone: $label"
-    timeout(time: args.timeoutMinutes, unit: 'MINUTES'){
+    timeout (time: args.timeoutMinutes, unit: 'MINUTES') {
       // workaround for https://issues.jenkins.io/browse/JENKINS-42582
       withEnv(["SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}"]) {
         gitSetup()
-        retry(2){
+        retry (2) {
           sh (
             label: "$label",
             // needs to be double quoted for Groovy to generate these kustomize commands for all docker images in the first arg list

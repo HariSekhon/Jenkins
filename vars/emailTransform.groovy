@@ -25,18 +25,18 @@
 //  2. If EMAIL_DOMAIN_TRANSFORM environment variable is set, replaces anything after the @ symbol with that domain
 //     - XXX: warning - this can lead to collisions if 2 different people have the same username prefix portions of email addresses from different domains eg. john@domain1.com and john@domain2.com both get munged to john@$EMAIL_DOMAIN
 
-def call(String email) {
+def call (String email) {
   String originalEmail = email
   // define matcher locally so @NonCPS excludes from serialization
   def matcher
-  if(env.EMAIL_TRANSFORMS){
+  if (env.EMAIL_TRANSFORMS) {
     // would have preferred newline split but Jenkins global env var doesn't allow newlines, even pasted multiline becomes join(' ') in UI,
     // and not DRY to define in pipelines where we can use actual multiline strings
     List emailTransformList = env.EMAIL_TRANSFORMS.trim().split(',').collect{ it.trim() }
     Map emailTransforms = emailTransformList.collectEntries {
       // ==~ anchored match returns boolean
       // requires brackets around ==~ otherwise ! test always returns negative
-      if( ! it || ! ( it ==~ /^[^=]+=[^=]+$/ ) ){
+      if ( ! it || ! ( it ==~ /^[^=]+=[^=]+$/ ) ) {
         echo ("WARNING: invalid EMAIL_TRANSFORMS entry: $it")
         return [:]
       }
@@ -49,13 +49,13 @@ def call(String email) {
       email = email.replaceFirst(/$it.key/, "$it.value")
     }
   }
-  if(env.EMAIL_DOMAIN_TRANSFORM){
+  if (env.EMAIL_DOMAIN_TRANSFORM) {
     String newDomain = env.EMAIL_DOMAIN_TRANSFORM.trim()
-    if(newDomain){
+    if (newDomain) {
       email = email.replaceFirst(/@.+$/, "@$newDomain")
     }
   }
-  if(email != originalEmail){
+  if (email != originalEmail) {
     echo "Transformed email from '$originalEmail' to '$email'"
   }
   return email

@@ -17,20 +17,20 @@
 //                         T e r r a f o r m   A p p l y
 // ========================================================================== //
 
-def call(timeoutMinutes=60){
+def call (timeoutMinutes=60) {
   String terraformDir = env.TERRAFORM_DIR ?: '.'
   String unique = "Dir: $terraformDir"
   String label = "Terraform Apply - $unique"
   // must differentiate lock to share the same lock between Terraform Plan and Terraform Apply
   String lockString = "Terraform - $unique"
   echo "Acquiring Terraform Apply Lock: $lockString"
-  lock(resource: lockString, inversePrecedence: true) {
+  lock (resource: lockString, inversePrecedence: true) {
     // forbids older applys from starting
     milestone(ordinal: null, label: "Milestone: $label")
 
     // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
     //container('terraform') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
         //dir ("components/${COMPONENT}") {
         ansiColor('xterm') {
           // for test environments, add a param to trigger -destroy switch

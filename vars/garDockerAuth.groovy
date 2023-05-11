@@ -21,16 +21,16 @@
 // Requires:
 //
 //  - gcpActivateServiceAccount.groovy to be called first to authenticate GCloud SDK
-//  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk'){ }
+//  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk') { }
 //
 //  XXX: GCloud SDK fails without throwing non-zero exit code for invalid registries with:
 //
 //            WARNING: blah is not a supported registry
 
-def call(registries='') {
+def call (registries='') {
   if (!registries) {
     echo "No GAR registries specified, auto-populating complete GAR registry list"
-    registries = sh(
+    registries = sh (
       label: 'GCloud SDK fetch GAR registry locations',
       returnStdout: true,
       script: """

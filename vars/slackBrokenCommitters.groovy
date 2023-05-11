@@ -32,7 +32,7 @@
 //
 //      then jenkins app, ensure 'users:read' and 'users:read.email' API scopes, click 'Reinstall App' at the top to make the permissions take effect before the slackUserIdFromEmail() resolution will work - otherwise will return 'null'
 
-def call(){
+def call () {
   // this returns nothing - probably because Committers emails don't always match Slack emails - so doing more advanced handling below with emailTranform() fallback
   //List userIds = slackUserIdsFromCommitters(botUser: true)
   //String userTags = userIds.collect { "<@$it>" }
@@ -43,11 +43,11 @@ def call(){
     String email = it.value
     // echo's the username that is being tried
     String userId = slackUserIdFromEmail(email: email, botUser: true)
-    if(!userId){
+    if (!userId) {
       //echo "Slack ID not found for email '$email'"
       String originalEmail = email
       email = emailTransform(email)
-      if(email != originalEmail){
+      if (email != originalEmail) {
         // slackUserIdFromEmail() echo's the username that is being tried, so this is not needed (update: only when doesn't have permissions it seems, blank when working)
         //echo "Trying to resolve Slack user using transformed email '$email'"
 
@@ -55,7 +55,7 @@ def call(){
         userId = slackUserIdFromEmail(email)
       }
     }
-    if(userId){
+    if (userId) {
       userTags.add("<@$userId>")
     } else {
       String name = it.key

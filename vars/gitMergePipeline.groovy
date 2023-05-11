@@ -23,7 +23,7 @@
 //    gitMergePipeline('staging', 'dev')
 //
 
-def call(from_branch, to_branch){
+def call (from_branch, to_branch) {
 
   pipeline {
 

@@ -17,9 +17,9 @@
 //                                 C h e c k o v
 // ========================================================================== //
 
-def call(timeoutMinutes=10) {
+def call (timeoutMinutes=10) {
   container('checkov') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         sh label: 'Checkov',
            script: 'checkov -d . -o junitxml > result.xml || true'

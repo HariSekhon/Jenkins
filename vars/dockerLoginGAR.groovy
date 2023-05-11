@@ -26,21 +26,21 @@
 //
 //    gcloud artifacts locations list
 
-def call(key='', registry='') {
+def call (key='', registry='') {
   key = key ?: env.GCP_SERVICEACCOUNT_KEY ?: error('dockerLoginGAR: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment')
   registry = registry ?: env.GAR_REGISTRY ?: error('dockerLoginGAR: registry not specified and GAR_REGISTRY not set in the environment')
-  withEnv(["GCP_SERVICEACCOUNT_KEY=$key", "GAR_REGISTRY=$registry"]){
+  withEnv(["GCP_SERVICEACCOUNT_KEY=$key", "GAR_REGISTRY=$registry"]) {
     script {
-      if(isCommandAvailable('gcloud')){
+      if (isCommandAvailable('gcloud')) {
         echo 'Using GCloud SDK to configure Docker'
         // configures docker config with a token
         sh 'gcloud auth configure-docker "$GAR_REGISTRY"'
       } else {
         echo 'GCloud SDK is not installed, attempting to login with docker directly'
-        if(!env.GAR_REGISTRY){
+        if (!env.GAR_REGISTRY) {
           error('GAR_REGISTRY environment variable not set!')
         }
-        if(!env.GCP_SERVICEACCOUNT_KEY){
+        if (!env.GCP_SERVICEACCOUNT_KEY) {
           error('GCP_SERVICEACCOUNT_KEY environment variable not set!')
         }
         dockerLogin('_json_key', env.GCP_SERVICEACCOUNT_KEY.bytes.decodeBase64().toString(), env.GAR_REGISTRY)

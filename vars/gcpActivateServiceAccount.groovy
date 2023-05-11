@@ -19,7 +19,7 @@
 
 // Requires base64 encoded GCP_SERVICEACCOUNT_KEY environment variable to be set in environment{} section of Jenkinsfile, see top level Jenkinsfile template
 
-def call(key='', timeoutMinutes=2){
+def call (key='', timeoutMinutes=2) {
   if (key) {
     env.GCP_SERVICEACCOUNT_KEY = credentials(key)
   } else {
@@ -27,8 +27,8 @@ def call(key='', timeoutMinutes=2){
       error('gcpActivateServiceAccount: key not specified and GCP_SERVICEACCOUNT_KEY not set in the environment')
     }
   }
-  retry(2){
-    timeout(time: "$timeoutMinutes", unit: 'MINUTES') {
+  retry (2) {
+    timeout (time: "$timeoutMinutes", unit: 'MINUTES') {
       String label = 'Activating GCP Service Account credential'
       script {
         // if called on concurrent persistent agents instead of single-use Kubernetes ephemeral agents, isolate the config to this pipeline

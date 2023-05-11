@@ -23,12 +23,12 @@
 // Requires:
 //
 //  - gcpActivateServiceAccount.groovy to be called first to authenticate GCloud SDK
-//  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk'){ }
+//  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk') { }
 //
 
 // if passing blank for GAR registries, garAuthDocker() will auto-determine all registries
 // if passing blank for GCR registries, will use hardcoded default list taken from documentation
-def call(garRegistries='', gcrRegistries='') {
+def call (garRegistries='', gcrRegistries='') {
   garDockerAuth(garRegistries)
   gcrDockerAuth(gcrRegistries)
 }

@@ -19,10 +19,10 @@
 
 // Terraform code security scanner
 
-def call(timeoutMinutes=10){
+def call (timeoutMinutes=10) {
   label 'tfsec'
   container('tfsec') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       //dir ("components/${COMPONENT}") {
       ansiColor('xterm') {
         // aquasec/tfsec image is based on Alpine, doesn't have bash

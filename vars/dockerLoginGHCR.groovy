@@ -19,7 +19,7 @@
 
 // GITHUB_USER and GH_TOKEN / GITHUB_TOKEN must be passed as args or set in the calling environment
 
-def call(user='', token='') {
+def call (user='', token='') {
   user = user ?: env.GITHUB_USER ?: error('dockerLoginGHCR: user not specified and GITHUB_USER not set in the environment')
   token = token ?: env.GH_TOKEN ?: env.GITHUB_TOKEN ?: error('dockerLoginGHCR: token not specified and GH_TOKEN / GITHUB_TOKEN not set in the environment')
   dockerLogin(user, token, 'ghcr.io')

@@ -22,9 +22,9 @@
 //
 // Requires GCloud SDK CLI to be installed and authenticated
 
-def call(String dockerImageRegistryPath, String dockerImageTag) {
+def call (String dockerImageRegistryPath, String dockerImageTag) {
   echo "Checking docker image '$dockerImageRegistryPath' tag '$dockerImageTag' exists"
-  if(dockerImageRegistryPath.contains(':')){
+  if (dockerImageRegistryPath.contains(':')) {
     dockerImageRegistryPath = dockerImageRegistryPath.split(':')[0]
   }
   String stdout = sh (
@@ -38,7 +38,7 @@ def call(String dockerImageRegistryPath, String dockerImageTag) {
     // XXX: do not do --filter='tags:$dockerImageTag' - this will match a partial substring such that an image
     //      with only a long hashref tag will be matched by a check for the short hashref, defeating adjacent gcrTagGitCommitShort.groovy
   )
-  if(stdout){
+  if (stdout) {
     echo "Docker image '$dockerImageRegistryPath:$dockerImageTag' exists"
     return true
   } else {

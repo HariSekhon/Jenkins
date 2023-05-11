@@ -21,7 +21,7 @@
 //
 // Used in terraformPipeline.groovy
 
-def call(timeoutMinutes=2){
+def call (timeoutMinutes=2) {
   String label = 'Terraform Validate'
 
   // forbids older inits from starting
@@ -29,7 +29,7 @@ def call(timeoutMinutes=2){
 
   // terraform docker image is pretty useless, doesn't have the tools to authenticate to cloud providers
   //container('terraform') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         dir(env.TERRAFORM_DIR ?: ".") {
           echo 'Terraform Validate'

@@ -17,9 +17,9 @@
 //                         D o w n l o a d   D a t r e e
 // ========================================================================== //
 
-//def call(version = '1.5.1') {
-//  withEnv(["VERSION=${version}"]){
-def call() {
+//def call (version = '1.5.1') {
+//  withEnv(["VERSION=${version}"]) {
+def call () {
   installPackages(
     [
       'bash',
@@ -29,7 +29,7 @@ def call() {
   )
   String label = "Download Datree on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
-  lock(resource: "$label"){
+  lock (resource: "$label") {
     sh (
       label: "$label",
       script: '''

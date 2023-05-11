@@ -26,14 +26,14 @@
 //
 // https://www.jenkins.io/doc/pipeline/examples/#gitcommit
 
-def call() {
-  if ( ! env.GIT_COMMIT ){
+def call () {
+  if ( ! env.GIT_COMMIT ) {
     echo "GIT_COMMIT environment variable not found, attempting to populate from git log"
-    env.GIT_COMMIT = sh(
+    env.GIT_COMMIT = sh (
       returnStdout: true,
       script: "git log -n 1 --pretty=format:'%H'"
     ).trim()
-    if ( ! env.GIT_COMMIT ){
+    if ( ! env.GIT_COMMIT ) {
       error "Failed to determine GIT_COMMIT"
     }
   }
@@ -42,7 +42,7 @@ def call() {
     error "GIT_COMMIT environment variable is of unexpected length, expected 40 characters, got '$commitLength' characters in '$GIT_COMMIT'"
   }
   // avoid this call if GIT_COMMIT is already set
-  //env.GIT_COMMIT_SHORT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+  //env.GIT_COMMIT_SHORT = sh (returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
   env.GIT_COMMIT_SHORT = env.GIT_COMMIT.substring(0, 7)
   return env.GIT_COMMIT_SHORT
 }

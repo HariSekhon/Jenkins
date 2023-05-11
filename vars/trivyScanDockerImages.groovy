@@ -59,7 +59,7 @@ def call (imageList=[], fail=true, timeoutMinutes=30) {
       error "No docker images passed to trivyScanDockerImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
     }
   }
-  timeout(time: timeoutMinutes, unit: 'MINUTES') {
+  timeout (time: timeoutMinutes, unit: 'MINUTES') {
     for (image in images) {
       withEnv (["IMAGE=$image"]) {
         echo "Trivy scanning image '$IMAGE' - informational only to see all issues"
