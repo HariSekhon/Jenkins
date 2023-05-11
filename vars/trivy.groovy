@@ -34,10 +34,12 @@
 //			}
 //
 
-def call (targetList=[], fail=true, timeoutMinutes=10) {
+def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
-  if (targetList) {
-    targets = targetList
+  fail = args.fails ?: true
+  timeoutMinutes = args.timeoutMinutes ?: 10
+  if (args.targets) {
+    targets = args.targets
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
