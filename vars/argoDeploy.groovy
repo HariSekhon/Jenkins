@@ -24,23 +24,24 @@
 //
 // The ArgoCD app must be passed as the first argument
 
-def call(app, timeoutMinutes=10){
+def call (app, timeoutMinutes=10) {
   String label = "ArgoCD Deploy - App: '$app'"
   int timeoutSeconds = timeoutMinutes * 60
   echo "Acquiring ArgoCD Lock: $label"
-  lock(resource: label, inversePrecedence: true){
+  lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
     //
     //  "Using a milestone step inside parallel is not allowed"
     //
     milestone ordinal: null, label: "Milestone: $label"
-    container('argocd') {
-      timeout(time: timeoutMinutes, unit: 'MINUTES') {
+    // let caller decide if wrapping this in a container('argocd') or using downloadArgo.groovy to save RAM
+    //container ('argocd') {
+      timeout (time: timeoutMinutes, unit: 'MINUTES') {
 
         argoSync("$app")
 
-        waitUntil(initialRecurrencePeriod: 5000){
-          withEnv(["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
+        waitUntil (initialRecurrencePeriod: 5000) {
+          withEnv (["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
             //echo "$label"
             script {
               int exitCode = sh (
@@ -93,6 +94,6 @@ def call(app, timeoutMinutes=10){
           }
         }
       }
-    }
+    //}
   }
 }
