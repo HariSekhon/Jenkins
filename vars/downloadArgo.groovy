@@ -25,6 +25,11 @@
 //
 //    https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
 
+// get release version from:
+//
+//    https://github.com/argoproj/argo-cd/releases
+//
+
 def call(version='latest'){
   String label = "Download ArgoCD CLI on agent '$HOSTNAME'"
   if (! version instanceof String){
