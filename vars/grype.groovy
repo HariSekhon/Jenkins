@@ -47,12 +47,10 @@
 //      }
 //
 
-def call (targets=[], fail=true, timeoutMinutes=10) {
+def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
-  fail = args.fail == false ? false : true
-  timeoutMinutes = args.timeoutMinutes ?: 10
-  if (args.targets) {
-    targets = args.targets
+  if (targetList) {
+    targets = args.targetList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
