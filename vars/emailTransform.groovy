@@ -43,7 +43,7 @@ def call (String email) {
       String key = it.split('=')[0].trim()
       String value = it.split('=')[-1].trim()
       // using bare key overwrites all values into a single literal 'key' item
-      return [key.toString(): value]
+      return [(key.toString()) : value]
     }
     emailTransforms.each {
       email = email.replaceFirst(/$it.key/, "$it.value")
