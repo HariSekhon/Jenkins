@@ -25,7 +25,7 @@
 //
 
 def call(registries='') {
-  if (! registries ) {
+  if (!registries) {
     echo "No GAR registries specified, auto-populating complete GAR registry list"
     registries = sh(
       label: 'GCloud SDK fetch GAR registries',
@@ -35,7 +35,7 @@ def call(registries='') {
         gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
       '''
     )
-    if (! registries) {
+    if (!registries) {
       error "Failed to get list of GAR registries"
     }
   }
