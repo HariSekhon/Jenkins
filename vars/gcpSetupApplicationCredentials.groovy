@@ -35,8 +35,11 @@ def call(timeoutMinutes=1){
         // needs to be bash to use <<< to avoid exposing the GCP_SERVICEACCOUNT_KEY in shell tracing
         //script: '''#!/bin/sh
         // but many docker containers like Trivy don't have Bash :'-(
+        //  # XXX: don't set -x as it'll expose the Service Account key credential
+        //  # base64 --decode is portable across Linux and Mac, but unfortunately busybox as found in Trivy container only supports -d
+        //  #base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
         script: '''#!/bin/sh
-          set -eu  # XXX: don't set -x as it'll expose the Service Account key credential
+          set -eu
           if [ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
             echo '$GOOGLE_APPLICATION_CREDENTIALS is not set'
             exit 1
@@ -52,8 +55,6 @@ def call(timeoutMinutes=1){
 
           echo "Writing Google Application Credentials key file to '$keyfile'"
 
-          # base64 --decode is portable across Linux and Mac, but unfortunately busybox as found in Trivy container only supports -d
-          #base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > "$keyfile"
           echo "$GCP_SERVICEACCOUNT_KEY"| base64 -d > "$keyfile"
         '''
       )
