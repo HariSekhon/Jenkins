@@ -70,14 +70,14 @@ def call (targets=[], fail=true, timeoutMinutes=10) {
       ansiColor('xterm') {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {
-            echo "Grype scanning image '$TARGET' - informational only to see all issues"
+            echo "Grype scanning target '$TARGET' - informational only to see all issues"
             sh (
               label: "Grype",
-              script: ' grype "$TARGET" --fail-on high --scope all-layers '
+              script: ' grype "$TARGET" --scope all-layers '
             )
 
             if (fail) {
-              echo "Grype scanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
+              echo "Grype scanning target '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
               sh (
                 label: "Grype",
                 script: ' grype "$TARGET" --fail-on high --scope all-layers '
