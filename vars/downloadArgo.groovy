@@ -61,7 +61,13 @@ def call(version='latest'){
             fi
           """
         )
-        sh 'argocd version'
+        sh (
+          label: "ArgoCD Version",
+          script: '''
+            set -eu
+            argocd version
+          '''
+        )
       }
     }
   }
