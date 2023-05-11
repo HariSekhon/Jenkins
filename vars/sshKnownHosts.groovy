@@ -21,8 +21,8 @@
 //
 // Can read from environment{} variable SSH_KNOWN_HOSTS or passed as an arg
 
-def call (known_hosts='', name='') {
-  withEnv(["SSH_KNOWN_HOSTS=$known_hosts"]) {
+def call (knownHosts='', name='') {
+  withEnv(["SSH_KNOWN_HOSTS=$knownHosts"]) {
     // only works on stages, not steps
     //when {
     //  not { environment name: 'SSH_KNOWN_HOSTS', value: '' }
