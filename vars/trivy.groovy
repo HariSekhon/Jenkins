@@ -40,14 +40,12 @@
 def call (args='') {
   label 'Trivy'
   container('trivy') {
-    timeout(time: timeoutMinutes, unit: 'MINUTES') {
-      ansiColor('xterm') {
-        withEnv (["ARGS=$args"]) {
-          sh (
-            label: "Trivy",
-            script: ' trivy $ARGS '
-          )
-        }
+    ansiColor('xterm') {
+      withEnv (["ARGS=$args"]) {
+        sh (
+          label: "Trivy",
+          script: ' trivy $ARGS '
+        )
       }
     }
   }
