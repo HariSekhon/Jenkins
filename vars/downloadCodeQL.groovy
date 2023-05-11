@@ -52,7 +52,7 @@ def call() {
 
         cd "$tmp"
 
-        curl -sSL -o "$tarball" "https://github.com/github/codeql-action/releases/latest/download/$tarball"
+        curl -sSLf -o "$tarball" "https://github.com/github/codeql-action/releases/latest/download/$tarball"
         echo
 
         rm -fr -- ./codeql
