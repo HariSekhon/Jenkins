@@ -50,6 +50,11 @@ set -euo pipefail
 url="https://raw.githubusercontent.com/HariSekhon/Jenkins/master/vars"
 checkout=~/github/jenkins
 
+if git remote -v | grep -q '^origin[[:space:]].*HariSekhon/Jenkins'; then
+    echo "Running out of origin repo, aborting..."
+    exit 1
+fi
+
 tmp="$(mktemp)"
 
 unalias cp &>/dev/null || :
