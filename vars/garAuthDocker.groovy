@@ -35,8 +35,8 @@ def call(registries='') {
       returnStdout: true,
       script: """
         set -eux
-        if [ -n "$GAR_PROJECT" ]; then
-          export CLOUDSDK_CORE_PROJECT="$GAR_PROJECT"
+        if [ -n "\${GAR_PROJECT:-}" ]; then
+          export CLOUDSDK_CORE_PROJECT="\$GAR_PROJECT"
         fi
         gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,\$//'
       """
@@ -53,8 +53,8 @@ def call(registries='') {
     label: 'GCloud SDK Configure Docker Authentication for Google Artifact Registry',
     script: """
       set -eux
-      if [ -n "$GAR_PROJECT" ]; then
-        export CLOUDSDK_CORE_PROJECT="$GCR_PROJECT"
+      if [ -n "\${GAR_PROJECT:-}" ]; then
+        export CLOUDSDK_CORE_PROJECT="\$GCR_PROJECT"
       fi
       # XXX: fails without throwing non-zero exit code for invalid registries with
       #      WARNING: blah is not a supported registry
