@@ -15,7 +15,7 @@
 //
 
 // ========================================================================== //
-//                    Configure Docker to Authenticate to GCR
+//       Configure Docker to Authenticate to Google Container Registry
 // ========================================================================== //
 
 // Requires:
@@ -24,15 +24,23 @@
 //  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk'){ }
 //
 
+// registry list is from here: https://cloud.google.com/container-registry/docs/overview#registries
 def call(registries='gcr.io,eu.gcr.io,us.gcr.io,asia.gcr.io') {
   if (! registries ) {
     error "cannot pass non-blank registries to gcrAuthDocker()"
+    // Can't find a GCloud SDK command similar to GAR to get a list of registries
+    //echo "No GAR registries given, auto-populating complete GAR registry list"
+    //registries = sh(
+    //  label: 'GCloud SDK fetch GAR registries',
+    //  returnStdout: true,
+    //  script: "cloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'"
+    //)
   }
   if (registries.contains("'")) {
     error "invalid registries given to gcrAuthDocker(): $registries"
   }
   sh (
-    label: 'GCloud SDK Configure Docker Authentication',
+    label: 'GCloud SDK Configure Docker Authentication for Google Container Registry',
     script: '''
       set -eux
       gcloud auth configure-docker --quiet '$registries'
