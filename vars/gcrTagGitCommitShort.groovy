@@ -30,7 +30,7 @@ def call (List<String> dockerImageRegistryPaths) {
   if ( ! env.GIT_COMMIT_SHORT ) {
     gitCommitShort()
   }
-  for(String dockerImageRegistryPath in dockerImageRegistryPaths) {
+  for (String dockerImageRegistryPath in dockerImageRegistryPaths) {
     if (gcrDockerImageExists(dockerImageRegistryPath, env.GIT_COMMIT_SHORT)) {
       continue
     }
