@@ -25,7 +25,8 @@
 //
 // - a Jenkins agent with Docker available locally see https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
 //
-// - if pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent) run in the trivy container before calling this function eg.
+// - if using trivy container and pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent)
+//   then set up the GCP application credentials key file in the trivy container before calling this function eg.
 //
 //      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
 //        container('trivy'){
@@ -36,12 +37,13 @@
 
 def call (args='') {
   label 'Trivy'
-  container('trivy') {
+  // let caller decide if wrapping this in a trivy container or using downloadTrivy to save RAM
+  //container('trivy') {
     ansiColor('xterm') {
       sh (
         label: "Trivy",
         script: "trivy $args"
       )
     }
-  }
+  //}
 }
