@@ -23,7 +23,7 @@
 //    gitMergePipeline('staging', 'dev')
 //
 
-def call (from_branch, to_branch) {
+def call (fromBranch, toBranch) {
 
   pipeline {
 
@@ -48,7 +48,7 @@ def call (from_branch, to_branch) {
 
       stage('Git Merge') {
         steps {
-          gitMerge("$from_branch", "$to_branch")
+          gitMerge("$fromBranch", "$toBranch")
         }
       }
 
