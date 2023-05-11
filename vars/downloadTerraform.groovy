@@ -38,6 +38,13 @@ def call(version) {
         binary: 'terraform',
         url: "https://releases.hashicorp.com/terraform/$version/terraform_${version}_{os}_{arch}.zip"
       )
+      sh (
+        label: "Terraform Version",
+        script: '''
+          set -eu
+          terraform version
+        '''
+      )
     }
   }
 }
