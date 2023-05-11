@@ -52,6 +52,8 @@
 def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
   if (targetList) {
+    //  ! targetList instanceof List   does not work and
+    //    targetList !instanceof List  is only available in Groovy 3
     if (targetList instanceof List == false) {
       error "non-list passed as first arg to grype() function"
     }
