@@ -23,20 +23,25 @@
 
 // Requires:
 //
-// - a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
+// - a Jenkins agent with Docker available locally see https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
 //
 // - if pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent) run in the trivy container before calling this function eg.
 //
-//			withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
-//				container('trivy'){
-//					gcpSetupApplicationCredentials()
-//				}
-//			}
+//      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
+//        container('trivy'){
+//          gcpSetupApplicationCredentials()
+//        }
+//      }
+//
+//
+// Usage:
+//
+//      trivy(targets: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
 //
 
 def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
-  fail = args.fails ?: true
+  fail = args.fail ?: true
   timeoutMinutes = args.timeoutMinutes ?: 10
   if (args.targets) {
     targets = args.targets
