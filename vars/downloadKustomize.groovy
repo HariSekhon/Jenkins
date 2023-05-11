@@ -23,6 +23,11 @@
 //
 //    https://github.com/HariSekhon/Kubernetes-configs
 
+// get release version from:
+//
+//    https://github.com/kubernetes-sigs/kustomize/releases
+//
+
 // Kustomize version needs to be fairly recent to solve 'unknown field "includeCRDs"' when combining Kustomize + Helm with includeCRDs option as seen in *-kustomization.yaml in https://github.com/HariSekhon/Kubernetes-configs
 def call(version='4.5.7'){
   String label = "Download Kustomize on agent '$HOSTNAME'"
