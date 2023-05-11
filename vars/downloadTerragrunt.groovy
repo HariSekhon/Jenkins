@@ -35,6 +35,10 @@ def call(version) {
   if (!version) {
     error "version arg not given to downloadTerragrunt()"
   }
+  // strip a 'v' prefix if present because we add it to the URL ourselves
+  if (version[0] = 'v'){
+    version = version.substring(1)
+  }
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 5, unit: 'MINUTES') {
