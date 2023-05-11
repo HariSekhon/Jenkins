@@ -65,7 +65,7 @@ def call(version='latest'){
           label: "ArgoCD Version",
           script: '''
             set -eu
-            argocd version
+            argocd version --client
           '''
         )
       }
