@@ -27,6 +27,12 @@
 //
 //      trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
 //
+//  You may want to wrap this in a catchError to show the stage failed but continue to the Deployment as its quite common for there to be some alerts for this and you don't want it blocking people
+//
+//      catchError(stageResult: 'FAILURE') {
+//        trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+//      }
+//
 
 def call (imageList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
