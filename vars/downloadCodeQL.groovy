@@ -63,9 +63,12 @@ def call() {
         unalias mv >/dev/null 2>/dev/null || :
 
         rm -fv -- "$tarball"
-        echo
-
-        echo "Version:"
+      '''
+    )
+    sh (
+      label: "CodeQL Version",
+      script: '''
+        set -eu
         ~/bin/codeql/codeql version
       '''
     )
