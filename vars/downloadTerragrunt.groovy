@@ -34,6 +34,13 @@ def call(version) {
         binary: 'terragrunt',
         url: "https://github.com/gruntwork-io/terragrunt/releases/download/v$version/terragrunt_{os}_{arch}"
       )
+      sh (
+        label: "Terragrunt Version",
+        script: '''
+          set -eu
+          terragrunt version
+        '''
+      )
     }
   }
 }
