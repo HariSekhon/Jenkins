@@ -23,7 +23,7 @@
 //
 // and it also saves RAM and billable cloud scaling to not have that container alive the whole time
 //
-// Downloading Grype only takes 7 seconds in testing
+// Downloading Grype only takes 4 seconds in testing
 
 // get release version from:
 //
