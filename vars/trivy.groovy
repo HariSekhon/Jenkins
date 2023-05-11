@@ -17,9 +17,19 @@
 //                                   T r i v y
 // ========================================================================== //
 
-// Security scanner
+// Trivy security scanner
 
-// For Usage see adjacent trivyScanDockerImages.groovy
+// Usage:
+//
+//    // if you're running on a Jenkins agent that already has the trivy binary bundled just call it
+//    // otherwise download trivy first
+//    downloadTrivy()
+//    trivy('whatever CLI args you want to pass to trivy')
+//
+//    // if you've set up a Trivy container in your Jenkins agent pod like: https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
+//    container('trivy'){
+//      trivy('whatever CLI args you want to pass to trivy')
+//    }
 //
 // Requires:
 //
@@ -37,7 +47,7 @@
 
 def call (args='') {
   label 'Trivy'
-  // let caller decide if wrapping this in a trivy container or using downloadTrivy to save RAM
+  // let caller decide if wrapping this in a container('trivy') or using downloadTrivy.groovy to save RAM
   //container('trivy') {
     ansiColor('xterm') {
       sh (
