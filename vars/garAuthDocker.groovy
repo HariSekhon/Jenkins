@@ -30,7 +30,10 @@ def call(registries='') {
     registries = sh(
       label: 'GCloud SDK fetch GAR registries',
       returnStdout: true,
-      script: "cloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'"
+      script: '''
+        set -eux
+        cloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
+      '''
     )
   }
   if (registries.contains("'")) {
