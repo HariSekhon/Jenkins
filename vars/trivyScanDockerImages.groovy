@@ -39,15 +39,15 @@
 def call (imageList=[], fail=true, timeoutMinutes=30) {
   label 'Trivy'
   if (imageList) {
+    images = imageList
     if (imageList instanceof String) {
-      imageList = [imageList]
+      images = [imageList]
     }
     //  ! targetList instanceof List   does not work and
     //    targetList !instanceof List  is only available in Groovy 3
-    if (imageList instanceof List == false) {
+    if (images instanceof List == false) {
       error "non-list passed as first arg to trivyScanDockerImages() function"
     }
-    images = imageList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
