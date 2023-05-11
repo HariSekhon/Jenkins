@@ -27,6 +27,12 @@
 
 def call(version='latest'){
   String label = "Download Trivy on agent '$HOSTNAME'"
+  if (! version instanceof String){
+    error "non-string version passed to downloadTrivy() function"
+  }
+  if (version.contains("'")) {
+    error "invalid version given to downloadTrivy(): $version"
+  }
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 3, unit: 'MINUTES') {
@@ -34,10 +40,10 @@ def call(version='latest'){
         echo "$label"
         sh (
           label: "$label, version '$version'",
-          script: '''
+          script: """
             set -eux
-            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          '''
+            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$version'
+          """
         )
       }
     }
