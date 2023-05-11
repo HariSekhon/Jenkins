@@ -38,13 +38,16 @@
 //
 // Usage:
 //
-//      trivy(targets: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
+//      trivy(["docker_image1:tag1", "docker_image2:tag2"])
 //
-// XXX: doesn't work at this time due to issue:
+//  You may want to wrap this in a catchError to show the stage failed but continue to the Deployment as its quite common for there to be some alerts for this and you don't want it blocking people
 //
-//    https://github.com/anchore/grype/issues/1287
+//      catchError(stageResult: 'FAILURE') {
+//        grype(["docker_image1:tag1", "docker_image2:tag2"])
+//      }
+//
 
-def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
+def call (targets=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
   fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
