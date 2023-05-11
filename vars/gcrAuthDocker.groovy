@@ -28,7 +28,7 @@ def call(registries='gcr.io,eu.gcr.io,us.gcr.io,asia.gcr.io') {
   if (! registries ) {
     error "cannot pass non-blank registries to gcrAuthDocker()"
   }
-  if (version.contains("'")) {
+  if (registries.contains("'")) {
     error "invalid registries given to gcrAuthDocker(): $registries"
   }
   sh (
