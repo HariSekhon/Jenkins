@@ -42,9 +42,7 @@ def call (List userEmailList) {
     if ((matcher = it =~ /^(.+)<(.+)>$/)) {
       username = matcher.group(1).trim()
       email = matcher.group(2).trim()
-      if (!username) {
-        username = email
-      }
+      username = username ?: email
       userEmails.put(username, email)
     } else {
       if (it) {
