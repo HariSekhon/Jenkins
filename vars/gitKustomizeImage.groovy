@@ -122,7 +122,7 @@ def call (Map args = [
               #kustomize edit set image "\$GCR_REGISTRY/\$GCR_PROJECT/\$APP:\$version"
               #kustomize edit set image "\$DOCKER_IMAGE:\$version"
 
-              ${ args.dockerImages.collect{ "kustomize edit set image $it:${args.version}" }.join("\n") }
+              ${ args.dockerImages.collect { "kustomize edit set image $it:${args.version}" }.join("\n") }
 
               git diff
 
