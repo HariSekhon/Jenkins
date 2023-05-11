@@ -32,7 +32,9 @@
 
 def call (version='latest') {
   String label = "Download Grype on agent '$HOSTNAME'"
-  if (! version instanceof String) {
+  //  ! version instanceof String   does not work and
+  //    version !instanceof String  is only available in Groovy 3
+  if (version instanceof String == false) {
     error "non-string version passed to downloadGrype() function"
   }
   if (version.contains("'")) {
