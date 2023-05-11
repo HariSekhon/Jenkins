@@ -19,7 +19,7 @@
 
 // https://github.com/anchore/grype
 
-// Security scanner
+// Grype security scanner
 
 // Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise)
 
