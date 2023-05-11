@@ -31,6 +31,10 @@
 // Kustomize version needs to be fairly recent to solve 'unknown field "includeCRDs"' when combining Kustomize + Helm with includeCRDs option as seen in *-kustomization.yaml in https://github.com/HariSekhon/Kubernetes-configs
 def call(version='4.5.7'){
   String label = "Download Kustomize on agent '$HOSTNAME'"
+  // strip a 'v' prefix if present because we add it to the URL ourselves
+  if (version[0] = 'v'){
+    version = version.substring(1)
+  }
   echo "Acquiring Lock: $label"
   lock(resource: "$label"){
     timeout(time: 2, unit: 'MINUTES') {
