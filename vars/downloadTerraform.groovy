@@ -29,6 +29,11 @@
 //
 //    installPackages(['curl', 'unzip'])
 
+// get release version from:
+//
+//    https://github.com/hashicorp/terraform/releases
+//
+
 def call(version) {
   String label = "Download Terraform on agent '$HOSTNAME'"
   if (!version) {
