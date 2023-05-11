@@ -49,12 +49,12 @@ def call(version='latest'){
             fi
             tmpfile="/tmp/argocd.\$\$"
             if [ "$VERSION" = latest ]; then
-              curl -sSL -o "\$tmpfile" "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-${os}-${arch}"
+              curl -sSL -o "\$tmpfile" "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-\$os-\$arch"
               chmod 0555 "\$tmpfile"
               unalias mv 2>/dev/null || :
               mv -fv "\$tmpfile" /usr/local/bin/argocd
             else
-              curl -sSL -o "\$tmpfile" "https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-${os}-${arch}"
+              curl -sSL -o "\$tmpfile" "https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-\$os-\$arch"
               chmod 0555 "\$tmpfile"
               unalias mv 2>/dev/null || :
               mv -fv "\$tmpfile" /usr/local/bin/argocd
