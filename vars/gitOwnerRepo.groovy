@@ -27,7 +27,7 @@ def call () {
   String ownerRepo = repoUrl.split(':')[-1]
 
   // take the last two components from "https://github.com/<owner>/<repo>" to leave just "<owner>/<repo>"
-  ownerRepo = ownerRepo.split('/')[-2,-1].join('/')
+  ownerRepo = ownerRepo.split('/')[-2, -1].join('/')
 
   return ownerRepo
 }
