@@ -61,7 +61,8 @@ def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
       error "No targets passed to grype() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
     }
   }
-  container('grype') {
+  // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
+  //container('grype') {
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         for (target in targets) {
@@ -83,5 +84,5 @@ def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
         }
       }
     }
-  }
+  //}
 }
