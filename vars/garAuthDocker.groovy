@@ -26,7 +26,7 @@
 
 def call(registries='') {
   if (! registries ) {
-    echo "No GAR registries given, auto-populating complete GAR registry list"
+    echo "No GAR registries specified, auto-populating complete GAR registry list"
     registries = sh(
       label: 'GCloud SDK fetch GAR registries',
       returnStdout: true,
