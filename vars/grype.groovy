@@ -73,14 +73,14 @@ def call (targetList=[], fail=true, timeoutMinutes=10) {
             echo "Grype scanning target '$TARGET' - informational only to see all issues"
             sh (
               label: "Grype",
-              script: ' grype "$TARGET" --scope all-layers '
+              script: "grype '$TARGET' --scope all-layers"
             )
 
             if (fail) {
               echo "Grype scanning target '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
               sh (
                 label: "Grype",
-                script: ' grype "$TARGET" --fail-on high --scope all-layers '
+                script: "grype '$TARGET' --fail-on high --scope all-layers"
               )
             }
           }
