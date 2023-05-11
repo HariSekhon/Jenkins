@@ -41,9 +41,9 @@ def call(registries='') {
   }
   sh (
     label: 'GCloud SDK Configure Docker Authentication for Google Artifact Registry',
-    script: '''
+    script: """
       set -eux
       gcloud auth configure-docker --quiet '$registries'
-    '''
+    """
   )
 }
