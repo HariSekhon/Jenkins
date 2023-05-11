@@ -47,6 +47,7 @@ def call(version) {
         label: "Terraform Version",
         script: '''
           set -eu
+          export PATH="$PATH:"~/bin
           terraform version
         '''
       )
