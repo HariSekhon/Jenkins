@@ -102,7 +102,7 @@ def call (Map args = [ jobs: [], excludeJobs: [] ]) {
   }
 
   echo "Downloading configurations for $numJobs Jenkins jobs"
-  jobs.eachWithIndex{ it, index ->
+  jobs.eachWithIndex { it, index ->
     withEnv (["JOB=$it"]) {
       sh (
         // zero indexed
