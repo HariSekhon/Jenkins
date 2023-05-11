@@ -23,7 +23,26 @@
 
 // Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise)
 
-// Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
+// Requires:
+//
+// - a Jenkins agent with Docker available locally see https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
+//
+// - if pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent) run in the trivy container before calling this function eg.
+//
+//      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
+//        container('trivy'){
+//          gcpSetupApplicationCredentials()
+//        }
+//      }
+//
+//
+// Usage:
+//
+//      trivy(targets: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
+//
+// XXX: doesn't work at this time due to issue:
+//
+//    https://github.com/anchore/grype/issues/1287
 
 def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Grype'
