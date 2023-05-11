@@ -30,8 +30,8 @@
 //  }
 //
 
-def call (pip_package) {
-  withEnv(["PACKAGE=$pip_package"]) {
+def call (pipPackage) {
+  withEnv(["PACKAGE=$pipPackage"]) {
     sh (
       label: 'Pipenv Install',
       script: '''
