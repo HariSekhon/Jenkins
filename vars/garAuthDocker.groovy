@@ -35,7 +35,7 @@ def call(registries='') {
         if [ -n "$GAR_PROJECT" ]; then
           export CLOUDSDK_CORE_PROJECT="$GAR_PROJECT"
         fi
-        gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
+        gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,\$//'
       """
     )
     if (!registries) {
