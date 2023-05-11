@@ -30,10 +30,13 @@ def call(registries='') {
     registries = sh(
       label: 'GCloud SDK fetch GAR registries',
       returnStdout: true,
-      script: '''
+      script: """
         set -eux
+        if [ -n "$GAR_PROJECT" ]; then
+          export CLOUDSDK_CORE_PROJECT="$GAR_PROJECT"
+        fi
         gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
-      '''
+      """
     )
     if (!registries) {
       error "Failed to get list of GAR registries"
@@ -46,6 +49,9 @@ def call(registries='') {
     label: 'GCloud SDK Configure Docker Authentication for Google Artifact Registry',
     script: """
       set -eux
+      if [ -n "$GAR_PROJECT" ]; then
+        export CLOUDSDK_CORE_PROJECT="$GCR_PROJECT"
+      fi
       gcloud auth configure-docker --quiet '$registries'
     """
   )
