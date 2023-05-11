@@ -25,6 +25,11 @@
 //
 // Downloading Grype only takes 7 seconds in testing
 
+// get release version from:
+//
+//    https://github.com/anchore/grype/releases
+//
+
 def call(version='latest'){
   String label = "Download Grype on agent '$HOSTNAME'"
   if (! version instanceof String){
