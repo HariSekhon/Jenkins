@@ -52,15 +52,15 @@
 def call (targetList=[], fail=true, timeoutMinutes=30) {
   label 'Grype'
   if (targetList) {
+    targets = targetList
     if (targetList instanceof String) {
-      targetList = [targetList]
+      targets = [targetList]
     }
     //  ! targetList instanceof List   does not work and
     //    targetList !instanceof List  is only available in Groovy 3
     if (targetList instanceof List == false) {
       error "non-list passed as first arg to grype() function"
     }
-    targets = targetList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
