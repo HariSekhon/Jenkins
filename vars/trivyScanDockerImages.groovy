@@ -25,35 +25,35 @@
 //
 // Usage:
 //
-//      trivy(targets: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
+//      trivyScanDockerImages(images: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
 //
 
-def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
+def call (Map args = [images=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
   fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
-  if (args.targets) {
-    targets = args.targets
+  if (args.images) {
+    images = args.images
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
       if (env.DOCKER_TAG) {
         tag = env.DOCKER_TAG
       }
-      targets = ["$DOCKER_IMAGE:$tag"]
+      images = ["$DOCKER_IMAGE:$tag"]
     } else {
-      error "No targets passed to trivy() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
+      error "No docker images passed to trivyScanDockerImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
     }
   }
   container('trivy') {
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
-      for (target in targets) {
-        withEnv (["TARGET=$target"]) {
-          echo "Trivy scanning image '$TARGET' - informational only to see all issues"
-          trivy('image --no-progress "$TARGET"')
+      for (image in images) {
+        withEnv (["IMAGE=$image"]) {
+          echo "Trivy scanning image '$IMAGE' - informational only to see all issues"
+          trivy('image --no-progress "$IMAGE"')
           if (fail) {
-            echo "Trivy scanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-            trivy('image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET"')
+            echo "Trivy scanning image '$IMAGE' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
+            trivy('image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$IMAGE"')
           }
         }
       }
