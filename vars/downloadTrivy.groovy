@@ -39,7 +39,7 @@ def call(version='latest'){
       withEnv(["VERSION=$version"]) {
         echo "$label"
         sh (
-          label: "$label, version '$version'",
+          label: "$label, version '$VERSION'",
           script: """
             set -eux
             curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
