@@ -32,7 +32,7 @@
 def call(version='4.5.7'){
   String label = "Download Kustomize on agent '$HOSTNAME'"
   // strip a 'v' prefix if present because we add it to the URL ourselves
-  if (version[0] = 'v'){
+  if (version[0] = 'v') {
     version = version.substring(1)
   }
   echo "Acquiring Lock: $label"
