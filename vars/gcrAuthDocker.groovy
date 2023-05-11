@@ -23,6 +23,9 @@
 //  - gcpActivateServiceAccount.groovy to be called first to authenticate GCloud SDK
 //  - needs GCloud SDK to be installed on the agent - if on Kubernetes make it the default container or else wrap this call in container('gcloud-sdk'){ }
 //
+//  XXX: GCloud SDK fails without throwing non-zero exit code for invalid registries with:
+//
+//            WARNING: blah is not a supported registry
 
 // registry list is from here: https://cloud.google.com/container-registry/docs/overview#registries
 def call(registries='') {
@@ -49,6 +52,8 @@ def call(registries='') {
       if [ -n "$GCR_PROJECT" ]; then
         export CLOUDSDK_CORE_PROJECT="$GCR_PROJECT"
       fi
+      # XXX: fails without throwing non-zero exit code for invalid registries with
+      #      WARNING: blah is not a supported registry
       gcloud auth configure-docker --quiet '$registries'
     """
   )
