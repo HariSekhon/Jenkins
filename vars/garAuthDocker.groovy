@@ -28,7 +28,7 @@ def call(registries='') {
   if (!registries) {
     echo "No GAR registries specified, auto-populating complete GAR registry list"
     registries = sh(
-      label: 'GCloud SDK fetch GAR registries',
+      label: 'GCloud SDK fetch GAR registry locations',
       returnStdout: true,
       script: """
         set -eux
@@ -39,8 +39,9 @@ def call(registries='') {
       """
     )
     if (!registries) {
-      error "Failed to get list of GAR registries"
+      error "Failed to get list of GAR registry locations"
     }
+    registries = registries.collect { "${it}.pkg.dev" }
   }
   if (registries.contains("'")) {
     error "invalid registries given to garAuthDocker(): $registries"
