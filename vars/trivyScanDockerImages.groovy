@@ -39,6 +39,9 @@
 def call (imageList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
   if (imageList) {
+    if (imageList instanceof String) {
+      imageList = [imageList]
+    }
     //  ! targetList instanceof List   does not work and
     //    targetList !instanceof List  is only available in Groovy 3
     if (imageList instanceof List == false) {
