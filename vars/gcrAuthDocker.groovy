@@ -25,9 +25,12 @@
 //
 
 // registry list is from here: https://cloud.google.com/container-registry/docs/overview#registries
-def call(registries='gcr.io,eu.gcr.io,us.gcr.io,asia.gcr.io') {
+def call(registries='') {
   if (! registries ) {
-    error "cannot pass non-blank registries to gcrAuthDocker()"
+    echo "No GCR registries specified, using default list of all documented regional registries"
+    registries = 'gcr.io,eu.gcr.io,us.gcr.io,asia.gcr.io'
+    //error "cannot pass non-blank registries to gcrAuthDocker()"
+    //
     // Can't find a GCloud SDK command similar to GAR to get a list of registries
     //echo "No GAR registries given, auto-populating complete GAR registry list"
     //registries = sh(
