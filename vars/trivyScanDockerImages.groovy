@@ -30,10 +30,8 @@
 
 def call (imageList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
-  fail = args.fail == false ? false : true
-  timeoutMinutes = args.timeoutMinutes ?: 10
-  if (args.imageList) {
-    images = args.imageList
+  if (imageList) {
+    images = imageList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
