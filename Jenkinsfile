@@ -289,7 +289,9 @@ pipeline {
     AWS_ACCESS_KEY_ID      = credentials('aws-secret-key-id')
     AWS_SECRET_ACCESS_KEY  = credentials('aws-secret-access-key')
     GCP_SERVICEACCOUNT_KEY = credentials('gcp-serviceaccount-key')
-    GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"  // needed if calling gcpSetupApplicationCredentials() eg. for Terraform Pipeline
+    // GOOGLE_APPLICATION_CREDENTIALS environment variable needs to be set for apps like Terraform, Trivy etc.
+    // to access GCP resources, and is required if calling gcpSetupApplicationCredentials()
+    GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
     DIGITALOCEAN_ACCESS_TOKEN = credentials('digitalocean-access-token') // picked up automatically by Digital Ocean CLI 'doctl'
 
     // Username/Password credentials - creates Environment Variables of these names suffixed with _USR and _PSW
