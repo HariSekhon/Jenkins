@@ -25,6 +25,11 @@
 //
 //    https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
 
+// get release version from:
+//
+//    https://github.com/aquasecurity/trivy/releases
+//
+
 def call(version='latest'){
   String label = "Download Trivy on agent '$HOSTNAME'"
   if (! version instanceof String){
