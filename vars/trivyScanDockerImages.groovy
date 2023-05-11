@@ -25,29 +25,29 @@
 //
 // Usage:
 //
-//      trivyScanDockerImages(images: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
+//      trivyScanDockerImages(imageList: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
 //
 
-def call (Map args = [images=[], fail=true, timeoutMinutes=10]) {
+def call (Map args = [imageList=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
   fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
-  if (args.images) {
-    images = args.images
+  if (args.imageList) {
+    imageList = args.imageList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
       if (env.DOCKER_TAG) {
         tag = env.DOCKER_TAG
       }
-      images = ["$DOCKER_IMAGE:$tag"]
+      imageList = ["$DOCKER_IMAGE:$tag"]
     } else {
       error "No docker images passed to trivyScanDockerImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
     }
   }
   container('trivy') {
     timeout(time: timeoutMinutes, unit: 'MINUTES') {
-      for (image in images) {
+      for (image in imageList) {
         withEnv (["IMAGE=$image"]) {
           echo "Trivy scanning image '$IMAGE' - informational only to see all issues"
           trivy('image --no-progress "$IMAGE"')
