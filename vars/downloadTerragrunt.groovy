@@ -53,7 +53,7 @@ def call(version) {
         script: '''
           set -eu
           export PATH="$PATH:$HOME/bin":~/bin
-          terragrunt version
+          terragrunt --version
         '''
       )
     }
