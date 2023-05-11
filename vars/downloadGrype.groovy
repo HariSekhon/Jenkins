@@ -30,18 +30,18 @@
 //    https://github.com/anchore/grype/releases
 //
 
-def call(version='latest'){
+def call (version='latest') {
   String label = "Download Grype on agent '$HOSTNAME'"
-  if (! version instanceof String){
+  if (! version instanceof String) {
     error "non-string version passed to downloadGrype() function"
   }
   if (version.contains("'")) {
     error "invalid version given to downloadGrype(): $version"
   }
   echo "Acquiring Lock: $label"
-  lock(resource: "$label"){
-    timeout(time: 3, unit: 'MINUTES') {
-      withEnv(["VERSION=$version"]) {
+  lock (resource: "$label") {
+    timeout (time: 3, unit: 'MINUTES') {
+      withEnv (["VERSION=$version"]) {
         echo "$label"
         sh (
           label: "$label, version '$VERSION'",
