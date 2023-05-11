@@ -52,7 +52,7 @@ def call() {
 
         cd "$tmp"
 
-        wget -cO "$tarball" "https://github.com/github/codeql-action/releases/latest/download/$tarball"
+        curl -sSL -o "$tarball" "https://github.com/github/codeql-action/releases/latest/download/$tarball"
         echo
 
         rm -fr -- ./codeql
