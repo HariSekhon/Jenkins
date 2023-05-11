@@ -50,7 +50,7 @@ def call(version = '1.5.1') {
         label: "KICS Version",
         script: '''
           set -eu
-          export PATH="$PATH:$HOME/bin":~/bin
+          export PATH="$PATH:$HOME/bin/kics":~/bin/kics
           kics version
         '''
       )
