@@ -17,6 +17,12 @@
 //               D o c k e r   L o g i n   t o   D o c k e r H u b
 // ========================================================================== //
 
+// See Also:
+//
+//    gcpAuthDocker.groovy
+//    gcrAuthDocker.groovy
+//    garAuthDocker.groovy
+
 def call(user='', pass='', registry='') {
   user = user ?: env.DOCKERHUB_USER ?: error('dockerLogin: username not specified and DOCKERHUB_USER not set in the environment')
   password = password ?: env.DOCKERHUB_TOKEN ?: error('dockerLogin: password/token not specified and DOCKERHUB_TOKEN not set in the environment')
