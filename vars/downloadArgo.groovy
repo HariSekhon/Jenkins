@@ -19,7 +19,7 @@
 
 // Downloading it for each run trades inbound bandwidth (free) for not using RAM for bigger Jenkins pods causing more scale and billable Kubernetes
 //
-// Downloading ArgoCD CLI only takes 7 seconds in testing
+// Downloading ArgoCD CLI only takes 2 seconds in testing
 //
 // The alternative is using the docker image which will be cached but hold RAM for the entire duration of the pipeline, which is very RAM inefficient:
 //
