@@ -45,6 +45,13 @@ def call(version='latest'){
             curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
           """
         )
+        sh (
+          label: "Trivy Version",
+          script: '''
+            set -eu
+            trivy version
+          '''
+        )
       }
     }
   }
