@@ -35,6 +35,9 @@ def call(registries='') {
         gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
       '''
     )
+    if (! registries) {
+      error "Failed to get list of GAR registries"
+    }
   }
   if (registries.contains("'")) {
     error "invalid registries given to garAuthDocker(): $registries"
