@@ -41,7 +41,7 @@
 
 def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Trivy'
-  fail = args.fail ?: true
+  fail = args.fail == false ?: true
   timeoutMinutes = args.timeoutMinutes ?: 10
   if (args.targets) {
     targets = args.targets
