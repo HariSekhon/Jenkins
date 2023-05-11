@@ -48,7 +48,7 @@ def call () {
                -e '[bot]' |
       sort -fu
     '''
-  ).trim().split('\n').collect{ it.trim() }
+  ).trim().split('\n').collect { it.trim() }
   //echo "Inferred Git committers List since last successful build via git log to be: $logCommittersList"
   // gets a Map in ['user': 'email'] format
   Map logCommitters = mapUserEmails(logCommittersList)
