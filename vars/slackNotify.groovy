@@ -35,7 +35,7 @@ def call (String channel='') {
 
   //if (env.BUILD_RESULT == 'SUCCESS') {
   //if (['UNSTABLE', 'ABORTED'].contains(env.BUILD_RESULT)) {
-  switch(env.BUILD_RESULT) {
+  switch (env.BUILD_RESULT) {
     case 'SUCCESS':
       env.SLACK_COLOR = 'good'
       env.BUILD_RESULT = env.BUILD_RESULT.toLowerCase().capitalize()
