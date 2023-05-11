@@ -49,7 +49,7 @@
 //      }
 //
 
-def call (targetList=[], fail=true, timeoutMinutes=10) {
+def call (targetList=[], fail=true, timeoutMinutes=30) {
   label 'Grype'
   if (targetList) {
     if (targetList instanceof String) {
