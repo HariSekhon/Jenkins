@@ -39,7 +39,7 @@ def call (String channel='') {
     case 'SUCCESS':
       env.SLACK_COLOR = 'good'
       env.BUILD_RESULT = env.BUILD_RESULT.toLowerCase().capitalize()
-      break;
+      break
     // fallthrough to set warning for either of these conditions
     case 'UNSTABLE':
     case 'ABORTED':
