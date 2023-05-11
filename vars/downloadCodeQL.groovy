@@ -56,7 +56,9 @@ def call() {
         echo
 
         rm -fr -- ./codeql
-        tar xvzf -- ./"$tarball"
+        # the -- breaks the tar command which attempts to take it literally on GCloud SDK container
+        #tar xvzf -- ./"$tarball"
+        tar xvzf ./"$tarball"
         echo
 
         unalias rm >/dev/null 2>/dev/null || :
