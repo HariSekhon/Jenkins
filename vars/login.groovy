@@ -48,20 +48,20 @@
 //
 //      login()
 
-def call(){
+def call() {
   echo 'Running Logins for any platforms we have environment credentials for'
 
   script {
 
-    if(env.DOCKERHUB_USER && env.DOCKERHUB_TOKEN){
+    if (env.DOCKERHUB_USER && env.DOCKERHUB_TOKEN) {
       dockerLogin()
     }
 
-    if(env.GH_TOKEN || env.GITHUB_TOKEN){
-      if(env.GITHUB_USER && isDockerAvailable()){
+    if (env.GH_TOKEN || env.GITHUB_TOKEN) {
+      if (env.GITHUB_USER && isDockerAvailable()) {
         dockerLoginGHCR()
       }
-      if(isCommandAvailable('gh')){
+      if (isCommandAvailable('gh')) {
         sh(
           label: 'GitHub CLI Auth Status',
           script: 'gh auth status'
@@ -69,49 +69,49 @@ def call(){
       }
     }
 
-    if(env.AWS_ACCESS_KEY_ID &&
+    if (env.AWS_ACCESS_KEY_ID &&
        env.AWS_SECRET_ACCESS_KEY &&
-       isCommandAvailable('aws')){
+       isCommandAvailable('aws')) {
       awsAuth()
-      if(isDockerAvailable()){
+      if (isDockerAvailable()) {
         dockerLoginECR()
       }
     }
 
-    if(env.GCP_SERVICEACCOUNT_KEY){
-      if(isCommandAvailable('gcloud')){
+    if (env.GCP_SERVICEACCOUNT_KEY) {
+      if (isCommandAvailable('gcloud')) {
         gcpActivateServiceAccount()
       }
-      if(isDockerAvailable()){
-        if(env.GAR_REGISTRY){
+      if (isDockerAvailable()) {
+        if (env.GAR_REGISTRY) {
           dockerLoginGAR()
         }
-        if(env.GCR_REGISTRY){
+        if (env.GCR_REGISTRY) {
           dockerLoginGCR()
         }
       }
-      if(env.GOOGLE_APPLICATION_CREDENTIALS){
+      if (env.GOOGLE_APPLICATION_CREDENTIALS) {
         gcpSetupApplicationCredentials()
       }
     }
 
-    if(env.AZURE_USER && env.AZURE_PASSWORD){
-      if(isCommandAvailable('az')){
+    if (env.AZURE_USER && env.AZURE_PASSWORD) {
+      if (isCommandAvailable('az')) {
         azureCLILogin()
-        if(isDockerAvailable()){
+        if (isDockerAvailable()) {
           dockerLoginACR()
         }
       }
     }
 
-    if(env.GITLAB_USER && env.GITLAB_TOKEN){
-      if(isDockerAvailable()){
+    if (env.GITLAB_USER && env.GITLAB_TOKEN) {
+      if (isDockerAvailable()) {
         dockerLoginGitlab()
       }
     }
 
-    if(env.QUAY_USER && env.QUAY_TOKEN){
-      if(isDockerAvailable()){
+    if (env.QUAY_USER && env.QUAY_TOKEN) {
+      if (isDockerAvailable()) {
         dockerLoginQuay()
       }
     }
