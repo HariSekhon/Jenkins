@@ -53,7 +53,7 @@ def call (String repo='') {
   String currentVersion = json.tag_name
 
   // XXX: GitHub json.tag_name is a string and so this won't carry through any alphabetic naming conventions prefixes/suffixes such a v1.0 or kustomize/v5.0.0 - something to be improved
-  List versionComponents = currentVersion.findAll( /\d+/ ).collect{ it.toInteger() }
+  List versionComponents = currentVersion.findAll( /\d+/ ).collect { it.toInteger() }
 
   echo "Latest release is: ${versionComponents.join('.')}"
 
