@@ -38,12 +38,10 @@ def call (args='') {
   label 'Trivy'
   container('trivy') {
     ansiColor('xterm') {
-      withEnv (["ARGS=$args"]) {
-        sh (
-          label: "Trivy",
-          script: 'trivy $ARGS'
-        )
-      }
+      sh (
+        label: "Trivy",
+        script: "trivy $args"
+      )
     }
   }
 }
