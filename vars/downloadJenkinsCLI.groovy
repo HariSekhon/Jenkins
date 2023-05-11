@@ -28,6 +28,13 @@ def call() {
     timeout(time: 5, unit: 'MINUTES') {
       // TODO: add destination arg to follow ${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}
       installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
+      sh (
+        label: "Jenkins CLI Version",
+        script: '''
+          set -eu
+          java -jar ~/bin/jenkins-cli.jar version
+        '''
+      )
     }
   }
 }
