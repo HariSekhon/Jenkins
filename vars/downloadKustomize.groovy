@@ -46,6 +46,13 @@ def call(version='4.5.7'){
             mv -fv /tmp/kustomize.$$ /usr/local/bin/kustomize
           '''
         )
+        sh (
+          label: "Kustomize Version",
+          script: '''
+            set -eu
+            kustomize version
+          '''
+        )
       }
     }
   }
