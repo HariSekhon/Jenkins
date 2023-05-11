@@ -39,5 +39,12 @@ def call() {
         /usr/bin/env bash
       '''
     )
+    sh (
+      label: "Datree Version",
+      script: '''
+        set -eu
+        datree version
+      '''
+    )
   }
 }
