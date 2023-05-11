@@ -57,18 +57,18 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
   //jenkinsCliJarFile = new File(jenkinsCliJar)
   //if(! (new File(jenkinsCliJar)).exists() ){
   //
-  Boolean jenkinsCliJarExists = sh(
+  Boolean jenkinsCliJarExists = sh (
     label: 'Check Jenkins CLI jar exists',
     returnStatus: true,
     script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
   ) == 0
 
-  if(!jenkinsCliJarExists){
+  if (!jenkinsCliJarExists) {
     echo "$jenkinsCliJar not found, downloading..."
     downloadJenkinsCLI()
   }
 
-  if(!jobs){
+  if (!jobs) {
       jobs = sh (
         label: "List Jobs via CLI",
         returnStdout: true,
@@ -103,7 +103,7 @@ def call(Map args = [ jobs: [], excludeJobs: [] ]) {
 
   echo "Downloading configurations for $numJobs Jenkins jobs"
   jobs.eachWithIndex{ it, index ->
-    withEnv(["JOB=$it"]){
+    withEnv (["JOB=$it"]) {
       sh (
         // zero indexed
         label: "${index+1} Download Jenkins Job Configuration: $it",
