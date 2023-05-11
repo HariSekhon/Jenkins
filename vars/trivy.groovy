@@ -33,9 +33,6 @@
 //        }
 //      }
 //
-//
-// Usage:
-//
 
 def call (args='') {
   label 'Trivy'
@@ -44,7 +41,7 @@ def call (args='') {
       withEnv (["ARGS=$args"]) {
         sh (
           label: "Trivy",
-          script: ' trivy $ARGS '
+          script: 'trivy $ARGS'
         )
       }
     }
