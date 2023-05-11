@@ -25,6 +25,11 @@
 
 // Adapted from DevOps Bash Tools setup/install_terragrunt.sh
 
+// get release version from:
+//
+//    https://github.com/gruntwork-io/terragrunt/releases
+//
+
 def call(version) {
   String label = "Download Terragrunt on agent '$HOSTNAME'"
   if (!version) {
