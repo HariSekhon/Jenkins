@@ -51,7 +51,7 @@ def call (imageList=[], fail=true, timeoutMinutes=10) {
           trivy("image --no-progress '$IMAGE'")
           if (fail) {
             echo "Trivy scanning image '$IMAGE' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-            trivy("image --no-progress --exit-code 1 --severity HIGH,CRITICAL '$IMAGE'")
+            trivy("image --no-progress --exit-code 1 --severity HIGH,CRITICAL $IMAGE")
           }
         }
       }
