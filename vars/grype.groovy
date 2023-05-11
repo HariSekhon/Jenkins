@@ -25,10 +25,12 @@
 
 // Requires a Jenkins agent with Docker available locally ie. not a Kubernetes agent which usually won't have this
 
-def call (targetList=[], fail=true, timeoutMinutes=10) {
+def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Grype'
-  if (targetList) {
-    targets = targetList
+  fail = args.fail ?: true
+  timeoutMinutes = args.timeoutMinutes ?: 10
+  if (args.targets) {
+    targets = args.targets
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
