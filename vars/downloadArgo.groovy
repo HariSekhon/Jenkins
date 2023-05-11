@@ -61,6 +61,7 @@ def call(version='latest'){
             fi
           """
         )
+        sh 'argocd version'
       }
     }
   }
