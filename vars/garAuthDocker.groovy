@@ -32,7 +32,7 @@ def call(registries='') {
       returnStdout: true,
       script: '''
         set -eux
-        cloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
+        gcloud artifacts locations list --format='get(name)' | tr '\\n' ',' | sed 's/,$//'
       '''
     )
   }
