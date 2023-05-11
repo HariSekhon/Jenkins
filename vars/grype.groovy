@@ -46,7 +46,7 @@
 
 def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
   label 'Grype'
-  fail = args.fail == false ?: true
+  fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
   if (args.targets) {
     targets = args.targets
@@ -67,11 +67,17 @@ def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {
             echo "Grype scanning image '$TARGET' - informational only to see all issues"
-            sh ' grype "$TARGET" --fail-on high --scope all-layers '
+            sh (
+              label: "Grype",
+              script: ' grype "$TARGET" --fail-on high --scope all-layers '
+            )
 
             if (fail) {
-              echo "Grypescanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-              sh ' grype "$TARGET" --fail-on high --scope all-layers '
+              echo "Grype scanning image '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
+              sh (
+                label: "Grype",
+                script: ' grype "$TARGET" --fail-on high --scope all-layers '
+              )
             }
           }
         }
