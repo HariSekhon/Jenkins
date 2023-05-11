@@ -45,6 +45,13 @@ def call(version='latest'){
             curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
           """
         )
+        sh (
+          label: "Grype Version",
+          script: '''
+            set -eu
+            grype version
+          '''
+        )
       }
     }
   }
