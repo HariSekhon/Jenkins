@@ -46,6 +46,13 @@ def call(version = '1.5.1') {
           bash-tools/setup/install_kics.sh
         '''
       )
+      sh (
+        label: "KICS Version",
+        script: '''
+          set -eu
+          kics version
+        '''
+      )
     }
   }
 }
