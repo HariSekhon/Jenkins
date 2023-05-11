@@ -49,8 +49,8 @@ def call(registries='') {
     label: 'GCloud SDK Configure Docker Authentication for Google Container Registry',
     script: """
       set -eux
-      if [ -n "$GCR_PROJECT" ]; then
-        export CLOUDSDK_CORE_PROJECT="$GCR_PROJECT"
+      if [ -n "\${GCR_PROJECT:-}" ]; then
+        export CLOUDSDK_CORE_PROJECT="\$GCR_PROJECT"
       fi
       # XXX: fails without throwing non-zero exit code for invalid registries with
       #      WARNING: blah is not a supported registry
