@@ -28,13 +28,11 @@
 //      trivy(targets: ["docker_image1:tag1", "docker_image2:tag2"], fail: true, timeoutMinutes: 15)
 //
 
-def call (Map args = [targets=[], fail=true, timeoutMinutes=10]) {
+def call (targets=[], Map args = [fail=true, timeoutMinutes=10]) {
   label 'Trivy'
   fail = args.fail == false ? false : true
   timeoutMinutes = args.timeoutMinutes ?: 10
-  if (args.targets) {
-    targets = args.targets
-  } else {
+  if (!targets) {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
       if (env.DOCKER_TAG) {
