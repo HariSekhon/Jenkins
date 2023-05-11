@@ -50,7 +50,7 @@
 def call (targetList=[], fail=true, timeoutMinutes=10) {
   label 'Grype'
   if (targetList) {
-    targets = args.targetList
+    targets = targetList
   } else {
     if (env.DOCKER_IMAGE) {
       String tag = 'latest'
