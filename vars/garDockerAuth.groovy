@@ -44,7 +44,7 @@ def call (registries='') {
     if (!registries) {
       error "Failed to get list of GAR registry locations"
     }
-    registries = registries.split(',').collect {"${it}-docker.pkg.dev"}.join(',')
+    registries = registries.split(',').collect {"${it}-docker.pkg.dev" }.join(',')
   }
   if (registries.contains("'")) {
     error "invalid registries given to garAuthDocker(): $registries"
