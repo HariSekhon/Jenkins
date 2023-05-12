@@ -50,7 +50,8 @@ def call (targetList=[], fail=true, timeoutMinutes=30) {
   label 'Grype'
   if (targetList) {
     targets = targetList
-    if (targetList instanceof String) {
+    if (targetList instanceof String ||
+        targetList instanceof org.codehaus.groovy.runtime.GStringImpl) {
       targets = [targetList]
     }
     //  ! targetList instanceof List   does not work and
