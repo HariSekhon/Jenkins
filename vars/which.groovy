@@ -52,7 +52,16 @@ def call(String executable) {
   //}
   //return ''
 	script {
-		def path = sh(returnStatus: true, script: "which $executable", returnStdout: true)
+		def path = sh(
+			returnStatus: true,
+      returnStdout: true,
+      // try all 3 because some agents containers might not have the which binary installed or bash for the type -P command
+			script: '''
+        which $executable ||
+        type -P $executable ||
+        command -v $executable
+      '''
+    )
 		return path
 	}
 }
