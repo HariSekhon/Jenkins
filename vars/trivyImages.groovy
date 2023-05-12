@@ -50,7 +50,8 @@ def call (imageList=[], fail=true, timeoutMinutes=30) {
   label 'Trivy'
   if (imageList) {
     images = imageList
-    if (imageList instanceof String) {
+    if (imageList instanceof String ||
+        imageList instanceof org.codehaus.groovy.runtime.GStringImpl) {
       images = [imageList]
     }
     //  ! targetList instanceof List   does not work and
