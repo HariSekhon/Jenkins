@@ -46,6 +46,7 @@
 //
 
 def call (targetList=[], fail=true, timeoutMinutes=30) {
+  println targetList.class
   label 'Grype'
   if (targetList) {
     targets = targetList
