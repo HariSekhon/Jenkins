@@ -25,17 +25,17 @@
 //
 // Usage:
 //
-//      trivyScanDockerImages("docker_image1:tag")  // pass a string for a single image
+//      trivyImages("docker_image1:tag")  // pass a string for a single image
 //
-//      trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])  // pass a list for 2 or more images
+//      trivyImages(["docker_image1:tag1", "docker_image2:tag2"])  // pass a list for 2 or more images
 //
 //
 //  Wrap in a 'catchError' to leave it as informational but not break the build - as it's very common for there to be some CVEs etc and you don't usually want it blocking people
 //
 //      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-//        trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+//        trivyImages(["docker_image1:tag1", "docker_image2:tag2"])
 //              // or
-//        trivyScanDockerImages(env.DOCKER_IMAGES_TAGS.split(',') as List)
+//        trivyImages(env.DOCKER_IMAGES_TAGS.split(',') as List)
 //      }
 //
 // XXX: set environment variable TRIVY_SERVER=trivy.trivy.svc.cluster.local to speed up the scan using the Trivy server deployment from here
@@ -54,7 +54,7 @@ def call (imageList=[], fail=true, timeoutMinutes=30) {
     //  ! targetList instanceof List   does not work and
     //    targetList !instanceof List  is only available in Groovy 3
     if (images instanceof List == false) {
-      error "non-list passed as first arg to trivyScanDockerImages() function"
+      error "non-list passed as first arg to trivyImages() function"
     }
   } else {
     if (env.DOCKER_IMAGE) {
@@ -64,7 +64,7 @@ def call (imageList=[], fail=true, timeoutMinutes=30) {
       }
       images = ["$DOCKER_IMAGE:$tag"]
     } else {
-      error "No docker images passed to trivyScanDockerImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
+      error "No docker images passed to trivyImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
     }
   }
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
