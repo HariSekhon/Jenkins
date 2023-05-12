@@ -45,7 +45,7 @@ def call (dir='.', fail=true, timeoutMinutes=10) {
       grype("dir:'$DIR' --scope all-layers")
       if (fail) {
         echo "Grype scanning dir '$DIR' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-        grype("dir:'$DIR' --fail-on high --scope all-layers"
+        grype("dir:'$DIR' --fail-on high --scope all-layers")
       }
     }
   }
