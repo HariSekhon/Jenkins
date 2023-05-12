@@ -38,6 +38,11 @@
 //        trivyScanDockerImages(env.DOCKER_IMAGES_TAGS.split(',') as List)
 //      }
 //
+// XXX: set environment variable TRIVY_SERVER=trivy.trivy.svc.cluster.local to speed up the scan using the Trivy server deployment from here
+//      to not waste 15 minutes downloading the vulnerabilities DB in every ephemeral Jenkins agent on Kubernetes
+//
+//        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
+//
 
 def call (imageList=[], fail=true, timeoutMinutes=30) {
   label 'Trivy'
