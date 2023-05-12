@@ -45,8 +45,10 @@
 //
 // - a Jenkins agent with Docker available locally see https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
 //
-// - if using trivy container and pulling from Google Container Registry - gcpSetupApplicationCredentials.groovy (adjacent)
-//   then set up the GCP application credentials key file in the trivy container before calling this function eg.
+// - if pulling docker images from Google Container Registry or Google Artifact Registry then be sure to set up Google Application Credentials first by calling
+//   gcpSetupApplicationCredentials.groovy or setting up general Docker Authentication to GCR/GAR by calling gcpDockerAuth.groovy / gcrDockerAuth.groovy / garDockerAuth.groovy
+//
+// - if using trivy container and using Google Application Credentials then make sure to set them up in the container to be used later eg.
 //
 //      withCredentials([string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')]) {
 //        container('trivy') {
