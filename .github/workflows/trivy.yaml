@@ -15,8 +15,6 @@
 #                                   T r i v y
 # ============================================================================ #
 
-# Generates code scanning alerts in GitHub's Security tab -> Code scanning alerts
-
 ---
 name: Trivy
 
