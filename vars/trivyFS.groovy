@@ -25,15 +25,15 @@
 //
 // Usage:
 //
-//      trivyFs()  // scan the git clone checkout in the root directory where we start the pipeline
+//      trivyFS()  // scan the git clone checkout in the root directory where we start the pipeline
 //
-//      trivyFs('src') // scan only the src code directory
+//      trivyFS('src') // scan only the src code directory
 //
 //
 //  Wrap in a 'catchError' to leave it as informational but not break the build - as it's very common for there to be some CVEs etc and you don't usually want it blocking people
 //
 //      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-//        trivyFs()
+//        trivyFS()
 //      }
 //
 // XXX: set environment variable TRIVY_SERVER to use a Trivy server to not waste 15 minutes downloading the vulnerabilities DB on every Jenkins agent,
