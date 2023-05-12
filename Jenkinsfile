@@ -876,8 +876,15 @@ pipeline {
     stage('Trivy') {
       steps {
         milestone(ordinal: null, label: "Milestone: Trivy")
-        // Requires DOCKER_IMAGE and DOCKER_TAG to be set in environment{} section of pipeline
-        trivy()  // func in vars/ shared library
+        // need to set buildResult to 'SUCCESS' to prevent it setting it to 'FAILURE' - otherwise the pipeline will continue but even though the deployment happens it'll mark it as failed
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          // funcs in vars/ shared library
+          trivy('fs . ')
+          trivy("image --no-progress --timeout 20m --exit-code 1 $DOCKER_IMAGE:$DOCKER_TAG")
+          // iterates a given list list of docker images and calls trivy('image...') for each one
+          trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+          //trivyScanDockerImages(env.DOCKER_IMAGES_TAGS.split(',') as List)
+        }
       }
     }
 
@@ -888,9 +895,14 @@ pipeline {
     stage('Grype') {
       steps {
         milestone(ordinal: null, label: "Milestone: Grype")
-        grype("$DOCKER_IMAGE:$DOCKER_TAG")  // func in vars/ shared library
-        // for locally built packages
-        grype("dir:.")
+        // need to set buildResult to 'SUCCESS' to prevent it setting it to 'FAILURE' - otherwise the pipeline will continue but even though the deployment happens it'll mark it as failed
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          // func in vars/ shared library
+          grype("dir:.") // for locally built packages
+          grype("$DOCKER_IMAGE:$DOCKER_TAG")
+          //grype(["docker_image1:tag1", "docker_image2:tag2"])
+          //grype(env.DOCKER_IMAGES_TAGS.split(',') as List)
+        }
       }
     }
 
