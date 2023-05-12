@@ -32,14 +32,19 @@
 //
 
 def call(String executable) {
-  String separator = File.pathSeparator
+  // not allowed in Groovy sandbox
+  //String separator = File.pathSeparator
+  String separator = FileSystems.default.getSeparator()
 
   for (dir in env.PATH.split(separators)) {
-      def file = new File(dir, executable)
-      if (file.canExecute()) {
-          return file.absolutePath
-      }
+    // not allowed in Groovy sandbox
+    //def file = new File(dir, executable)
+    //if (file.canExecute()) {
+    //  return file.absolutePath
+    def file = FileSystems.default.getPath(dir, executable)
+    if (file.isExecutable()) {
+      return file.toAbsolutePath().toString()
+    }
   }
-
   return ''
 }
