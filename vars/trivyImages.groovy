@@ -46,7 +46,7 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (imageList=[], fail=true, timeoutMinutes=10) {
+def call (imageList=[], fail=true, timeoutMinutes=30) {
   label 'Trivy'
   if (imageList) {
     images = imageList
