@@ -54,13 +54,12 @@ def call(String executable) {
   withEnv(["EXECUTABLE=$executable"]){
     def path = sh(
       label: "Which $EXECUTABLE",
-      echo: false,
       //returnStatus: true, // overrides returnStdout
       returnStdout: true,
       // try all 3 because some agents containers might not have the which binary installed or bash for the type -P command
       script: """
         which $EXECUTABLE ||
-        type -P $EXECUTABLE ||
+        type -P $EXECUTABLE 2>/dev/null ||
         command -v $EXECUTABLE || :
       """
     )
