@@ -21,15 +21,25 @@
 
 // Usage:
 //
-//    // if you're running on a Jenkins agent that already has the trivy binary bundled just call it otherwise download trivy first
-//    // Downloading Trivy only takes 7 seconds in testing
-//    downloadTrivy()
-//    trivy('whatever CLI args you want to pass to trivy')
+//  If you're running on a Jenkins agent that already has the trivy binary bundled just call it otherwise download trivy first
+//  Downloading Trivy only takes 7 seconds in testing
 //
-//    // if you've set up a Trivy container in your Jenkins agent pod like: https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
-//    container('trivy') {
-//      trivy('whatever CLI args you want to pass to trivy')
-//    }
+//      downloadTrivy()
+//
+//      trivy('...')
+//
+//
+//  If you've set up a Trivy container in your Jenkins agent pod like: https://github.com/HariSekhon/Kubernetes-configs/blob/master/jenkins/base/jenkins-agent-pod.yaml
+//
+//      container('trivy') {
+//        trivy('...')
+//      }
+//
+//  If you want to make it informational but not break the build:
+//
+//      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+//        trivy('...')
+//      }
 //
 // Requires:
 //
