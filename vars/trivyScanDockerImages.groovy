@@ -25,13 +25,16 @@
 //
 // Usage:
 //
-//      trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+//      trivyScanDockerImages("docker_image1:tag")  // pass a string for a single image
 //
-//  You may want to wrap this in a catchError to show the stage failed but continue to the Deployment as its quite common for there to be some alerts for this and you don't want it blocking people
+//      trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])  // pass a list for 2 or more images
 //
-//      catchError(stageResult: 'FAILURE') {
+//
+//  Wrap in a 'catchError' to leave it as informational but not break the build - as it's very common for there to be some CVEs etc and you don't usually want it blocking people
+//
+//      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //        trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
-//        // or
+//              // or
 //        trivyScanDockerImages(env.DOCKER_IMAGES.split(',') as List)
 //      }
 //
