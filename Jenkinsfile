@@ -512,7 +512,8 @@ pipeline {
         '''
 
         // DRY for gcpCloudBuild() and gitKustomize() - see further down
-        // done here because you cannot run straight Groovy in the environment{} section and env also can't take list constructs which get syntactically checked, you'd have to write in multiline """ string which requires both global and ${it.trim()}
+        // done here because you cannot run straight Groovy in the environment{} section and env also can't take list constructs which get syntactically checked,
+        // you'd have to write in multiline """ string which requires both global and ${it.trim()}
         echo "Generating DOCKER_IMAGES list"
         script {
           env.DOCKER_IMAGES = [
@@ -521,6 +522,9 @@ pipeline {
             "$APP-cache",
             "$APP-sql-proxy",
           ].collect{"$GCR_REGISTRY/$GCR_PROJECT/$it"}.join(',')
+
+          // useful to sending to grype() and trivyScanDockerImages() - see Container Scanning section further down
+          env.DOCKER_IMAGES_TAGS = env.DOCKER_IMAGES.split(',').collect{"$it:$VERSION"}.join(',')
         }
         printEnv()
       }
