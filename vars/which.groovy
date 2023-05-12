@@ -60,9 +60,9 @@ def call(String executable) {
       // not only is type -P not available, but it outputs this in the output annoyingly so use without -P even though it might accidentally catch non-binaries
       // type -P $EXECUTABLE 2>/dev/null ||
       script: """
-        which $EXECUTABLE ||
+        which $EXECUTABLE 2>/dev/null ||
         type $EXECUTABLE 2>/dev/null ||
-        command -v $EXECUTABLE || :
+        command -v $EXECUTABLE 2>/dev/null || :
       """
     )
     return path
