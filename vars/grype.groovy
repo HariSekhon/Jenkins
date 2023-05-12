@@ -47,7 +47,7 @@
 //      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 //        grype(["docker_image1:tag1", "docker_image2:tag2"])
 //              // or
-//        grype(env.DOCKER_IMAGES.split(',') as List)
+//        grype(env.DOCKER_IMAGES_TAGS.split(',') as List)
 //      }
 //
 
