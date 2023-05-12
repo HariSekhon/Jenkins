@@ -14,12 +14,12 @@
 //
 
 // ========================================================================== //
-//                T r i v y   S c a n   D o c k e r   I m a g e s
+//                  T r i v y   S c a n   L o c a l   F i l e s
 // ========================================================================== //
 
 // Security scanner
 
-// Pass list of Docker image:tag targets (will attempt to infer from environment DOCKER_IMAGE and DOCKER_TAG otherwise)
+// Pass a starting directory to scan everything underneath it - defaults to '.' for $PWD which in CI/CD is your repo checkout
 
 // For requirements see adjacent trivy.groovy
 //
