@@ -32,19 +32,27 @@
 //
 
 def call(String executable) {
-  // not allowed in Groovy sandbox
+  // not allowed in Groovy sandbox:
+  // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use staticField java.io.File pathSeparator
   //String separator = File.pathSeparator
-  String separator = FileSystems.default.getSeparator()
+  // groovy.lang.MissingPropertyException: No such property: FileSystems for class: groovy.lang.Binding
+  //String separator = FileSystems.default.getSeparator()
 
-  for (dir in env.PATH.split(separators)) {
+  // both methods blocked, let's try this another way...
+  //for (dir in env.PATH.split('/')) {
     // not allowed in Groovy sandbox
     //def file = new File(dir, executable)
     //if (file.canExecute()) {
     //  return file.absolutePath
-    def file = FileSystems.default.getPath(dir, executable)
-    if (file.isExecutable()) {
-      return file.toAbsolutePath().toString()
-    }
-  }
-  return ''
+    //
+    //def file = FileSystems.default.getPath(dir, executable)
+    //if (file.isExecutable()) {
+    //  return file.toAbsolutePath().toString()
+    //}
+  //}
+  //return ''
+	script {
+		def path = sh(returnStatus: true, script: "which $executable", returnStdout: true)
+		return path
+	}
 }
