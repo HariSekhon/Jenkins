@@ -38,13 +38,15 @@
 //        trivyImages(env.DOCKER_IMAGES_TAGS.split(',') as List)
 //      }
 //
-// XXX: set environment variable TRIVY_SERVER=trivy.trivy.svc.cluster.local to speed up the scan using the Trivy server deployment from here
-//      to not waste 15 minutes downloading the vulnerabilities DB in every ephemeral Jenkins agent on Kubernetes
+// XXX: set environment variable TRIVY_SERVER to use a Trivy server to not waste 15 minutes downloading the vulnerabilities DB on every Jenkins agent,
+//      especially important if you're using auto-spawning agents on Kubernetes. On Kubernetes this should be set in Jenkins set this globally at $JENKINS_URL/configure to:
+//
+//        TRIVY_SERVER=trivy.trivy.svc.cluster.local:4954
 //
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (imageList=[], fail=true, timeoutMinutes=30) {
+def call (imageList=[], fail=true, timeoutMinutes=10) {
   label 'Trivy'
   if (imageList) {
     images = imageList
