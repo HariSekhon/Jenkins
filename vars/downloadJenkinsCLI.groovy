@@ -30,14 +30,14 @@ def call () {
       installBinary(url: "$JENKINS_URL/jnlpJars/jenkins-cli.jar")
       sh (
         label: "Jenkins CLI Version",
-        // clear JENKINS_USER_ID and JENKINS_API_TOKEN to avoid this error:
+        // clear JENKINS_URL and JENKINS_USER_ID to avoid this error:
         //  "The JENKINS_USER_ID and JENKINS_API_TOKEN env vars should be both set or left empty."
-        script: """
+        script: '''
           set -eu
-          export JENKINS_USER_ID=""
-          export JENKINS_API_TOKEN=""
-          java -jar ~/bin/jenkins-cli.jar -s "$JENKINS_URL" -webSocket version
-        """
+          #unset JENKINS_URL JENKINS_SERVER_COOKIE JENKINS_USER_ID JENKINS_NODE_COOKIE
+          unset $(env | grep '^JENKINS_' | sed 's/=.*//')
+          java -jar ~/bin/jenkins-cli.jar version || :
+        '''
       )
     }
   }
