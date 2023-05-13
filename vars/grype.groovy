@@ -45,7 +45,7 @@
 //      }
 //
 
-def call (targetList=[], fail=true, timeoutMinutes=30) {
+def call (targetList=[], failOn='high', timeoutMinutes=30) {
   label 'Grype'
   if (targetList) {
     targets = targetList
@@ -75,19 +75,12 @@ def call (targetList=[], fail=true, timeoutMinutes=30) {
       ansiColor('xterm') {
         for (target in targets) {
           withEnv (["TARGET=$target"]) {
-            echo "Grype scanning target '$TARGET' - informational only to see all issues"
+            echo "Grype scanning target '$TARGET'"
             sh (
               label: "Grype",
-              script: "grype '$TARGET' --scope all-layers"
+              // still shows medium when --fail-on high
+              script: "grype '$TARGET' --scope all-layers --fail-on '$failOn'"
             )
-
-            if (fail) {
-              echo "Grype scanning target '$TARGET' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-              sh (
-                label: "Grype",
-                script: "grype '$TARGET' --fail-on high --scope all-layers"
-              )
-            }
           }
         }
       }
