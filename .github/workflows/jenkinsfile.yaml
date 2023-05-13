@@ -29,10 +29,11 @@ on:
       - Jenkinsfile
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   jenkinsfile:
     if: github.event.repository.fork == false
     name: Jenkinsfile
     uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
-    permissions:
-      contents: read
