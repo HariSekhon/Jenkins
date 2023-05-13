@@ -74,12 +74,12 @@ def call (targetList=[], failOn='high', timeoutMinutes=30) {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         for (target in targets) {
-          withEnv (["TARGET=$target"]) {
+          withEnv (["TARGET=$target","FAIL_ON=$failOn"]) {
             echo "Grype scanning target '$TARGET'"
             sh (
               label: "Grype",
               // still shows medium when --fail-on high
-              script: "grype '$TARGET' --scope all-layers --fail-on '$failOn'"
+              script: "grype '$TARGET' --scope all-layers --fail-on '$FAIL_ON'"
             )
           }
         }
