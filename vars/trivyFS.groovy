@@ -44,16 +44,16 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (dir='.', fail=true, timeoutMinutes=10) {
+def call (dir='.', severity='HIGH,CRITICAL', timeoutMinutes=10) {
   label 'Trivy'
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
-    withEnv (["DIR=$dir"]) {
+    withEnv (["DIR=$dir", "SEVERITY=$severity"]) {
+      // Trivy won't show anything below --severity so need to run one without severity to get the full information
       echo "Trivy scanning dir '$DIR' - informational only to see all issues"
-      trivy("fs '$DIR' --no-progress --timeout ${timeoutMinutes}m")
-      if (fail) {
-        echo "Trivy scanning dir '$DIR' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-        trivy("fs '$DIR' --no-progress --timeout ${timeoutMinutes}m --exit-code 1 --severity HIGH,CRITICAL")
-      }
+      trivy("fs '$DIR' --no-progress --timeout '${timeoutMinutes}m'")
+
+      echo "Trivy scanning dir '$DIR' for severity '$SEVERITY' vulnerabilities only - will fail if any are detected"
+      trivy("fs '$DIR' --no-progress --timeout '${timeoutMinutes}m' --exit-code 1 --severity '$SEVERITY'")
     }
   }
 }
