@@ -49,7 +49,7 @@ def call (version='latest') {
           label: "$label, version '$VERSION'",
           script: """
             set -eux
-            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
+            curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin '$VERSION'
           """
         )
         sh (
@@ -58,6 +58,12 @@ def call (version='latest') {
             set -eu
             trivy version
           '''
+        )
+        label = "Download Trivy HTML Report Template"
+        echo "$label"
+        sh (
+          label: "$label",
+          script: "curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > trivy-html.tpl"
         )
       }
     }
