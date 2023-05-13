@@ -31,10 +31,11 @@ on:
       - vars/*.groovy
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   groovyc:
     if: github.event.repository.fork == false
     name: Groovy Shared Library
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
-    permissions:
-      contents: read
