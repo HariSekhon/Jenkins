@@ -46,7 +46,7 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (imageList=[], fail=true, timeoutMinutes=30) {
+def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
   label 'Trivy'
   if (imageList) {
     images = imageList
@@ -72,13 +72,13 @@ def call (imageList=[], fail=true, timeoutMinutes=30) {
   }
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
     for (image in images) {
-      withEnv (["IMAGE=$image"]) {
+      withEnv (["IMAGE=$image", "SEVERITY=$severity"]) {
+        // Trivy won't show anything below --severity so need to run one without severity to get the full information
         echo "Trivy scanning image '$IMAGE' - informational only to see all issues"
-        trivy("image --no-progress --timeout ${timeoutMinutes}m $IMAGE")
-        if (fail) {
-          echo "Trivy scanning image '$IMAGE' for HIGH/CRITICAL vulnerabilities - will fail if any are detected"
-          trivy("image --no-progress --timeout ${timeoutMinutes}m --exit-code 1 --severity HIGH,CRITICAL $IMAGE")
-        }
+        trivy("image --no-progress --timeout '${timeoutMinutes}m' '$IMAGE'")
+
+        echo "Trivy scanning image '$IMAGE' for severity '$SEVERITY' vulnerabilities only - will fail if any are detected"
+        trivy("image --no-progress --timeout '${timeoutMinutes}m' --exit-code 1 --severity '$SEVERITY' '$IMAGE'")
       }
     }
   }
