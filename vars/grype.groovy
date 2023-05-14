@@ -59,15 +59,7 @@ def call (targetList=[], failOn='high', timeoutMinutes=30) {
       error "non-list passed as first arg to grype() function"
     }
   } else {
-    if (env.DOCKER_IMAGE) {
-      String tag = 'latest'
-      if (env.DOCKER_TAG) {
-        tag = env.DOCKER_TAG
-      }
-      targets = ["$DOCKER_IMAGE:$tag"]
-    } else {
-      error "No targets passed to grype() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
-    }
+    List targets = dockerInferImageTagList()
   }
   // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
   //container('grype') {
