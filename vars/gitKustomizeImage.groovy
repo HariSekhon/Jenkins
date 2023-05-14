@@ -60,11 +60,19 @@ def call (Map args = [
   //assert args.repo instanceof String
   args.branch  = args.branch ?: 'main'
   args.dir = args.dir ?: '.'
-  args.dockerImages = args.dockerImages ?: []
+  args.dockerImages = args.dockerImages ?: dockerInferImageList()
   args.repo = args.repo ?: ''
   args.timeoutMinutes = args.timeout ?: 5
   args.version = args.version ?: "$GIT_COMMIT"
-  assert args.repo != ''
+
+  if (args.repo == '') {
+    error "blank repo arg passed gitKustomizeImage()"
+  }
+
+  if (args.dockerImages instanceof List == false) {
+    error "non-list passed as dockerImages arg of gitKustomizeImage()"
+  }
+
   // Lock should be on the Owner/Repo format, not including the protocol prefix because some pipelines may use git@github.com while others use https://github.com
   //
   // git@github.com:HariSekhon/Kubernetes -> HariSekhon/Kubernetes
@@ -78,7 +86,7 @@ def call (Map args = [
   //
   // normalize to lowercase so different users don't bypass the lock via capitalization. Branch and Dir are case sensitive, so those would fail naturally and don't need normalizing
   ownerRepo = ownerRepo.toLowerCase()
-  //
+
   String label = "Git Kustomize Image Version - Repo: '$ownerRepo', Branch: '$args.branch', Dir: '$args.dir'"
   echo "Acquiring gitKustomizeImage Lock: $label"
   lock (resource: label, inversePrecedence: true) {
