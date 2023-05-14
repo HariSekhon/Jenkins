@@ -54,11 +54,11 @@ def call (Map args = [:]){
   //assert args.repo instanceof String
 
   args.dockerImages = args.dockerImages ?: dockerInferImageList()
-  args.repo = args.repo ?: env.GITOPS_REPO ?: error("no repo arg passed gitKustomizeImage() and \$GITOPS_REPO environment variable not found")
+  args.repo = args.repo ?: env.GITOPS_REPO ?: error("no repo arg passed to gitKustomizeImage() and \$GITOPS_REPO environment variable is not set")
   args.branch  = args.branch ?: env.GITOPS_BRANCH ?: 'main'
   args.dir = args.dir ?: env.K8S_DIR ?: '.'
   args.timeoutMinutes = args.timeout ?: 5
-  args.version = args.version ?: env.GIT_COMMIT_SHORT ?: env.GIT_COMMIT ?: error("no version arg passed gitKustomizeImage() and \$GIT_COMMIT environment variable not found")
+  args.version = args.version ?: env.GIT_COMMIT_SHORT ?: env.GIT_COMMIT ?: error("no version arg passed to gitKustomizeImage() and \$GIT_COMMIT environment variable is not set")
 
   if (args.dockerImages instanceof List == false) {
     error "non-list passed as dockerImages arg of gitKustomizeImage()"
