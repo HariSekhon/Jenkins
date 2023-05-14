@@ -15,15 +15,18 @@
 //
 
 // ========================================================================== //
-//                    Jenkins Groovy Shared Library Function
+//            D o c k e r   A d d   T a g   I f   N o t   E x i s t s
 // ========================================================================== //
 
-def call(image, tag) {
+// checks a given docker container image for a tag suffix and adds it if not given
+
+def call(image, tag='') {
   if (!image) {
     error "no docker image passed as first arg to dockerAddTagIfNotExists() function"
   }
   if (!tag) {
-    error "no docker tag passed as second arg to dockerAddTagIfNotExists() function"
+    //error "no docker tag passed as second arg to dockerAddTagIfNotExists() function"
+    tag = inferDockerTag()
   }
   if (!image.contains(':')) {
     image += ":$tag"
