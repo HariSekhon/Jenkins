@@ -26,9 +26,15 @@
 //
 // Requires GCloud SDK CLI to be installed and authenticated
 
-def call (List<String> dockerImageRegistryPaths) {
+def call (List<String> dockerImageRegistryPaths=[]) {
   if ( ! env.GIT_COMMIT_SHORT ) {
     gitCommitShort()
+  }
+  if (!dockerImageRegistryPaths) {
+    dockerImageRegistryPaths = dockerInferImageList()
+  }
+  if (dockerImageRegistryPaths instanceof List == false) {
+    error "non-list passed as arg to gcrTagGitCommitShort()"
   }
   for (String dockerImageRegistryPath in dockerImageRegistryPaths) {
     if (gcrDockerImageExists(dockerImageRegistryPath, env.GIT_COMMIT_SHORT)) {
