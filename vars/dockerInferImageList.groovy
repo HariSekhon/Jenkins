@@ -26,7 +26,7 @@ def call() {
     return env.DOCKER_IMAGES.split(',')
   }
   if (env.DOCKER_IMAGES_TAGS) {
-    for (docker_image in env.DOCKER_IMAGES_TAGS) {
+    for (docker_image in env.DOCKER_IMAGES_TAGS.split(',')) {
       images.add(docker.image.split(':')[0])
     }
   } else {
