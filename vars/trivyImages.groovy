@@ -60,15 +60,7 @@ def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
       error "non-list passed as first arg to trivyImages() function"
     }
   } else {
-    if (env.DOCKER_IMAGE) {
-      String tag = 'latest'
-      if (env.DOCKER_TAG) {
-        tag = env.DOCKER_TAG
-      }
-      images = ["$DOCKER_IMAGE:$tag"]
-    } else {
-      error "No docker images passed to trivyImages() function and no \$DOCKER_IMAGE / \$DOCKER_TAG environment variable found"
-    }
+    List targets = dockerInferImageTagList()
   }
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
     for (image in images) {
