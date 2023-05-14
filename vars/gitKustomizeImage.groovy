@@ -38,6 +38,7 @@
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
 def call (Map args = []){
+
   // these get blocked in Jenkins Groovy Sandbox
   //if (!args.dockerImages) {
   //  throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
@@ -51,10 +52,11 @@ def call (Map args = []){
   //assert args.dockerImages instanceof Collection
   //assert args.dir instanceof String
   //assert args.repo instanceof String
-  args.branch  = args.branch ?: env.GITOPS_BRANCH ?: 'main'
-  args.dir = args.dir ?: env.K8S_DIR ?: '.'
+
   args.dockerImages = args.dockerImages ?: dockerInferImageList()
   args.repo = args.repo ?: env.GITOPS_REPO ?: error("no repo arg passed gitKustomizeImage() and \$GITOPS_REPO environment variable not found")
+  args.branch  = args.branch ?: env.GITOPS_BRANCH ?: 'main'
+  args.dir = args.dir ?: env.K8S_DIR ?: '.'
   args.timeoutMinutes = args.timeout ?: 5
   args.version = args.version ?: env.GIT_COMMIT_SHORT ?: env.GIT_COMMIT ?: error("no version arg passed gitKustomizeImage() and \$GIT_COMMIT environment variable not found")
 
