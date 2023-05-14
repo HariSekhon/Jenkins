@@ -21,10 +21,10 @@
 // Infers a Docker Image Tag from possible environment variables and returns it as a String
 
 def call(tag='') {
-  return tag ||
-         env.DOCKER_TAG ||
-         env.CONTAINER_TAG ||
-         env.VERSION ||
-         env.GIT_COMMIT ||
+  return tag ?:
+         env.DOCKER_TAG ?:
+         env.CONTAINER_TAG ?:
+         env.VERSION ?:
+         env.GIT_COMMIT ?:
          'latest'
 }
