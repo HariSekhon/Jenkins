@@ -28,4 +28,5 @@ def call(image, tag) {
   if (!image.contains(':')) {
     image += ":$tag"
   }
+  return image
 }
