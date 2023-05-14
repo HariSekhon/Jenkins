@@ -37,14 +37,7 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call (Map args = [
-                      dockerImages: [],
-                      repo: '',
-                      dir: '',
-                      version: "$GIT_COMMIT",
-                      branch: 'main',
-                      timeoutMinutes: 5
-                     ]) {
+def call (Map args = []){
   // these get blocked in Jenkins Groovy Sandbox
   //if (!args.dockerImages) {
   //  throw new IllegalArgumentException("dockerImages not provided to gitKustomizeImage() function")
