@@ -26,7 +26,7 @@ def call(image, tag='') {
   }
   if (!tag) {
     //error "no docker tag passed as second arg to dockerAddTagIfNotExists() function"
-    tag = inferDockerTag()
+    tag = dockerInferTag()
   }
   if (!image.contains(':')) {
     image += ":$tag"
