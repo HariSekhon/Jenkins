@@ -15,7 +15,7 @@
 //
 
 // ========================================================================== //
-//                        I n f e r   D o c k e r   T a g
+//                        D o c k e r   I n f e r   T a g
 // ========================================================================== //
 
 // Infers a Docker Image Tag from possible environment variables and returns it as a String
