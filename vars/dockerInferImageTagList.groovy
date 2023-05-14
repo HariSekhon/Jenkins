@@ -22,7 +22,7 @@
 
 def call() {
   List images = []
-  String tag = inferDockerTag()
+  String tag = dockerInferTag()
   if (env.DOCKER_IMAGES_TAGS) {
     for (docker_image in env.DOCKER_IMAGES_TAGS.split(',')) {
       images.add(dockerAddTagIfNotExists(docker_image, tag))
