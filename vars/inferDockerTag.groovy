@@ -23,7 +23,6 @@ def call(tag='') {
          env.DOCKER_TAG ||
          env.CONTAINER_TAG ||
          env.VERSION ||
-         env.RELEASE ||
          env.GIT_COMMIT ||
          'latest'
 }
