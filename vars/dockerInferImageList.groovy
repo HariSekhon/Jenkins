@@ -18,23 +18,22 @@
 //                 D o c k e r   I n f e r   I m a g e   L i s t
 // ========================================================================== //
 
-// Constructs and returns a List of docker images
+// Constructs and returns a List of docker images without tags by inferring from environment variables
 
 def call() {
   List images = []
   if (env.DOCKER_IMAGES) {
-    return env.DOCKER_IMAGES.split(',')
-  }
-  if (env.DOCKER_IMAGES_TAGS) {
+    images = env.DOCKER_IMAGES.split(',')
+  } else if (env.DOCKER_IMAGES_TAGS) {
     for (docker_image in env.DOCKER_IMAGES_TAGS.split(',')) {
       images.add(docker.image.split(':')[0])
     }
+  } else if (env.DOCKER_IMAGE) {
+    images.add(env.DOCKER_IMAGE)
+  } else if (env.DOCKER_IMAGE_TAG) {
+      images.add(env.DOCKER_IMAGE.split(':'[0]))
   } else {
-    if (env.DOCKER_IMAGE) {
-      images.add(env.DOCKER_IMAGE)
-    } else {
-      error "Failed to infer docker images for list. None of the following environment variables were found: \$DOCKER_IMAGES, \$DOCKER_IMAGES_TAGS, \$DOCKER_IMAGE"
-    }
+    error "Failed to infer docker images for list. None of the following environment variables were found: \$DOCKER_IMAGES, \$DOCKER_IMAGES_TAGS, \$DOCKER_IMAGE, \$DOCKER_IMAGE_TAG"
   }
   return images
 }
