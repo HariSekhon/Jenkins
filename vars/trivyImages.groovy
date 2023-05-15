@@ -50,16 +50,7 @@ def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
   label 'Trivy'
   List images = []
   if (imageList) {
-    images = imageList
-    if (imageList instanceof String ||
-        imageList instanceof org.codehaus.groovy.runtime.GStringImpl) {
-      images = [imageList]
-    }
-    //  ! targetList instanceof List   does not work and
-    //    targetList !instanceof List  is only available in Groovy 3
-    if (images instanceof List == false) {
-      error "non-list passed as first arg to trivyImages() function"
-    }
+    images = stringToList(imageList)
   } else {
     images = dockerInferImageTagList()
   }
