@@ -45,7 +45,7 @@
 //      }
 //
 
-def call (targetList=[], failOn='high', timeoutMinutes=30) {
+def call (targetList, failOn='high', timeoutMinutes=30) {
   label 'Grype'
   List targets = []
   if (targetList) {
