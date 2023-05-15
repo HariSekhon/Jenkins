@@ -45,11 +45,15 @@
 //      }
 //
 
-def call (targetList, failOn='high', timeoutMinutes=30) {
+// If wanting to call without args, must specify a default type otherwise will hit this error:
+//
+//    org.codehaus.groovy.runtime.metaclass.MethodSelectionException: Could not find which method call() to invoke from this list:
+//
+def call (targetList=[], failOn='high', timeoutMinutes=30) {
   label 'Grype'
   List targets = []
   if (targetList) {
-    targets = stringToList(targetList)
+    targets = targetList
   } else {
     targets = dockerInferImageTagList()
   }
