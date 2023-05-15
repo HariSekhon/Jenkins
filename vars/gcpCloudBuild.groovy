@@ -48,7 +48,9 @@ def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) 
       script {
         boolean dockerImagesExist = false
         if ( args.skipIfDockerImagesExist != [] ) {
-          assert args.skipIfDockerImagesExist instanceof List
+          List dockerImageTags = []
+          // if we're passed a string just convert it to a list for convenience
+          dockerImageTags = stringToList(args.skipIfDockerImagesExist)
           String labelCheckingImages = 'Checking if Docker images exist in GCR'
           //echo "$labelCheckingImages"
           dockerImagesExist =
@@ -62,7 +64,7 @@ def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) 
 
                 gcloud auth list
 
-                for docker_image_tag in ${ args.skipIfDockerImagesExist.join(" ") }; do
+                for docker_image_tag in ${ dockerImageTags.join(" ") }; do
                   if [[ "\$docker_image_tag" =~ : ]]; then
                     docker_image="\${docker_image_tag%%:*}"
                     docker_tag="\${docker_image_tag##*:}"
