@@ -46,11 +46,15 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (imageList, severity='HIGH,CRITICAL', timeoutMinutes=30) {
+// If wanting to call without args, must specify a default type otherwise will hit this error:
+//
+//    org.codehaus.groovy.runtime.metaclass.MethodSelectionException: Could not find which method call() to invoke from this list:
+//
+def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
   label 'Trivy'
   List images = []
   if (imageList) {
-    images = stringToList(imageList)
+    images = imageList
   } else {
     images = dockerInferImageTagList()
   }
