@@ -41,7 +41,7 @@ def call (dir='.', failOn='high', timeoutMinutes=10) {
   label 'Grype'
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
     withEnv (["DIR=$dir"]) {
-      grype("dir:$DIR", failOn, timeoutMinutes)
+      grype(["dir:$DIR"], failOn, timeoutMinutes)
     }
   }
 }
