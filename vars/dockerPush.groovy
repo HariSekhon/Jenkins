@@ -31,7 +31,7 @@ def call(List imageList=[], timeoutMinutes=30) {
       withEnv (["IMAGE=$image"]) {
         echo "Docker Push '$IMAGE'"
         sh(
-          label: label,
+          label: 'Docker Push',
           script: "docker push '$IMAGE'"
         )
       }
