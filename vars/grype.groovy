@@ -47,19 +47,20 @@
 
 def call (targetList=[], failOn='high', timeoutMinutes=30) {
   label 'Grype'
+  List targets = []
   if (targetList) {
-    targets = targetList
     if (targetList instanceof String ||
         targetList instanceof org.codehaus.groovy.runtime.GStringImpl) {
       targets = [targetList]
-    }
-    //  ! targetList instanceof List   does not work and
-    //    targetList !instanceof List  is only available in Groovy 3
-    if (targets instanceof List == false) {
+      //  ! targetList instanceof List   does not work and
+      //    targetList !instanceof List  is only available in Groovy 3
+    } else if (targets instanceof List == false) {
       error "non-list passed as first arg to grype() function"
+    } else {
+      targets = targetList
     }
   } else {
-    List targets = dockerInferImageTagList()
+    targets = dockerInferImageTagList()
   }
   // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
   //container('grype') {
@@ -71,7 +72,7 @@ def call (targetList=[], failOn='high', timeoutMinutes=30) {
             sh (
               label: "Grype",
               // still shows medium when --fail-on high
-              script: "grype '$TARGET' --scope all-layers --fail-on '$FAIL_ON'"
+              script: "grype '$TARGET' --verbose --scope all-layers --fail-on '$FAIL_ON'"
             )
           }
         }
