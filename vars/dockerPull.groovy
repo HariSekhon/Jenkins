@@ -30,7 +30,10 @@ def call(List imageList=[], timeoutMinutes=30) {
     for (image in images) {
       withEnv (["IMAGE=$image"]) {
         echo "Docker Pull '$IMAGE'"
-        trivy("docker pull '$IMAGE'")
+        sh(
+          label: label,
+          script: "docker pull '$IMAGE'"
+        )
       }
     }
   }
