@@ -22,7 +22,7 @@ def call(List imageList=[], timeoutMinutes=30) {
   label 'Docker Push'
   List images = []
   if (imageList) {
-    images = stringToList(imageList)
+    images = imageList
   } else {
     images = dockerInferImageTagList()
   }
