@@ -48,6 +48,7 @@
 
 def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
   label 'Trivy'
+  List images = []
   if (imageList) {
     images = imageList
     if (imageList instanceof String ||
@@ -60,7 +61,7 @@ def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
       error "non-list passed as first arg to trivyImages() function"
     }
   } else {
-    List targets = dockerInferImageTagList()
+    images = dockerInferImageTagList()
   }
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
     for (image in images) {
