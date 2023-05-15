@@ -38,5 +38,5 @@ def call(arg) {
   } else {
     error "no arg passed to stringToList() function"
   }
-  return arg
+  return list
 }
