@@ -47,7 +47,7 @@ def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) 
     timeout (time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
         boolean dockerImagesExist = false
-        if ( args.skipIfDockerImagesExist != [] ) {
+        if (args.skipIfDockerImagesExist) {
           List dockerImageTags = []
           // if we're passed a string just convert it to a list for convenience
           dockerImageTags = stringToList(args.skipIfDockerImagesExist)
