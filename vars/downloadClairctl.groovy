@@ -17,28 +17,36 @@
 //                       D o w n l o a d   C l a i r c t l
 // ========================================================================== //
 
-// Downloading Clairctl only takes 11 seconds in testing
+// Downloading Clairctl only takes 4 seconds in testing
 
-def call () {
+def call (version='4.6.1') {
   String label = "Download Clairctl on agent '$HOSTNAME'"
+  // strip a 'v' prefix if present because we add it to the URL ourselves
+  if (version[0] == 'v') {
+    version = version.substring(1)
+  }
   echo "Acquiring Lock: $label"
   lock (resource: "$label") {
     timeout (time: 2, unit: 'MINUTES') {
-      echo "$label"
-      sh (
-        label: label,
-        script: '''
-          set -eux
-          curl -L https://raw.githubusercontent.com/jgsqware/clairctl/master/install.sh | sh
-        '''
-      )
-      sh (
-        label: "Clairctl Version",
-        script: '''
-          set -eu
-          clairctl version
-        '''
-      )
+      withEnv(["VERSION=$version"]) {
+        echo "$label"
+        sh (
+          label: label,
+          script: '''
+            set -eux
+            curl -sSL -o /tmp/clairctl.$$ "https://github.com/quay/clair/releases/download/v$VERSION/clairctl-linux-amd64"
+            chmod +x /tmp/clairctl.$$
+            mv -vf /tmp/clairctl.$$ /usr/local/bin/clairctl
+          '''
+        )
+        sh (
+          label: "Clairctl Version",
+          script: '''
+            set -eu
+            clairctl --version
+          '''
+        )
+      }
     }
   }
 }
