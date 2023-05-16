@@ -45,20 +45,15 @@
 //      }
 //
 
+// If wanting to call without args, must specify a default type otherwise will hit this error:
+//
+//    org.codehaus.groovy.runtime.metaclass.MethodSelectionException: Could not find which method call() to invoke from this list:
+//
 def call (targetList=[], failOn='high', timeoutMinutes=30) {
   label 'Grype'
   List targets = []
   if (targetList) {
-    if (targetList instanceof String ||
-        targetList instanceof org.codehaus.groovy.runtime.GStringImpl) {
-      targets = [targetList]
-      //  ! targetList instanceof List   does not work and
-      //    targetList !instanceof List  is only available in Groovy 3
-    } else if (targets instanceof List == false) {
-      error "non-list passed as first arg to grype() function"
-    } else {
-      targets = targetList
-    }
+    targets = targetList
   } else {
     targets = dockerInferImageTagList()
   }

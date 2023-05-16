@@ -46,20 +46,15 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
+// If wanting to call without args, must specify a default type otherwise will hit this error:
+//
+//    org.codehaus.groovy.runtime.metaclass.MethodSelectionException: Could not find which method call() to invoke from this list:
+//
 def call (imageList=[], severity='HIGH,CRITICAL', timeoutMinutes=30) {
   label 'Trivy'
   List images = []
   if (imageList) {
     images = imageList
-    if (imageList instanceof String ||
-        imageList instanceof org.codehaus.groovy.runtime.GStringImpl) {
-      images = [imageList]
-    }
-    //  ! targetList instanceof List   does not work and
-    //    targetList !instanceof List  is only available in Groovy 3
-    if (images instanceof List == false) {
-      error "non-list passed as first arg to trivyImages() function"
-    }
   } else {
     images = dockerInferImageTagList()
   }
