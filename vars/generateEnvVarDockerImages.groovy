@@ -15,16 +15,11 @@
 //
 
 // ========================================================================== //
-// Generate DOCKER_IMAGES environment variable with full GCR registry prefixes
+//     Generate DOCKER_IMAGES environment variable with registry prefixes
 // ========================================================================== //
 
-def call(images=[]) {
-  if (! env.GCR_REGISTRY) {
-    error('GCR_REGISTRY environment variable not set before calling gcrGenerateEnvVarDockerImages()')
-  }
-  if (! env.GCR_PROJECT) {
-    error('GCR_PROJECT environment variable not set before calling gcrGenerateEnvVarDockerImages()')
-  }
-
-  return generateEnvVarDockerImages(images, "$GCR_REGISTRY/$GCR_PROJECT")
+def call(images=[], registry='') {
+  echo "Generating DOCKER_IMAGES environment variable" + ( registry ? " with registry prefix '$registry'" : '')
+  env.DOCKER_IMAGES = images.collect{ (registry ? "$registry/" : '') + it.trim() }.join(',')
+  return env.DOCKER_IMAGES
 }
