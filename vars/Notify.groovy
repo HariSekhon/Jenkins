@@ -21,10 +21,12 @@
 // Wrapper to call all other notification functions to abstract any changes from the many calling pipelines
 
 def call () {
+  if (env.NO_NOTIFY != 'true') {
     // add all notification methods here:
     //
     // emailNotify()
     // ...
     //
     slackNotify()
+  }
 }
