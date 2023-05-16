@@ -44,7 +44,7 @@
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
 
-def call (dir='.', severity='HIGH,CRITICAL', timeoutMinutes=10) {
+def call (dir='.', severity='HIGH,CRITICAL', timeoutMinutes=20) {
   label 'Trivy'
   timeout (time: timeoutMinutes, unit: 'MINUTES') {
     withEnv (["DIR=$dir", "SEVERITY=$severity"]) {
