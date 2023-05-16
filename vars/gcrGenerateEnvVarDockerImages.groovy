@@ -20,10 +20,10 @@
 
 def call(images=[]) {
   if (! env.GCR_REGISTRY) {
-    error('GCR_REGISTRY environment variable not set before calling gcrGenerateEnvVarDockerImages()")
+    error('GCR_REGISTRY environment variable not set before calling gcrGenerateEnvVarDockerImages()')
   }
   if (! env.GCR_PROJECT) {
-    error('GCR_PROJECT environment variable not set before calling gcrGenerateEnvVarDockerImages()")
+    error('GCR_PROJECT environment variable not set before calling gcrGenerateEnvVarDockerImages()')
   }
 
   return generateEnvVarDockerImages(images, "$GCR_REGISTRY/$GCR_PROJECT")
