@@ -69,7 +69,7 @@ def call (imageList=[], timeoutMinutes=30) {
             echo "Clair scanning container image '$image'"
             sh (
               label: "Clair",
-              script: "clair -D report --host '$CLAIR_URL' '$image'"
+              script: "clairctl -D report --host '$CLAIR_URL' '$image'"
             )
           }
         }
