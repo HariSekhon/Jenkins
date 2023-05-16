@@ -26,6 +26,7 @@ def call(images=[]) {
     error('GCR_PROJECT environment variable not set before calling gcrGenerateEnvVarDockerImages()")
   }
 
+  echo "Generating DOCKER_IMAGES environment variable with GCR prefixes"
   env.DOCKER_IMAGES = images.collect{"$GCR_REGISTRY/$GCR_PROJECT/${it.trim()}"}.join(',')
   return env.DOCKER_IMAGES
 }
