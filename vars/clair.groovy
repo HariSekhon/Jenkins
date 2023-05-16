@@ -59,6 +59,7 @@ def call (imageList=[], timeoutMinutes=30) {
   } else {
     images = dockerInferImageTagList()
   }
+  env.CLAIR_URL ?: 'http://clair.clair.svc.cluster.local:8080'
   // let caller decide if wrapping this in a container('clairctl') or using downloadClairctl.groovy to save RAM
   //container('clairctl') {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
@@ -68,7 +69,7 @@ def call (imageList=[], timeoutMinutes=30) {
             echo "Clair scanning container image '$image'"
             sh (
               label: "Clair",
-              script: "clair -D report --host '${CLAIR_URL:-http://clair.clair.svc.cluster.local:8080}' '$image'"
+              script: "clair -D report --host '$CLAIR_URL' '$image'"
             )
           }
         }
