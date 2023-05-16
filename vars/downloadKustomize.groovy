@@ -50,12 +50,12 @@ def call (version='4.5.7') {
 
             echo "Downloading Kustomize version $VERSION"
 
-            curl -sSL -o /tmp/kustomize.$$.tgz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz
+            curl -sSL -o "/tmp/kustomize.$$.tgz" "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${VERSION}/kustomize_v${VERSION}_linux_amd64.tar.gz"
 
-            tar zxvf /tmp/kustomize.$$.tgz kustomize -O > /tmp/kustomize.$$
-            chmod +x /tmp/kustomize.$$
+            tar zxvf "/tmp/kustomize.$$.tgz" kustomize -O > "/tmp/kustomize.$$"
+            chmod +x "/tmp/kustomize.$$"
 
-            mv -fv /tmp/kustomize.$$ /usr/local/bin/kustomize
+            mv -fv "/tmp/kustomize.$$" /usr/local/bin/kustomize
           '''
         )
         sh (
