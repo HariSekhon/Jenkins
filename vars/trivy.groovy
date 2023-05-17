@@ -63,6 +63,8 @@
 //
 //        https://github.com/HariSekhon/Kubernetes-configs/tree/master/trivy/base
 //
+// XXX: don't forget to set TRIVY_DEBUG=true for better logging
+//
 
 def call (args='') {
   label 'Trivy'
