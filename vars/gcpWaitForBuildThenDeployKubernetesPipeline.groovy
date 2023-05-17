@@ -24,15 +24,15 @@
 // and only after all of those images become available will we proceed to deployment
 
 def call (Map args = [
-                        project,
-                        region,
-                        app,
-                        env,
-                        gcp_serviceaccount_key,
-                        gcr_registry,
-                        images,
-                        k8s_dir='',
-                        timeoutMinutes=60,
+                        project: '',
+                        region: '',
+                        app: '',
+                        env: '',
+                        gcp_serviceaccount_key: '',
+                        gcr_registry: '',
+                        images: [],
+                        k8s_dir: '',
+                        timeoutMinutes: 60,
                       ]
       ) {
 
@@ -79,7 +79,7 @@ def call (Map args = [
           script {
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"
           }
-          gcrGenerateEnvVarDockerImages(images)
+          gcrGenerateEnvVarDockerImages("${args.images}")
           gitCommitShort()
           printEnv()
           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
