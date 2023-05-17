@@ -21,18 +21,17 @@
 //
 //    https://plugins.jenkins.io/grypescanner/
 
-// Must download Grype because the docker image doesn't have any command to keep the container alive as per:
+// Use this if you need more control to download a specific Grype version from GitHub
+//
+//    https://github.com/anchore/grype/releases
+
+// Grype docker image doesn't have any command to keep the container alive as per:
 //
 //    https://github.com/anchore/grype/issues/1287
 //
 // and it also saves RAM and billable cloud scaling to not have that container alive the whole time
 //
 // Downloading Grype only takes 4 seconds in testing
-
-// get release version from:
-//
-//    https://github.com/anchore/grype/releases
-//
 
 def call (version='latest') {
   String label = "Download Grype on agent '$HOSTNAME'"
