@@ -18,6 +18,10 @@
 // ========================================================================== //
 
 // CLI Scanner for SonarQube
+//
+// Takes 2 seconds to download Sonar Scanner
+//
+// Takes 13 seconds to download unzip due to apt package cache updates
 
 def call (version='4.8.0.2856') {
   String label = "Download Sonar Scanner on agent '$HOSTNAME'"
