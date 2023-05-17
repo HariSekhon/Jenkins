@@ -54,7 +54,7 @@ def call (Map args = [
       APP         = "${args.app}"
       ENVIRONMENT = "${args.env}"
 
-      CLOUDSDK_CORE_PROJECT = "${args.project}"
+      CLOUDSDK_CORE_PROJECT   = "${args.project}"
       CLOUDSDK_COMPUTE_REGION = "${args.region}"
 
       GCP_SERVICEACCOUNT_KEY = credentials("${args.gcp_serviceaccount_key}")
@@ -79,7 +79,7 @@ def call (Map args = [
           script {
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"
           }
-          gcrGenerateEnvVarDockerImages("${args.images}")
+          gcrGenerateEnvVarDockerImages(args.images)
           gitCommitShort()
           printEnv()
           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
