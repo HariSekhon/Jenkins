@@ -23,7 +23,7 @@
 //
 // Takes 13 seconds to download unzip due to apt package cache updates
 //
-// XXX: use this instead, it'll have having to re-download Sonar Scanner for each pipeline run:
+// XXX: superceded by the Jenkins SonarQube Scanner plugin
 //
 //      https://plugins.jenkins.io/sonar/
 
