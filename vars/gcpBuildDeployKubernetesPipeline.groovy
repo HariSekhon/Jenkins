@@ -56,7 +56,7 @@ def call (Map args = [
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
                         cloudbuild: '', // GCP Cloudbuild args if needing to customize eg. to pass different or additional environment variables to the build
                         gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
-                        gcr_registry: '', // eg. 'eu.gcr.io' or 'us.gcr.io'
+                        gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
                         images: [],   // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
                         cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
