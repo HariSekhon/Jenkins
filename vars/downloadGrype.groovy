@@ -17,11 +17,11 @@
 //                          D o w n l o a d   G r y p e
 // ========================================================================== //
 
-// XXX: superceded by Jenkins plugin:
+// XXX: Jenkins plugin doesn't document how grypeScanner function can use all the Grype settings such as --scope all-layers --fail-on high
 //
 //    https://plugins.jenkins.io/grypescanner/
 
-// Use this if you need more control to download a specific Grype version from GitHub
+// This also gives greater control to download a specific Grype version from GitHub:
 //
 //    https://github.com/anchore/grype/releases
 
