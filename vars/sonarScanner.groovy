@@ -26,6 +26,10 @@
 //  SONAR_TOKEN credential - https://sonar.domain.com/account/security
 //
 //  SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
+//
+//  XXX: consider using the Jenkins plugin instead:
+//
+//      https://plugins.jenkins.io/sonar/
 
 def call (timeoutMinutes=30) {
   label 'Sonar Scanner'
