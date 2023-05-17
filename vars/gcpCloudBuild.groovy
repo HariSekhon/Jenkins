@@ -43,6 +43,9 @@ def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) 
   args.args = args.args ?: ''
   args.timeoutMinutes = args.timeoutMinutes ?: 60
   args.skipIfDockerImagesExist = args.skipIfDockerImagesExist ?: []
+  if (! args.skipIfDockerImagesExist && env.DOCKER_IMAGES) {
+    args.skipIfDockerImagesExist = dockerInferImageTagList()
+  }
   retry (2) {
     timeout (time: "${args.timeoutMinutes}", unit: 'MINUTES') {
       script {
