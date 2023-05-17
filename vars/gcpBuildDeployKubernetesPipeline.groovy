@@ -23,6 +23,8 @@ def call (Map args = [
                         app: '',
                         version: '',
                         env: '',
+                        env_vars: [:],
+                        cloudbuild: '',
                         gcp_serviceaccount_key: '',
                         gcr_registry: '',
                         images: [],
@@ -79,6 +81,15 @@ def call (Map args = [
           script {
             env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"
+
+            if (env_vars) {
+              if (env_vars instanceof Map == false) {
+                error "env_vars passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
+              }
+              env_vars.each { k, v ->
+                env[k] = v
+              }
+            }
           }
           gcrGenerateEnvVarDockerImages(args.images)
           gitCommitShort()
@@ -190,7 +201,7 @@ def call (Map args = [
 
       stage('GCP CloudBuild'){
         steps {
-          gcpCloudBuild(args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
+          gcpCloudBuild(args: args.cloudbuild ?: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
                         timeoutMinutes: 90,
                         // auto-inferred now
                         //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
