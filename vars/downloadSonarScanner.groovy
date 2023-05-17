@@ -22,6 +22,10 @@
 // Takes 2 seconds to download Sonar Scanner
 //
 // Takes 13 seconds to download unzip due to apt package cache updates
+//
+// XXX: use this instead, it'll have having to re-download Sonar Scanner for each pipeline run:
+//
+//      https://plugins.jenkins.io/sonar/
 
 def call (version='4.8.0.2856') {
   String label = "Download Sonar Scanner on agent '$HOSTNAME'"
