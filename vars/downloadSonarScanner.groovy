@@ -17,6 +17,8 @@
 //                 D o w n l o a d   S o n a r S c a n n e r
 // ========================================================================== //
 
+// CLI Scanner for SonarQube
+
 def call (version='4.8.0.2856') {
   String label = "Download Sonar Scanner on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
