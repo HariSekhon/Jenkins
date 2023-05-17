@@ -45,6 +45,7 @@
 // - $GITOPS_BRANCH  eg. master
 // - $GCR_PROJECT    eg. shared-project  - where the docker images are built in CloudBuild and stored in GCR
 // - $TRIVY_SERVER   eg. http://trivy.trivy.svc.cluster.local:4954
+// - $TRIVY_DEBUG=true  if you want better trivy logging
 
 def call (Map args = [
                         project: '',  // GCP project id to run commands against (except for CloudBuild which is always run in --project "$GCR_PROJECT" environment variable to share the same docker images from a shared build project
