@@ -17,6 +17,10 @@
 //                          D o w n l o a d   G r y p e
 // ========================================================================== //
 
+// XXX: superceded by Jenkins plugin:
+//
+//    https://plugins.jenkins.io/grypescanner/
+
 // Must download Grype because the docker image doesn't have any command to keep the container alive as per:
 //
 //    https://github.com/anchore/grype/issues/1287
