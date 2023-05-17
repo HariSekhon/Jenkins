@@ -18,21 +18,21 @@
 // ========================================================================== //
 
 def call (Map args = [
-                        project: '',
-                        region: '',
-                        app: '',
+                        project: '',  // GCP project id
+                        region: '',   // GCP compute region
+                        app: '',      // App name - used by ArgoCD
                         version: '',
-                        env: '',
-                        env_vars: [:],
-                        creds: [:],
-                        cloudbuild: '',
-                        gcp_serviceaccount_key: '',
-                        gcr_registry: '',
-                        images: [],
-                        k8s_dir: '',
-                        cloudflare_email: '',
+                        env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc..
+                        env_vars: [:],  // a Map of environment variables and their values
+                        creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
+                        cloudbuild: '', // GCP Cloudbuild args if needing to customize eg. to pass different or additional environment variables to the build
+                        gcp_serviceaccount_key: '',  // the credential id of the GCP service account auth key
+                        gcr_registry: '', // eg. 'eu.gcr.io' or 'us.gcr.io'
+                        images: [],   // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
+                        k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
+                        cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
                         cloudflare_zone_id: '',
-                        timeoutMinutes: 60,
+                        timeoutMinutes: 60,  // total pipeline timeout limit to catch stuck pipelines
                       ]
       ) {
 
@@ -89,6 +89,11 @@ def call (Map args = [
               }
               env_vars.each { k, v ->
                 env[k] = v
+              }
+            }
+            if (creds) {
+              if (creds instanceof Map == false) {
+                error "creds passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
               }
               creds.each { k, v ->
                 env[k] = credentials(v)
