@@ -104,15 +104,17 @@ def call (Map args = [
             }
           }
 
-          // provided by Jenkins plugin: https://plugins.jenkins.io/grypescanner/
-          // unless you need a specific version downloaded
-          //stage('Download Grype') {
-          //  steps {
-          //    catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          //      downloadGrype()
-          //    }
-          //  }
-          //}
+          // Jenkins plugin doesn't expose all grype switches in grypeScanner function so download and call with full settings:
+          //
+          //    https://plugins.jenkins.io/grypescanner/
+          //
+          stage('Download Grype') {
+            steps {
+              catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                downloadGrype()
+              }
+            }
+          }
 
           stage('Download Kustomize') {
             steps {
