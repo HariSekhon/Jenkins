@@ -45,7 +45,7 @@ def call (config='SonarQube', timeoutMinutes=30) {
   //container('sonar-scanner') {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
-        withSonarQubeEnv('My SonarQube Server') {
+        withSonarQubeEnv(config) {
           def scannerHome = tool 'SonarScanner 4.0';
           echo "Sonar Scanner using SonarQube server at '$SONAR_HOST_URL'"
           sh (
