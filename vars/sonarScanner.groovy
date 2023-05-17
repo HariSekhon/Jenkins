@@ -20,6 +20,12 @@
 // CLI Scanner for SonarQube
 //
 // Repo should have a sonar-project.properties at its root for the project specific settings
+//
+// Jenkins should be configured to provide pipeline with:
+//
+//  SONAR_TOKEN credential - https://sonar.domain.com/account/security
+//
+//  SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
 
 def call (timeoutMinutes=30) {
   label 'Sonar Scanner'
