@@ -55,7 +55,7 @@ def call (Map args = [args:'', skipIfdockerImagesExist: [], timeoutMinutes:60]) 
           // if we're passed a string just convert it to a list for convenience
           dockerImageTags = stringToList(args.skipIfDockerImagesExist)
           String labelCheckingImages = 'Checking if Docker images exist in GCR'
-          //echo "$labelCheckingImages"
+          echo "$labelCheckingImages"
           dockerImagesExist =
             sh (
               label: "$labelCheckingImages",
