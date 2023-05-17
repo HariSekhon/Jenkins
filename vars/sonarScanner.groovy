@@ -17,19 +17,26 @@
 //                         S o n a r   S c a n n e r
 // ========================================================================== //
 
+// https://docs.sonarqube.org/latest/analyzing-source-code/scanners/jenkins-extension-sonarqube/
+//
+// Requires Jenkins Sonar plugin:
+//
+//      https://plugins.jenkins.io/sonar/
+
 // CLI Scanner for SonarQube
 //
 // Repo should have a sonar-project.properties at its root for the project specific settings
 //
-// Jenkins should be configured to provide pipeline with:
+// Jenkins should have its Global Config for the SonarQube section set at:
 //
-//  SONAR_TOKEN credential - https://sonar.domain.com/account/security
+//    $JENKINS_URL/configure
 //
-//  SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
+// to provide pipeline with:
 //
-//  XXX: superceded by the Jenkins SonarQube scanner plugin
+//    SONAR_TOKEN credential - https://sonar.domain.com/account/security
 //
-//      https://plugins.jenkins.io/sonar/
+//    SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
+//
 
 def call (timeoutMinutes=30) {
   label 'Sonar Scanner'
@@ -37,10 +44,11 @@ def call (timeoutMinutes=30) {
   //container('sonar-scanner') {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
+        def scannerHome = tool 'SonarScanner 4.0';
         echo "Sonar Scanner"
         sh (
           label: "Sonar Scanner",
-          script: "sonar-scanner"
+          script: "${scannerHome}/bin/sonar-scanner"
         )
       }
     }
