@@ -17,22 +17,51 @@
 //                GCP Wait for Build Then Deploy to Kubernetes
 // ========================================================================== //
 
-// This pipeline waits for an externally triggered GCP CloudBuild to complete
-// and then updates the GitOps Kubernetes repo and triggers ArgoCD to deploy
+// Templated pipeline:
 //
-// Images must be declared so we know what to test check for existence for
-// and only after all of those images become available will we proceed to deployment
+// - waits for docker images in GCR via externally triggered GCP Cloud Build
+//   - docker images must be declared so we know what to test check for existence for
+//   - only after all of those images become available will we proceed to deployment
+// - updates the GitOps Kubernetes repo given directory via Kustomize with the version (or git hashref if no version given)
+// - publishes the new docker images to Kubernetes via triggering their corresponding ArgoCD app
+// - waits for ArgoCD sync and health checks
+
+// Extras (they don't fail the pipeline or block deployment):
+//
+// - Scans the Git repo using:
+//   - Grype (results in pipeline)
+//   - Trivy (results in pipeline)
+//   - SonarQube (results in $SONAR_HOST_URL server)
+//
+// - Scans the created docker images using:
+//   - Clair
+//   - Grype
+//   - Trivy
+
+// Important shared environment variables that should be defined on the Jenkins server:
+//
+// - $ARGOCD_SERVER  eg. argocd.domain.com  - without the https:// ingress prefix
+// - $DOCKER_HOST    eg. tcp://docker.docker.svc.cluster.local:2375  - for Docker Pull to cache images before calling Grype and Trivy
+// - $GITOPS_REPO    eg. git@github.com:<org>/<repo>
+// - $GITOPS_BRANCH  eg. master
+// - $GCR_PROJECT    eg. shared-project  - where the docker images are built in CloudBuild and stored in GCR
+// - $TRIVY_SERVER   eg. http://trivy.trivy.svc.cluster.local:4954
 
 def call (Map args = [
-                        project: '',
-                        region: '',
-                        app: '',
-                        env: '',
-                        gcp_serviceaccount_key: '',
-                        gcr_registry: '',
-                        images: [],
-                        k8s_dir: '',
-                        timeoutMinutes: 60,
+                        project: '',  // GCP project id to run commands against (except for CloudBuild which is always run in --project "$GCR_PROJECT" environment variable to share the same docker images from a shared build project
+                        region: '',   // GCP compute region
+                        app: '',      // App name - used by ArgoCD
+                        version: '',  // tags docker images with this, or $GIT_COMMIT if version is not defined
+                        env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc.. - suffixed to ArgoCD app name calls and used if k8s_dir not defined
+                        env_vars: [:],  // a Map of environment variables and their values to load to the pipeline
+                        creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
+                        gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
+                        gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
+                        images: [],  // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
+                        k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
+                        cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
+                        cloudflare_zone_id: '',
+                        timeoutMinutes: 60,  // total pipeline timeout limit to catch stuck pipelines
                       ]
       ) {
 
@@ -61,8 +90,9 @@ def call (Map args = [
 
       GCR_REGISTRY = "${args.gcr_registry}"
 
-      ARGOCD_AUTH_TOKEN = credentials('argocd-auth-token')
-      GITHUB_TOKEN      = credentials('github-token')
+      ARGOCD_AUTH_TOKEN  = credentials('argocd-auth-token')
+      CLOUDFLARE_API_KEY = credentials('cloudflare-api-key')
+      GITHUB_TOKEN       = credentials('github-token')
     }
 
     options {
@@ -76,7 +106,8 @@ def call (Map args = [
       stage('Setup') {
         steps {
           script {
-            env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"
+            env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
+            env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
           }
           gcrGenerateEnvVarDockerImages(args.images)
           gitCommitShort()
@@ -255,6 +286,17 @@ def call (Map args = [
           }
         }
       }
+
+      stage('Cloudflare Cache Purge') {
+        steps {
+          script {
+            if (env.CLOUDFLARE_EMAIL && env.CLOUDFLARE_ZONE_ID) {
+              cloudflarePurgeCache()
+            }
+          }
+        }
+      }
+
     }
 
     post {
