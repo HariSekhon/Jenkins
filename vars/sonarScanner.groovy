@@ -27,7 +27,7 @@
 //
 //  SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
 //
-//  XXX: consider using the Jenkins plugin instead:
+//  XXX: superceded by the Jenkins SonarQube scanner plugin
 //
 //      https://plugins.jenkins.io/sonar/
 
