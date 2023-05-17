@@ -57,7 +57,7 @@ def call (Map args = [
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
                         gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
                         gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
-                        images: [],  // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
+                        images: [],   // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
                         cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
                         cloudflare_zone_id: '',
@@ -79,6 +79,12 @@ def call (Map args = [
       pollSCM('H/10 * * * *')
     }
 
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '30'))
+      timestamps()
+      timeout (time: "${args.timeoutMinutes ?: 60}", unit: 'MINUTES')
+    }
+
     environment {
       APP         = "${args.app}"
       ENVIRONMENT = "${args.env}"
@@ -93,12 +99,9 @@ def call (Map args = [
       ARGOCD_AUTH_TOKEN  = credentials('argocd-auth-token')
       CLOUDFLARE_API_KEY = credentials('cloudflare-api-key')
       GITHUB_TOKEN       = credentials('github-token')
-    }
 
-    options {
-      buildDiscarder(logRotator(numToKeepStr: '30'))
-      timestamps()
-      timeout (time: "${args.timeoutMinutes ?: 60}", unit: 'MINUTES')
+      CLOUDFLARE_EMAIL   = "${args.cloudflare_email ?: ''}"
+      CLOUDFLARE_ZONE_ID = "${args.cloudflare_zone_id ?: ''}"
     }
 
     stages {
@@ -108,6 +111,23 @@ def call (Map args = [
           script {
             env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
+
+            if (env_vars) {
+              if (env_vars instanceof Map == false) {
+                error "env_vars passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
+              }
+              env_vars.each { k, v ->
+                env[k] = v
+              }
+            }
+            if (creds) {
+              if (creds instanceof Map == false) {
+                error "creds passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
+              }
+              creds.each { k, v ->
+                env[k] = credentials(v)
+              }
+            }
           }
           gcrGenerateEnvVarDockerImages(args.images)
           gitCommitShort()
