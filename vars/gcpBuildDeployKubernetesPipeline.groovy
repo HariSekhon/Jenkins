@@ -218,12 +218,24 @@ def call (Map args = [
         }
       }
 
-      stage('Docker Pull') {
-        steps {
-          catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            // pre-load cache for Grype and Trivy
-            dockerPull()
+      stage('Docker') {
+        parallel {
+          stage('Add GCR Docker Image Tags') {
+            steps {
+              // XXX: needed because we use short git commits for deployments if a VERSION isn't specified
+              gcrTagGitCommitShort()
+            }
           }
+
+          stage('Docker Pull') {
+            steps {
+              catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                // pre-load cache for Grype and Trivy
+                dockerPull()
+              }
+            }
+          }
+
         }
       }
 
