@@ -42,7 +42,7 @@
 //
 // 'toolName' is the global tool name configured with version at $JENKINS_URL/configureTools/ "SonarQube Scanner" section
 //
-def call (config='SonarQube', toolName='Sonar Scanner', timeoutMinutes=30) {
+def call (config='SonarQube', toolName='SonarQube Scanner', timeoutMinutes=30) {
   label 'Sonar Scanner'
   // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
   //container('sonar-scanner') {
