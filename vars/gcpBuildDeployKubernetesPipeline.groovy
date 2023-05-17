@@ -14,19 +14,48 @@
 //
 
 // ========================================================================== //
-//        G C P   B u i l d   &   D e p l o y   t o   K u b e r n e t e s
+//                   GCP Cloud Build & Deploy to Kubernetes
 // ========================================================================== //
 
+// Templated pipeline:
+//
+// - builds docker images in GCP Cloud Build which publishes to GCR
+// - updates the GitOps Kubernetes repo given directory via Kustomize with the version (or git hashref if no version given)
+// - publishes the new docker images to Kubernetes via triggering their corresponding ArgoCD app
+// - waits for ArgoCD sync and health checks
+// - purges Cloudflare cache
+
+// Extras (they don't fail the pipeline or block deployment):
+//
+// - Scans the Git repo using:
+//   - Grype (results in pipeline)
+//   - Trivy (results in pipeline)
+//   - SonarQube (results in $SONAR_HOST_URL server)
+//
+// - Scans the created docker images using:
+//   - Clair
+//   - Grype
+//   - Trivy
+
+// Important shared environment variables that should be defined on the Jenkins server:
+//
+// - $ARGOCD_SERVER  eg. argocd.domain.com  - without the https:// ingress prefix
+// - $DOCKER_HOST    eg. tcp://docker.docker.svc.cluster.local:2375  - for Docker Pull to cache images before calling Grype and Trivy
+// - $GITOPS_REPO    eg. git@github.com:<org>/<repo>
+// - $GITOPS_BRANCH  eg. master
+// - $GCR_PROJECT    eg. shared-project  - where the docker images are built in CloudBuild and stored in GCR
+// - $TRIVY_SERVER   eg. http://trivy.trivy.svc.cluster.local:4954
+
 def call (Map args = [
-                        project: '',  // GCP project id
+                        project: '',  // GCP project id to run commands against (except for CloudBuild which is always run in --project "$GCR_PROJECT" environment variable to share the same docker images from a shared build project
                         region: '',   // GCP compute region
                         app: '',      // App name - used by ArgoCD
-                        version: '',
-                        env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc..
-                        env_vars: [:],  // a Map of environment variables and their values
+                        version: '',  // tags docker images with this, or $GIT_COMMIT if version is not defined
+                        env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc.. - suffixed to ArgoCD app name calls and used if k8s_dir not defined
+                        env_vars: [:],  // a Map of environment variables and their values to load to the pipeline
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
                         cloudbuild: '', // GCP Cloudbuild args if needing to customize eg. to pass different or additional environment variables to the build
-                        gcp_serviceaccount_key: '',  // the credential id of the GCP service account auth key
+                        gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
                         gcr_registry: '', // eg. 'eu.gcr.io' or 'us.gcr.io'
                         images: [],   // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
@@ -80,8 +109,8 @@ def call (Map args = [
       stage('Setup') {
         steps {
           script {
-            env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"
-            env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"
+            env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
+            env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
 
             if (env_vars) {
               if (env_vars instanceof Map == false) {
