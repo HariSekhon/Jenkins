@@ -196,6 +196,7 @@ def call (Map args = [
         parallel {
           stage('Add GCR Docker Image Tags') {
             steps {
+              // XXX: needed because we use short git commits for deployments if a VERSION isn't specified
               gcrTagGitCommitShort()
             }
           }
