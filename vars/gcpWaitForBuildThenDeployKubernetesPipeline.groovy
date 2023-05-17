@@ -104,13 +104,15 @@ def call (Map args = [
             }
           }
 
-          stage('Download Grype') {
-            steps {
-              catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                downloadGrype()
-              }
-            }
-          }
+          // provided by Jenkins plugin: https://plugins.jenkins.io/grypescanner/
+          // unless you need a specific version downloaded
+          //stage('Download Grype') {
+          //  steps {
+          //    catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          //      downloadGrype()
+          //    }
+          //  }
+          //}
 
           stage('Download Kustomize') {
             steps {
