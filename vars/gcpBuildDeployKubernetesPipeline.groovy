@@ -24,6 +24,7 @@ def call (Map args = [
                         version: '',
                         env: '',
                         env_vars: [:],
+                        creds: [:],
                         cloudbuild: '',
                         gcp_serviceaccount_key: '',
                         gcr_registry: '',
@@ -88,6 +89,9 @@ def call (Map args = [
               }
               env_vars.each { k, v ->
                 env[k] = v
+              }
+              creds.each { k, v ->
+                env[k] = credentials(v)
               }
             }
           }
