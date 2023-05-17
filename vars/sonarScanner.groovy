@@ -38,15 +38,18 @@
 //    SONAR_HOST_URL = https://sonar.domain.com (via Kubernetes ingress, see https://github.com/HariSekhon/Kubernetes-configs
 //
 
-// config is the server config instance configured at $JENKINS_URL/configure "SonarQube servers" section
-def call (config='SonarQube', timeoutMinutes=30) {
+// 'config' is the server config instance configured at $JENKINS_URL/configure "SonarQube servers" section
+//
+// 'toolName' is the global tool name configured with version at $JENKINS_URL/configureTools/ "SonarQube Scanner" section
+//
+def call (config='SonarQube', toolName='Sonar Scanner', timeoutMinutes=30) {
   label 'Sonar Scanner'
   // let caller decide if wrapping this in a container('grype') or using downloadGrype.groovy to save RAM
   //container('sonar-scanner') {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         withSonarQubeEnv(config) {
-          def scannerHome = tool 'SonarScanner 4.0';
+          def scannerHome = tool toolName;
           echo "Sonar Scanner using SonarQube server at '$SONAR_HOST_URL'"
           sh (
             label: "Sonar Scanner",
