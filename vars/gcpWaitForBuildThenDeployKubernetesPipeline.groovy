@@ -63,7 +63,6 @@ def call (Map args = [
 
       ARGOCD_AUTH_TOKEN = credentials('argocd-auth-token')
       GITHUB_TOKEN      = credentials('github-token')
-      SONAR_TOKEN       = credentials('sonar-token')
     }
 
     options {
@@ -119,12 +118,6 @@ def call (Map args = [
             }
           }
 
-          stage('Download Sonar Scanner') {
-            steps {
-              downloadSonarScanner()
-            }
-          }
-
           stage('Download Trivy') {
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -157,7 +150,7 @@ def call (Map args = [
             }
           }
 
-          stage('Sonar Scanner') {
+          stage('SonarQube') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 sonarScanner()
@@ -217,13 +210,17 @@ def call (Map args = [
 
       stage('Container Image Scanning') {
         parallel {
-          stage('Clair') {
-            steps {
-              catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                clair()
-              }
-            }
-          }
+          // being extremely slow, and hit this bug giving no useful results anyway, so disable for now:
+          //
+          //    https://github.com/quay/clair/issues/1756
+          //
+          //stage('Clair') {
+          //  steps {
+          //    catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          //      clair()
+          //    }
+          //  }
+          //}
           stage('Grype') {
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
