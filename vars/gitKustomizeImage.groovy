@@ -37,7 +37,7 @@
 //
 // Could be adapted to take these as parameters if multiple GitOps updates were done in a single pipeline, but more likely those should be separate pipelines
 
-def call (Map args = [:]){
+def call (Map args = [:]) {
 
   // these get blocked in Jenkins Groovy Sandbox
   //if (!args.dockerImages) {
