@@ -58,7 +58,10 @@ def call (Map args = [:]) {
   args.branch  = args.branch ?: env.GITOPS_BRANCH ?: 'main'
   args.dir = args.dir ?: env.K8S_DIR ?: '.'
   args.timeoutMinutes = args.timeout ?: 5
-  args.version = args.version ?: env.GIT_COMMIT_SHORT ?: env.GIT_COMMIT ?: error("no version arg passed to gitKustomizeImage() and \$GIT_COMMIT environment variable is not set")
+  args.version = args.version ?:
+                 env.GIT_COMMIT_SHORT ?:
+                 env.GIT_COMMIT ?:
+                 error("no version arg passed to gitKustomizeImage() and \$GIT_COMMIT environment variable is not set")
 
   if (args.dockerImages instanceof List == false) {
     error "non-list passed as dockerImages arg of gitKustomizeImage()"
