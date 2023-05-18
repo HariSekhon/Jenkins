@@ -24,8 +24,7 @@
 // Requires GCloud SDK CLI to be installed and authenticated
 
 def call (List<String> dockerImageRegistryPaths=[], String dockerTag='', int waitMinutes=10) {
-  if (!dockerImageRegistryPaths){
-    dockerImageRegistryPaths = dockerInferImageTagList()
+  dockerImageRegistryPaths = dockerImageRegistryPaths ?: dockerInferImageTagList()
   }
   timeout (time: waitMinutes, unit: 'MINUTES') {
     echo "Waiting for $waitMinutes minutes for GCR docker images to become available"
