@@ -50,7 +50,7 @@ def call(String executable) {
     //}
   //}
   //return ''
-  withEnv(["EXECUTABLE=$executable"]){
+  withEnv(["EXECUTABLE=$executable"]) {
     def path = sh(
       label: "Which $EXECUTABLE",
       //returnStatus: true, // overrides returnStdout
