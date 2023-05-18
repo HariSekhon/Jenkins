@@ -238,7 +238,7 @@ def call (Map args = [
         }
       }
 
-      stage('GCP CloudBuild'){
+      stage('GCP CloudBuild') {
         steps {
           gcpCloudBuild(args: args.cloudbuild ?: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
                         timeoutMinutes: 90,
