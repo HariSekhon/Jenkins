@@ -49,7 +49,7 @@ def call (config='SonarQube Server on Kubernetes', toolName='SonarQube Scanner',
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         withSonarQubeEnv(config) {
-          def scannerHome = tool toolName;
+          def scannerHome = tool toolName
           echo "Sonar Scanner using SonarQube server at '$SONAR_HOST_URL'"
           sh (
             label: "Sonar Scanner",
