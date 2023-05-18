@@ -113,19 +113,19 @@ def call (Map args = [
             env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
 
-            if (env_vars) {
-              if (env_vars instanceof Map == false) {
+            if (args.env_vars) {
+              if (args.env_vars instanceof Map == false) {
                 error "env_vars passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
               }
-              env_vars.each { k, v ->
+              args.env_vars.each { k, v ->
                 env[k] = v
               }
             }
-            if (creds) {
-              if (creds instanceof Map == false) {
+            if (args.creds) {
+              if (args.creds instanceof Map == false) {
                 error "creds passed to parametered pipeline 'gcpBuildDeployKubernetesPipeline' must be a Map"
               }
-              creds.each { k, v ->
+              args.creds.each { k, v ->
                 env[k] = credentials(v)
               }
             }
