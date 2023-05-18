@@ -19,6 +19,6 @@
 
 def call(images=[], registry='') {
   echo "Generating DOCKER_IMAGES environment variable" + ( registry ? " with registry prefix '$registry'" : '')
-  env.DOCKER_IMAGES = images.collect{ (registry ? "$registry/" : '') + it.trim() }.join(',')
+  env.DOCKER_IMAGES = images.collect { (registry ? "$registry/" : '') + it.trim() }.join(',')
   return env.DOCKER_IMAGES
 }
