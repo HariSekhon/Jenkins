@@ -34,7 +34,7 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 - [Jenkinsfile](https://github.com/HariSekhon/Jenkins/blob/master/Jenkinsfile) - epic Jenkinsfile template - full of real-world tricks from production
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Groovy Shared Library reusable functions
 
-There are lots of Jenkins scripts in [HariSekhon/Templates](https://github.com/HariSekhon/DevOps-Bash-tools), both bash scripts and groovy scripts for the Admin Script Console.
+There are also lots of Jenkins scripts in [HariSekhon/DevOps-Bash-tools](https://github.com/HariSekhon/DevOps-Bash-tools), both Jenkins Rest API and bash scripts as well as Jenkins Groovy scripts for the Admin Script Console.
 
 ## QuickStart
 
