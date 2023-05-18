@@ -62,7 +62,7 @@ def call (targetList=[], failOn='high', timeoutMinutes=30) {
     timeout (time: timeoutMinutes, unit: 'MINUTES') {
       ansiColor('xterm') {
         for (target in targets) {
-          withEnv (["TARGET=$target","FAIL_ON=$failOn"]) {
+          withEnv (["TARGET=$target", "FAIL_ON=$failOn"]) {
             echo "Grype scanning target '$TARGET'"
             sh (
               label: "Grype",
