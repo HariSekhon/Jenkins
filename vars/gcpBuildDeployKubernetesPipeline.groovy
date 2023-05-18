@@ -271,17 +271,17 @@ def call (Map args = [
 
       stage('Container Image Scanning') {
         parallel {
-          // being extremely slow, and hit this bug giving no useful results anyway, so disable for now:
+          // being extremely slow, and hit this bug giving no useful results:
           //
           //    https://github.com/quay/clair/issues/1756
           //
-          //stage('Clair') {
-          //  steps {
-          //    catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          //      clair()
-          //    }
-          //  }
-          //}
+          stage('Clair') {
+            steps {
+              catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                clair()
+              }
+            }
+          }
           stage('Grype') {
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
