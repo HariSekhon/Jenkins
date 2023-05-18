@@ -106,7 +106,7 @@ def call (Map args = [ jobs: [], excludeJobs: [] ]) {
     withEnv (["JOB=$it"]) {
       sh (
         // zero indexed
-        label: "${index+1} Download Jenkins Job Configuration: $it",
+        label: "${ index + 1 } Download Jenkins Job Configuration: $it",
         script: '''
           set -eux
           java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} get-job "$JOB" > "$JOB.xml"
