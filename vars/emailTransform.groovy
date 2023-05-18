@@ -32,7 +32,7 @@ def call (String email) {
   if (env.EMAIL_TRANSFORMS) {
     // would have preferred newline split but Jenkins global env var doesn't allow newlines, even pasted multiline becomes join(' ') in UI,
     // and not DRY to define in pipelines where we can use actual multiline strings
-    List emailTransformList = env.EMAIL_TRANSFORMS.trim().split(',').collect{ it.trim() }
+    List emailTransformList = env.EMAIL_TRANSFORMS.trim().split(',').collect { it.trim() }
     Map emailTransforms = emailTransformList.collectEntries {
       // ==~ anchored match returns boolean
       // requires brackets around ==~ otherwise ! test always returns negative
