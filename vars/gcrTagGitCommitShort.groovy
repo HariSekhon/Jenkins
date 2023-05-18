@@ -29,9 +29,7 @@ def call (List<String> dockerImageRegistryPaths=[]) {
   if ( ! env.GIT_COMMIT_SHORT ) {
     gitCommitShort()
   }
-  if (!dockerImageRegistryPaths) {
-    dockerImageRegistryPaths = dockerInferImageList()
-  }
+  dockerImageRegistryPaths ?: dockerInferImageList()
   if (dockerImageRegistryPaths instanceof List == false) {
     error "non-list passed as arg to gcrTagGitCommitShort()"
   }
