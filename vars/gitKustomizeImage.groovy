@@ -73,7 +73,7 @@ def call (Map args = [:]) {
   String ownerRepo = args.repo.split(':')[-1]
   //
   // https://github.com/HariSekhon/Kubernetes -> HariSekhon/Kubernetes
-  ownerRepo = ownerRepo.split('/')[-2,-1].join('/')
+  ownerRepo = ownerRepo.split('/')[-2, -1].join('/')
   //
   // HariSekhon/Kubernetes.git -> HariSekhon/Kubernetes
   ownerRepo = ownerRepo.split('\\.')[0]
