@@ -39,16 +39,18 @@
 
 // Important shared environment variables that should be defined on the Jenkins server:
 //
-// - $ARGOCD_SERVER  eg. argocd.domain.com  - without the https:// ingress prefix
-// - $DOCKER_HOST    eg. tcp://docker.docker.svc.cluster.local:2375  - for Docker Pull to cache images before calling Grype and Trivy
-// - $GITOPS_REPO    eg. git@github.com:<org>/<repo>
-// - $GITOPS_BRANCH  eg. master
-// - $GCR_PROJECT    eg. shared-project  - where the docker images are built in CloudBuild and stored in GCR
-// - $TRIVY_SERVER   eg. http://trivy.trivy.svc.cluster.local:4954
-// - $TRIVY_DEBUG=true  if you want better trivy logging
+// - ARGOCD_SERVER      eg. argocd.domain.com  - without the https:// ingress prefix
+// - DOCKER_HOST        eg. tcp://docker.docker.svc.cluster.local:2375  - for Docker Pull to cache images before calling Grype and Trivy
+// - GITOPS_REPO        eg. git@github.com:<org>/<repo>
+// - GITOPS_BRANCH      eg. master
+// - GCR_PROJECT        eg. shared-project  - where the docker images are built in CloudBuild and stored in GCR
+// - NO_CODE_SCAN       eg. optional. Set to 'true' to code scan stage and related downloads
+// - NO_CONTAINER_SCAN  eg. optional. Set to 'true' to container scan stage and related downloads
+// - TRIVY_SERVER       eg. http://trivy.trivy.svc.cluster.local:4954
+// - TRIVY_DEBUG        eg. set to 'true' if you want better trivy logging
 
 def call (Map args = [
-                        project: '',  // GCP project id to run commands against (except for CloudBuild which is always run in --project "$GCR_PROJECT" environment variable to share the same docker images from a shared build project
+                        project: '',  // GCP project id to run commands against (except for CloudBuild which is always run in --project "$GCR_PROJECT" environment variable to share the same docker images from a shared build project unless overridden by the cloudbuild arg
                         region: '',   // GCP compute region
                         app: '',      // App name - used by ArgoCD
                         version: '',  // tags docker images with this, or $GIT_COMMIT if version is not defined
