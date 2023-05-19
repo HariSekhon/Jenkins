@@ -152,7 +152,7 @@ def call (Map args = [
           //
           stage('Download Grype') {
             when {
-              expression { (!env.NO_CONTAINER_SCAN && !env.NO_CODE_SCAN) || (env.NO_CONTAINER_SCAN != 'true' env.NO_CODE_SCAN != 'true') }
+              expression { (!env.NO_CONTAINER_SCAN || !env.NO_CODE_SCAN) || (env.NO_CONTAINER_SCAN != 'true' || env.NO_CODE_SCAN != 'true') }
             }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -169,7 +169,7 @@ def call (Map args = [
 
           stage('Download Trivy') {
             when {
-              expression { (!env.NO_CONTAINER_SCAN && !env.NO_CODE_SCAN) || (env.NO_CONTAINER_SCAN != 'true' env.NO_CODE_SCAN != 'true') }
+              expression { (!env.NO_CONTAINER_SCAN || !env.NO_CODE_SCAN) || (env.NO_CONTAINER_SCAN != 'true' || env.NO_CODE_SCAN != 'true') }
             }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
