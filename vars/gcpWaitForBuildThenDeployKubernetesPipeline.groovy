@@ -60,6 +60,8 @@ def call (Map args = [
                         gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
                         images: [],   // List of docker image names (not prefixed by GCR/GAR registries) to test for existence to skip CloudBuild if all are present
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
+                        no_code_scan: 'false'  // set to 'true' or environment variable NO_CODE_SCAN=true to not run Code Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
+                        no_container_scan: 'false'  // set to 'true' or environment variable NO_CONTAINER_SCAN=true to not run Container Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
                         cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
                         cloudflare_zone_id: '',
                         timeoutMinutes: 60,  // total pipeline timeout limit to catch stuck pipelines
@@ -134,6 +136,9 @@ def call (Map args = [
           }
 
           stage('Download Clairctl') {
+            when {
+              expression { env.NO_CONTAINER_SCAN == 'true' }
+            }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 downloadClairctl()
@@ -146,6 +151,9 @@ def call (Map args = [
           //    https://plugins.jenkins.io/grypescanner/
           //
           stage('Download Grype') {
+            when {
+              expression { env.NO_CONTAINER_SCAN == 'true' }
+            }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 downloadGrype()
@@ -160,6 +168,9 @@ def call (Map args = [
           }
 
           stage('Download Trivy') {
+            when {
+              expression { env.NO_CONTAINER_SCAN == 'true' }
+            }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 downloadTrivy()
@@ -168,6 +179,9 @@ def call (Map args = [
           }
 
           stage('Install NodeJS') {
+            when {
+              expression { env.NO_CONTAINER_SCAN == 'true' }
+            }
             steps {
               catchError (buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 // for sonar scanner to avoid this:
@@ -181,6 +195,9 @@ def call (Map args = [
       }
 
       stage('Code Scanning') {
+        when {
+          expression { env.NO_CODE_SCAN == 'true' }
+        }
         parallel {
 
           stage('Grype') {
@@ -251,6 +268,9 @@ def call (Map args = [
       }
 
       stage('Container Image Scanning') {
+        when {
+          expression { env.NO_CONTAINER_SCAN == 'true' }
+        }
         parallel {
           // being extremely slow, and hit this bug giving no useful results:
           //
