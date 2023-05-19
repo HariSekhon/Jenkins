@@ -261,10 +261,13 @@ def call (Map args = [
                         )
         }
       }
+
       stage('Wait for GCR Docker Images') {
-        when {
-          expression { "${args.no_cloudbuild}".toBoolean() }
-        }
+        // used to do this only for externally triggered CloudBuild but actually this is useful to check the list of docker images provided
+        // are actually what we think they are rather than just waiting for ArgoCD to deploy and then realizing ImagePullBackoff later
+        //when {
+        //  expression { "${args.no_cloudbuild}".toBoolean() }
+        //}
         steps {
           gcrDockerImagesExistWait()
         }
