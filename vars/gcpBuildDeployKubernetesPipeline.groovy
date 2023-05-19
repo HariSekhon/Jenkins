@@ -114,6 +114,8 @@ def call (Map args = [
           script {
             env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
             env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
+            env.NO_CODE_SCAN = args.no_code_scan ?: env.NO_CODE_SCAN ?: false
+            env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
           }
           loadEnvVars(args.env_vars)
           loadCredentials(args.creds)
