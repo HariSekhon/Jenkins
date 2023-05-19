@@ -246,28 +246,24 @@ def call (Map args = [
         }
       }
 
-      stage('Docker Images') {
-        parallel {
-          stage('GCP CloudBuild') {
-            when {
-              expression { ! "${args.no_cloudbuild}".toBoolean() }
-            }
-            steps {
-              gcpCloudBuild(args: args.cloudbuild ?: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
-                            timeoutMinutes: 90,
-                            // auto-inferred now
-                            //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
-                            )
-            }
-          }
-          stage('Wait for CloudBuild & GCR') {
-            when {
-              expression { "${args.no_cloudbuild}".toBoolean() }
-            }
-            steps {
-              gcrDockerImagesExistWait()
-            }
-          }
+      stage('GCP CloudBuild') {
+        when {
+          expression { ! "${args.no_cloudbuild}".toBoolean() }
+        }
+        steps {
+          gcpCloudBuild(args: args.cloudbuild ?: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
+                        timeoutMinutes: 90,
+                        // auto-inferred now
+                        //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
+                        )
+        }
+      }
+      stage('Wait for GCR Docker Images') {
+        when {
+          expression { "${args.no_cloudbuild}".toBoolean() }
+        }
+        steps {
+          gcrDockerImagesExistWait()
         }
       }
 
