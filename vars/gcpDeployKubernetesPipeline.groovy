@@ -241,6 +241,9 @@ def call (Map args = [
       }
 
       stage('GCP Docker Auth') {
+        when {
+          expression { ! "${env.NO_CONTAINER_SCAN}".toBoolean() }
+        }
         steps {
           gcpDockerAuth()
         }
