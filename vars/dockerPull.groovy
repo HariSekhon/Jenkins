@@ -17,7 +17,7 @@
 //                           D o c k e r   P u l l
 // ========================================================================== //
 
-def call(List imageList=[], timeoutMinutes=30) {
+def call(List imageList=[], timeoutMinutes=15) {
   label 'Docker Pull'
   List images = []
   if (imageList) {
