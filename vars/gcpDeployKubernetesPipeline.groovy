@@ -100,7 +100,7 @@ def call (Map args = [
       CLOUDSDK_CORE_PROJECT   = "${ args.project ?: env.CLOUDSDK_CORE_PROJECT   ?: error('project arg not specified and CLOUDSDK_CORE_PROJECT environment variable not already set') }"
       CLOUDSDK_COMPUTE_REGION = "${ args.region  ?: env.CLOUDSDK_COMPUTE_REGION ?: error('region arg not specified and CLOUDSDK_COMPUTE_REGION environment variable not already set') }"
 
-      CLOUDBUILD_CONFIG       = "${ args.cloudbuild_config ?: 'cloudbuild.yaml' }"
+      CLOUDBUILD_CONFIG = "${ args.cloudbuild_config ?: 'cloudbuild.yaml' }"
 
       GCP_SERVICEACCOUNT_KEY = credentials("${ args.gcp_serviceaccount_key ?: env.GCP_SERVICEACCOUNT_KEY ?: error('gcp_serviceaccount_key arg not specified and GCP_SERVICEACCOUNT_KEY environment variable not already set') }")
 
