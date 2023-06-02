@@ -95,7 +95,7 @@ def call (Map args = [
 
     environment {
       APP         = "${ args.app ?: env.APP ?: error('app arg not specified and APP environment variable not already set') }"
-      ENVIRONMENT = "${ args.env ?: env.APP ?: error('env arg not specified and ENVIRONMENT environment variable not already set')}"
+      ENVIRONMENT = "${ args.env ?: env.ENVIRONMENT ?: env.ENV ?: error('env arg not specified and ENVIRONMENT/ENV environment variables not already set')}"
 
       CLOUDSDK_CORE_PROJECT   = "${ args.project ?: env.CLOUDSDK_CORE_PROJECT   ?: error('project arg not specified and CLOUDSDK_CORE_PROJECT environment variable not already set') }"
       CLOUDSDK_COMPUTE_REGION = "${ args.region  ?: env.CLOUDSDK_COMPUTE_REGION ?: error('region arg not specified and CLOUDSDK_COMPUTE_REGION environment variable not already set') }"
