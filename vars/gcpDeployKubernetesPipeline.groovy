@@ -119,7 +119,7 @@ def call (Map args = [
       stage('Setup') {
         steps {
           script {
-            env.VERSION = "${ args.version ?: env.VERSION ?: env.GIT_COMMIT ?: error('version arg not specified and neither VERSION nor GIT_COMMIT environment variables are already set') }"  // CloudBuild tags docker images with this $VERSION variable
+            env.VERSION = "${ args.version ?: env.GIT_COMMIT ?: error('version arg not specified and neither VERSION nor GIT_COMMIT environment variables are already set') }"  // CloudBuild tags docker images with this $VERSION variable
             env.K8S_DIR = "${ args.k8s_dir ?: env.K8S_DIR ?: "$APP/$ENVIRONMENT" }"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
             env.NO_CODE_SCAN = args.no_code_scan ?: env.NO_CODE_SCAN ?: false
             env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
