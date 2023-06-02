@@ -58,7 +58,8 @@ def call (Map args = [
                         env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc.. - suffixed to ArgoCD app name calls and used if k8s_dir not defined
                         env_vars: [:],  // a Map of environment variables and their values to load to the pipeline
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
-                        cloudbuild: '', // GCP Cloudbuild args if needing to customize eg. to pass different or additional environment variables to the build
+                        cloudbuild_args: '', // GCP CloudBuild args if needing to customize eg. to pass different or additional environment variables to the build
+                        cloudbuild_config: 'cloudbuild.yaml',  // CloudBuild config file to use (will be ignored if cloudbuild_args is supplied but does not references the $CLOUDBUILD_CONFIG environment variable)
                         no_cloudbuild: false,  // set to 'true' to not run CloudBuild but instead wait for the docker image tags appear in GCR from externally triggered CloudBuild or other image build process
                         gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
                         gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
@@ -93,22 +94,24 @@ def call (Map args = [
     }
 
     environment {
-      APP         = "${args.app}"
-      ENVIRONMENT = "${args.env}"
+      APP         = "${ args.app ?: env.APP ?: error('app arg not specified and APP environment variable not already set') }"
+      ENVIRONMENT = "${ args.env ?: env.APP ?: error('env arg not specified and ENVIRONMENT environment variable not already set')}"
 
-      CLOUDSDK_CORE_PROJECT   = "${args.project}"
-      CLOUDSDK_COMPUTE_REGION = "${args.region}"
+      CLOUDSDK_CORE_PROJECT   = "${ args.project ?: env.CLOUDSDK_CORE_PROJECT   ?: error('project arg not specified and CLOUDSDK_CORE_PROJECT environment variable not already set') }"
+      CLOUDSDK_COMPUTE_REGION = "${ args.region  ?: env.CLOUDSDK_COMPUTE_REGION ?: error('region arg not specified and CLOUDSDK_COMPUTE_REGION environment variable not already set') }"
 
-      GCP_SERVICEACCOUNT_KEY = credentials("${args.gcp_serviceaccount_key}")
+      CLOUDBUILD_CONFIG       = "${ args.cloudbuild_config ?: 'cloudbuild.yaml' }"
 
-      GCR_REGISTRY = "${args.gcr_registry}"
+      GCP_SERVICEACCOUNT_KEY = credentials("${ args.gcp_serviceaccount_key ?: env.GCP_SERVICEACCOUNT_KEY ?: error('gcp_serviceaccount_key arg not specified and GCP_SERVICEACCOUNT_KEY environment variable not already set') }")
+
+      GCR_REGISTRY = "${ args.gcr_registry ?: env.GCR_REGISTRY ?: error('gcr_registry arg not specified and GCR_REGISTRY environment variable not already set') }"
 
       ARGOCD_AUTH_TOKEN  = credentials('argocd-auth-token')
       CLOUDFLARE_API_KEY = credentials('cloudflare-api-key')
       GITHUB_TOKEN       = credentials('github-token')
 
-      CLOUDFLARE_EMAIL   = "${args.cloudflare_email ?: ''}"
-      CLOUDFLARE_ZONE_ID = "${args.cloudflare_zone_id ?: ''}"
+      CLOUDFLARE_EMAIL   = "${ args.cloudflare_email ?: '' }"
+      CLOUDFLARE_ZONE_ID = "${ args.cloudflare_zone_id ?: '' }"
     }
 
     stages {
@@ -116,8 +119,8 @@ def call (Map args = [
       stage('Setup') {
         steps {
           script {
-            env.VERSION = "${args.version ?: ''}" ?: "$GIT_COMMIT"        // CloudBuild tags docker images with this $VERSION variable
-            env.K8S_DIR = "${args.k8s_dir ?: ''}" ?: "$APP/$ENVIRONMENT"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
+            env.VERSION = "${ args.version ?: env.VERSION ?: env.GIT_COMMIT ?: error('version arg not specified and neither VERSION nor GIT_COMMIT environment variables are already set') }"  // CloudBuild tags docker images with this $VERSION variable
+            env.K8S_DIR = "${ args.k8s_dir ?: env.K8S_DIR ?: "$APP/$ENVIRONMENT" }"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
             env.NO_CODE_SCAN = args.no_code_scan ?: env.NO_CODE_SCAN ?: false
             env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
           }
@@ -254,7 +257,7 @@ def call (Map args = [
           expression { ! "${args.no_cloudbuild}".toBoolean() }
         }
         steps {
-          gcpCloudBuild(args: args.cloudbuild ?: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
+          gcpCloudBuild(args: args.cloudbuild ?: '--config="$CLOUDBUILD_CONFIG" --project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
                         timeoutMinutes: 90,
                         // auto-inferred now
                         //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
