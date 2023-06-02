@@ -257,7 +257,7 @@ def call (Map args = [
           expression { ! "${args.no_cloudbuild}".toBoolean() }
         }
         steps {
-          gcpCloudBuild(args: args.cloudbuild ?: '--config="$CLOUDBUILD_CONFIG" --project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
+          gcpCloudBuild(args: args.cloudbuild_args ?: '--config="$CLOUDBUILD_CONFIG" --project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
                         timeoutMinutes: 90,
                         // auto-inferred now
                         //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
