@@ -59,7 +59,7 @@ def call (Map args = [
                         env_vars: [:],  // a Map of environment variables and their values to load to the pipeline
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
                         cloudbuild_args: '', // GCP CloudBuild args if needing to customize eg. to pass different or additional environment variables to the build
-                        cloudbuild_config: 'cloudbuild.yaml',  // CloudBuild config file to use (will be ignored if cloudbuild_args is supplied but does not references the $CLOUDBUILD_CONFIG environment variable)
+                        cloudbuild_config: 'cloudbuild.yaml',  // CloudBuild config file to use (will be ignored if cloudbuild_args is supplied but does not reference the $CLOUDBUILD_CONFIG environment variable)
                         no_cloudbuild: false,  // set to 'true' to not run CloudBuild but instead wait for the docker image tags appear in GCR from externally triggered CloudBuild or other image build process
                         gcp_serviceaccount_key: '',  // the Jenkins secret credential id of the GCP service account auth key
                         gcr_registry: '',  // eg. 'eu.gcr.io' or 'us.gcr.io'
