@@ -25,20 +25,6 @@ def call() {
   // requires several iterations of In-process Script Approvals from repeatedly failing pipelines at each level of descent into the jenkins.model hierarchy
   //List<String> jobs = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
 
-  // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
-  jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
-
-  Boolean jenkinsCliJarExists = sh (
-    label: 'Check Jenkins CLI jar exists',
-    returnStatus: true,
-    script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
-  ) == 0
-
-  if (!jenkinsCliJarExists) {
-    echo "$jenkinsCliJar not found, downloading..."
-    downloadJenkinsCLI()
-  }
-
   List<String> jobs = sh (
     label: "List Jobs via CLI",
     returnStdout: true,
