@@ -22,6 +22,31 @@
 // Adapted from DevOps Bash Tools jenkins_cli.sh, install_binary.sh, install_packages.sh and lib/utils.sh
 
 def call () {
+
+  // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
+  //jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
+  //
+  //if (env.JENKINS_CLI_JAR) {
+  //  jenkinsCliJar = env.JENKINS_CLI_JAR
+  //} else {
+  //  jenkinsCliJar = "$HOME/bin/jenkins-cli.jar"
+  //}
+  //
+  // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
+  //jenkinsCliJarFile = new File(jenkinsCliJar)
+  //if (! (new File(jenkinsCliJar)).exists() ) {
+  //
+  Boolean jenkinsCliJarExists = sh (
+    label: 'Check Jenkins CLI jar exists',
+    returnStatus: true,
+    script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
+  ) == 0
+
+  if (!jenkinsCliJarExists) {
+    echo "$jenkinsCliJar not found, downloading..."
+    downloadJenkinsCLI()
+  }
+
   String label = "Download Jenkins CLI on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
   lock (resource: "$label") {
