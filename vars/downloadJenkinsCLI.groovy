@@ -35,17 +35,17 @@ def call () {
   // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
   //jenkinsCliJarFile = new File(jenkinsCliJar)
   //if (! (new File(jenkinsCliJar)).exists() ) {
-  //
-  Boolean jenkinsCliJarExists = sh (
-    label: 'Check Jenkins CLI jar exists',
-    returnStatus: true,
-    script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
-  ) == 0
 
-  if (!jenkinsCliJarExists) {
-    echo "$jenkinsCliJar not found, downloading..."
-    downloadJenkinsCLI()
-  }
+  //Boolean jenkinsCliJarExists = sh (
+  //  label: 'Check Jenkins CLI jar exists',
+  //  returnStatus: true,
+  //  script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
+  //) == 0
+  //
+  //if (!jenkinsCliJarExists) {
+  //  echo "$jenkinsCliJar not found, downloading..."
+  //  downloadJenkinsCLI()
+  //}
 
   String label = "Download Jenkins CLI on agent '$HOSTNAME'"
   echo "Acquiring Lock: $label"
