@@ -44,8 +44,6 @@ def call (Map args = [ jobs: [], excludeJobs: [] ]) {
   List<String> jobs = args.jobs ?: []
   List<String> excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
-  downloadJenkinsCLI()
-
   if (!jobs) {
       jobs = jenkinsJobList()
   }
