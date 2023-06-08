@@ -18,6 +18,8 @@
 // ========================================================================== //
 
 // inspired by jenkins_jobs_download_configs_cli.sh in the adjacent DevOps Bash tools repo
+//
+// assumes JENKIN_CLI_JAR has been downloaded in a previous stage via downloadJenkinsCLI() function
 
 // this function
 //
