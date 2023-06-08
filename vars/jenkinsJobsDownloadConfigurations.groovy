@@ -44,39 +44,10 @@ def call (Map args = [ jobs: [], excludeJobs: [] ]) {
   List<String> jobs = args.jobs ?: []
   List<String> excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
-  // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
-  //jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
-  //
-  //if (env.JENKINS_CLI_JAR) {
-  //  jenkinsCliJar = env.JENKINS_CLI_JAR
-  //} else {
-  //  jenkinsCliJar = "$HOME/bin/jenkins-cli.jar"
-  //}
-  //
-  // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
-  //jenkinsCliJarFile = new File(jenkinsCliJar)
-  //if (! (new File(jenkinsCliJar)).exists() ) {
-  //
-  Boolean jenkinsCliJarExists = sh (
-    label: 'Check Jenkins CLI jar exists',
-    returnStatus: true,
-    script: 'test -f "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}"'
-  ) == 0
-
-  if (!jenkinsCliJarExists) {
-    echo "$jenkinsCliJar not found, downloading..."
-    downloadJenkinsCLI()
-  }
+  downloadJenkinsCLI()
 
   if (!jobs) {
-      jobs = sh (
-        label: "List Jobs via CLI",
-        returnStdout: true,
-        script: '''
-          set -eux
-          java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} list-jobs
-        '''
-      ).tokenize('\n')
+      jobs = jenkinsJobList()
   }
   int numJobs = jobs.size()
 
