@@ -87,6 +87,17 @@ def call (Map args = [
         }
       }
 
+      stage('Jenkins Auth Env Check') {
+        steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          withEnv(args.env ?: []) {
+            withCredentials(args.creds ?: []) {
+              jenkinsCLICheckEnvVars()
+            }
+          }
+        }
+      }
+
       stage ('Setup') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
@@ -103,17 +114,6 @@ def call (Map args = [
         steps {
           milestone(ordinal: null, label: "Milestone: ${env.STAGE_NAME}")
           checkout(args.checkout)
-        }
-      }
-
-      stage('Jenkins Auth Env Check') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
-              jenkinsCLICheckEnvVars()
-            }
-          }
         }
       }
 
