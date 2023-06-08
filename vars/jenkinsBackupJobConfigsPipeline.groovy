@@ -107,7 +107,7 @@ def call (Map args = [
         }
       }
 
-      stage('Auth Env Check') {
+      stage('Jenkins Auth Env Check') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []) {
