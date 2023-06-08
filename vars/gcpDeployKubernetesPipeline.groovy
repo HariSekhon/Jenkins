@@ -88,6 +88,7 @@ def call (Map args = [
     }
 
     options {
+      ansiColor('xterm')
       buildDiscarder(logRotator(numToKeepStr: '30'))
       timestamps()
       timeout (time: "${args.timeoutMinutes ?: 60}", unit: 'MINUTES')
