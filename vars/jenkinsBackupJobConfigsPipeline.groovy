@@ -87,23 +87,22 @@ def call (Map args = [
         }
       }
 
+      stage ('Setup') {
+        steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          gitSetup()
+          sshKnownHostsGitHub()
+        }
+      }
+
       // usually not needed when called from SCM but if testing can pass checkout parameters to run this pipeline directly from Jenkins, see examples in top-level description
       stage ('Checkout') {
         when {
           expression { args.checkout }
         }
         steps {
-          milestone(ordinal: null, label: "Milestone: Checkout")
-          sshKnownHostsGitHub()
+          milestone(ordinal: null, label: "Milestone: ${env.STAGE_NAME}")
           checkout(args.checkout)
-        }
-      }
-
-      stage ('Setup') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          gitSetup()
-          sshKnownHostsGitHub()
         }
       }
 
