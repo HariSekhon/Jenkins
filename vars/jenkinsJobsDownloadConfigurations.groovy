@@ -46,14 +46,7 @@ def call (Map args = [ jobs: [], excludeJobs: [] ]) {
   List<String> jobs = args.jobs ?: []
   List<String> excludedJobs = args.excludeJobs ?: defaultExcludedJobs
 
-  // groovy.lang.MissingPropertyException: No such property: JENKINS_CLI_JAR for class: groovy.lang.Binding
   //jenkinsCliJar = env.JENKINS_CLI_JAR ?: "$HOME/bin/jenkins-cli.jar"
-  //
-  //if (env.JENKINS_CLI_JAR) {
-  //  jenkinsCliJar = env.JENKINS_CLI_JAR
-  //} else {
-  //  jenkinsCliJar = "$HOME/bin/jenkins-cli.jar"
-  //}
   //
   // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use new java.io.File java.lang.String
   //jenkinsCliJarFile = new File(jenkinsCliJar)
