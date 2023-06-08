@@ -30,7 +30,7 @@ def call () {
       returnStdOut: true,
       script: """
         set -eux
-        git tags
+        git tag --list
       """
   )
   tagList = tags.trim().split('\n')
