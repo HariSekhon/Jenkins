@@ -37,7 +37,7 @@ def call (all=false) {
         git branch --list -r
       """
   )
-  if ( !branches ) {
+  if ( ! branches ) {
     error('No branches returns from git command in function gitBranchList()')
   }
   branchList = branches.
