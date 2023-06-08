@@ -18,6 +18,8 @@
 // ========================================================================== //
 
 // Returns a list of strings of jenkins job names
+//
+// assumes JENKIN_CLI_JAR has been downloaded in a previous stage via downloadJenkinsCLI() function
 
 def call() {
   // requires several iterations of In-process Script Approvals from repeatedly failing pipelines at each level of descent into the jenkins.model hierarchy
