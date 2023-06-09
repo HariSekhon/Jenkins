@@ -55,7 +55,7 @@ def call (Map args = [
                      ] ) {
 
   List<String> jobList = []
-  List<String> gitTagsAndBranches = []
+  List<String> gitTagsAndBranchesList = []
 
   // XXX: not working yet
   podTemplate(
@@ -132,7 +132,7 @@ spec:
 
             List<String> gitBranchList = gitBranchList()
 
-            gitTagsAndBranches = gitTagList + gitBranchList
+            gitTagsAndBranchesList = gitTagList + gitBranchList
 
             // grep needs to be approved XXX: hits error, debug later
             //List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
