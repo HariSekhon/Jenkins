@@ -222,8 +222,10 @@ def call (Map args = [
           dir("$DIR") {
             withEnv(args.env ?: []) {
               withCredentials(args.creds ?: []) {
-                // XXX: define this SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
-                sshagent (credentials: ['github-ssh-key']) {
+                // Shouldn't be necessary if you're running this in the Jenkins repo, as the automatic checkout should be authenticated as part of the pipeline setup
+                // So removing this to avoid one more hard dependency and just follow the repo's auth
+                // SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
+                //sshagent (credentials: ['github-ssh-key']) {
                   sh (
                     label: 'Git Push',
                     script: '''
@@ -237,7 +239,7 @@ def call (Map args = [
                       git push origin HEAD:"$branch"
                     '''
                   )
-                }
+                //}
               }
             }
           }
