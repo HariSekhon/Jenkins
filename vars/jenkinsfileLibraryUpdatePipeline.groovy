@@ -293,22 +293,27 @@ spec:
       stage("Checkout Target Pipeline Repo") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          checkout (
-            [
-              $class: 'GitSCM',
-              userRemoteConfigs: [
+          withEnv(args.env ?: []) {
+            withCredentials(args.creds ?: []) {
+              checkout (
                 [
-                  url: env.REPO,
-                  credentialsId: args.creds ? args.creds.credentialsId : null
+                  $class: 'GitSCM',
+                  userRemoteConfigs: [
+                    [
+                      url: env.REPO,
+                      // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: No such field found: field org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation credentialsId
+                      //credentialsId: args.creds ? args.creds.credentialsId : null
+                    ]
+                  ],
+                  branches: [
+                    [
+                      name: env.BRANCH
+                    ]
+                  ]
                 ]
-              ],
-              branches: [
-                [
-                  name: env.BRANCH
-                ]
-              ]
-            ]
-          )
+              )
+            }
+          }
         }
       }
 
