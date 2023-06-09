@@ -54,6 +54,9 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
+  List<String> jobList = []
+  List<String> gitTagsAndBranches = []
+
   // XXX: not working yet
   podTemplate(
     yaml: """
@@ -101,7 +104,7 @@ spec:
             sh 'whoami'
 
             // much lighter weight than having to install the CLI
-            List<String> jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+            jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
 
             //jenkinsCLICheckEnvVars()
             //timeout (time: 5, unit: 'MINUTES') {
@@ -129,7 +132,7 @@ spec:
 
             List<String> gitBranchList = gitBranchList()
 
-            List<String> gitTagsAndBranches = gitTagList + gitBranchList
+            gitTagsAndBranches = gitTagList + gitBranchList
 
             // grep needs to be approved XXX: hits error, debug later
             //List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
