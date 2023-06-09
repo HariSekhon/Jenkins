@@ -149,13 +149,13 @@ spec:
 
             gitTagsAndBranchesList = gitTagList + gitBranchList + gitTagList
 
-            // grep needs to be approved XXX: hits error, debug later
-            List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
+            //  grep needs to be approved, but would also require @NonCPS which probably isn't worth it for this
+            //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
             //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }*.key
 
-            if ( duplicates ) {
-              echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
-            }
+            //if ( duplicates ) {
+            //  echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+            //}
           }
         }
       }
