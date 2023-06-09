@@ -87,22 +87,24 @@ def call (Map args = [
         }
       }
 
-      stage('Jenkins Auth Env Check') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
-              jenkinsCLICheckEnvVars()
+      stage('Setup') {
+        parallel {
+          stage ('Git Setup') {
+            steps {
+              gitSetup()
+              sshKnownHostsGitHub()
             }
           }
-        }
-      }
 
-      stage ('Setup') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          gitSetup()
-          sshKnownHostsGitHub()
+          stage('Jenkins Auth Env Check') {
+            steps {
+              withEnv(args.env ?: []) {
+                withCredentials(args.creds ?: []) {
+                  jenkinsCLICheckEnvVars()
+                }
+              }
+            }
+          }
         }
       }
 
