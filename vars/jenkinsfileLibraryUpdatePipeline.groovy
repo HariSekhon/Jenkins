@@ -54,52 +54,51 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
-  node {
+  podTemplate(
+    defaultContainer: args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions'),
+    yamlFile: args.yamlFile ?: 'ci/jenkins-pod.yaml'
+    ) {
 
-    agent {
-      kubernetes {
-        defaultContainer args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
-        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
-      }
-    }
+    node {
 
-    stage('Dynamically Populate Choices'){
-      withEnv(args.env ?: []) {
-        withCredentials(args.creds ?: []) {
+      stage('Dynamically Populate Choices'){
+        withEnv(args.env ?: []) {
+          withCredentials(args.creds ?: []) {
 
-          printEnv()
-          sh 'whoami'
+            printEnv()
+            sh 'whoami'
 
-          jenkinsCLICheckEnvVars()
-          timeout (time: 5, unit: 'MINUTES') {
-            // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
-            // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
-            installPackages(
-              [
-                'default-jdk',
-                'curl',
-                'libxml2-utils', // for xmllint
-              ]
-            )
-          }
-          downloadJenkinsCLI()
+            jenkinsCLICheckEnvVars()
+            timeout (time: 5, unit: 'MINUTES') {
+              // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+              // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+              installPackages(
+                [
+                  'default-jdk',
+                  'curl',
+                  'libxml2-utils', // for xmllint
+                ]
+              )
+            }
+            downloadJenkinsCLI()
 
-          echo "Getting Jenkins Jobs"
+            echo "Getting Jenkins Jobs"
 
-          List<String> jobList = jenkinsJobList()
+            List<String> jobList = jenkinsJobList()
 
-          echo "Getting Git Tags and Branches"
+            echo "Getting Git Tags and Branches"
 
-          List<String> gitTagList = gitTagList()
+            List<String> gitTagList = gitTagList()
 
-          List<String> gitBranchList = gitBranchList()
+            List<String> gitBranchList = gitBranchList()
 
-          List<String> gitTagsAndBranches = gitTagList + gitBranchList
+            List<String> gitTagsAndBranches = gitTagList + gitBranchList
 
-          List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
+            List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
 
-          if ( duplicates ) {
-            echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+            if ( duplicates ) {
+              echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+            }
           }
         }
       }
@@ -125,18 +124,18 @@ def call (Map args = [
     //environment {
     //}
 
-		parameters {
-			choice(
-				name: 'JOB',
-				description: "Pipeline to update 'Libary(jenkins@version)'",
-				choices: jobList
-			)
-			choice(
+    parameters {
+      choice(
+        name: 'JOB',
+        description: "Pipeline to update 'Libary(jenkins@version)'",
+        choices: jobList
+      )
+      choice(
         name: 'GIT_REF',
         description: "Jenkins Library git tag/branch to update Jenkinsfile to use",
         choices: gitTagsAndBranchesList
       )
-		}
+    }
 
     stages {
 
