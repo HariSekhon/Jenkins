@@ -58,6 +58,8 @@ def call (Map args = [
                         env: '',      // Environment, eg, 'uk-dev', 'us-staging' etc.. - suffixed to ArgoCD app name calls and used if k8s_dir not defined
                         env_vars: [:],  // a Map of environment variables and their values to load to the pipeline
                         creds: [:],     // a Map of environment variable keys and credentials IDs to populate each one with
+                        container: 'gcloud-sdk',  // the container to run the build in
+                        yamlFile: 'ci/jenkins-pod.yaml',  // the Kubernetes agent yaml file path
                         cloudbuild_args: '', // GCP CloudBuild args if needing to customize eg. to pass different or additional environment variables to the build
                         cloudbuild_config: 'cloudbuild.yaml',  // CloudBuild config file to use (will be ignored if cloudbuild_args is supplied but does not reference the $CLOUDBUILD_CONFIG environment variable)
                         no_cloudbuild: false,  // set to 'true' to not run CloudBuild but instead wait for the docker image tags appear in GCR from externally triggered CloudBuild or other image build process
@@ -73,14 +75,17 @@ def call (Map args = [
                       ]
       ) {
 
+  String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
+  String yamlFilePath = args.yamlFile ?: 'ci/jenkins-pod.yaml'
   int timeoutMins = args.timeoutMinutes ?: 60
 
   pipeline {
 
     agent {
       kubernetes {
-        defaultContainer 'gcloud-sdk'
-        yamlFile "ci/jenkins-pod.yaml"
+        defaultContainer container
+        yamlFile yamlFilePath
       }
     }
 
