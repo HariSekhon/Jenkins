@@ -35,7 +35,7 @@ def call () {
         script: '''
           set -eu
           #unset JENKINS_URL JENKINS_SERVER_COOKIE JENKINS_USER_ID JENKINS_NODE_COOKIE
-          unset $(env | grep '^JENKINS_' | grep -v JENKINS_CLI_ARGS | sed 's/=.*//')
+          unset $(env | grep '^JENKINS_' | grep -v '^JENKINS_CLI_ARGS=' | sed 's/=.*//')
           java -jar ~/bin/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} version || :
         '''
       )
