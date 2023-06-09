@@ -54,6 +54,7 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
+  // XXX: not working yet
   podTemplate(
     yaml: """
 ---
@@ -99,10 +100,8 @@ spec:
             printEnv()
             sh 'whoami'
 
+            // much lighter weight than having to install the CLI
             List<String> jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
-
-            echo "Found Jobs:"
-            jobList.each { println it }
 
             //jenkinsCLICheckEnvVars()
             //timeout (time: 5, unit: 'MINUTES') {
@@ -121,6 +120,8 @@ spec:
             //echo "Getting Jenkins Jobs"
             //
             //List<String> jobList = jenkinsJobList()
+
+            checkout scm
 
             echo "Getting Git Tags and Branches"
 
