@@ -232,7 +232,6 @@ def call (Map args = [
 
       stage('Jenkins CLI Version') {
         steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []) {
             withCredentials(args.creds ?: []) {
               sh (
@@ -249,7 +248,7 @@ def call (Map args = [
 
       stage("Get Pipeline Config") {
         steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
           script {
             withEnv(args.env ?: []) {
               withCredentials(args.creds ?: []) {
@@ -265,7 +264,7 @@ def call (Map args = [
 
       stage("Checkout Pipeline Repo") {
         steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
           withEnv(args.env ?: []) {
             withCredentials(args.creds ?: []) {
               checkout (
@@ -299,7 +298,7 @@ def call (Map args = [
 
       stage('Update Pipeline Jenkinsfile') {
         steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
           withEnv(args.env ?: []) {
             withCredentials(args.creds ?: []) {
               // protection because the first run of the pipeline will just assume to take the first choices of both the job name and the git ref - second run will force Build with Parameters pop-up choice
