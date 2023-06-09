@@ -25,14 +25,14 @@
 //
 //    loadEnvVars(['NO_NOTIFY': 'true'])
 
-def call(env_vars) {
-  if (! env_vars) {
+def call(envVars) {
+  if (! envVars) {
     return
   }
-  if (env_vars instanceof Map == false) {
-    error 'env_vars passed to loadEnvVars() must be a Map'
+  if (envVars instanceof Map == false) {
+    error 'envVars passed to loadEnvVars() must be a Map'
   }
-  env_vars.each { k, v ->
+  envVars.each { k, v ->
     env[k] = v
   }
 }
