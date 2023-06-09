@@ -35,12 +35,10 @@
 def call (Map args = []) {
 
   //branch = args.branch ?: error('branch not specified in args to gitUpdateFiles()')
-  branch = args.branch ?: ''
+  branch = args.branch ?: gitCurrentBranch()
   commands = args.commands ?: error('commands not specified in args to gitUpdateFiles()')
   commit_msg = args.commit_msg ?: 'gitUpdateFiles'
   credential = args.credential ?: 'github-ssh-key'
-
-  branch = branch ?: gitCurrentBranch()
 
   String label = "Git Update File(s) in branch '$branch'"
 
