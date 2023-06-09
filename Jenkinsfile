@@ -422,7 +422,7 @@ pipeline {
                 url: 'https://github.com/HariSekhon/DevOps-Bash-tools',
                 credentialsId: '',
               ]
-            ]
+            ],
             branches: [
               [
                 name: '*/master'
