@@ -40,9 +40,7 @@ def call (Map args = []) {
   commit_msg = args.commit_msg ?: 'gitUpdateFiles'
   credential = args.credential ?: 'github-ssh-key'
 
-  if ( ! branch ) {
-    branch = gitCurrentBranch()
-  }
+  branch = branch ?: gitCurrentBranch()
 
   String label = "Git Update File(s) in branch '$branch'"
 
