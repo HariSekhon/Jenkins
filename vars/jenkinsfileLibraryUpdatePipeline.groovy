@@ -199,8 +199,8 @@ spec:
 
     stages {
 
-      parallel('Setup') {
-        stages {
+      stage('Setup') {
+        parallel {
           stage('Environment') {
             steps {
               withEnv(args.env ?: []) {
