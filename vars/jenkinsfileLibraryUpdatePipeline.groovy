@@ -23,8 +23,9 @@
 //
 // Choices are remembered after first run and subsequently Build with Parameters prompt is then available
 //
-// XXX: Beware: the first run may try to execute against the first pipeline in the list though, with the first tag in the list which is always the default.
-//      You should cancel the first pipeline if this will cause you an issue
+// XXX: the first run will populated the choices but it continues assuming the default first choices for job and git ref
+//      so the pipeline checks the build number and aborts BUILD_NUMBER=1 for safety
+//      the second run will force a Build with Parameters pop-up choice to the calling user
 
 // Templated pipeline:
 //
@@ -198,48 +199,52 @@ spec:
 
     stages {
 
-      stage('Environment') {
-        steps {
-          withEnv(args.env ?: []) {
-            printEnv()
-            sh 'whoami'
-          }
-        }
-      }
-
-      stage('Jenkins Auth Env Check') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
-              jenkinsCLICheckEnvVars()
+      parallel('Setup') {
+        stages {
+          stage('Environment') {
+            steps {
+              withEnv(args.env ?: []) {
+                printEnv()
+                sh 'whoami'
+              }
             }
           }
-        }
-      }
 
-      stage ('Setup') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          gitSetup()
-          sshKnownHostsGitHub()
-        }
-      }
+          stage('Jenkins Auth Env Check') {
+            steps {
+              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+              withEnv(args.env ?: []) {
+                withCredentials(args.creds ?: []) {
+                  jenkinsCLICheckEnvVars()
+                }
+              }
+            }
+          }
 
-      stage('Install Packages') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            timeout (time: 5, unit: 'MINUTES') {
-              // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
-              // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
-              installPackages(
-                [
-                  'default-jdk',
-                  'curl',
-                  'libxml2-utils', // for xmllint
-                ]
-              )
+          stage ('Git Setup') {
+            steps {
+              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+              gitSetup()
+              sshKnownHostsGitHub()
+            }
+          }
+
+          stage('Install Packages') {
+            steps {
+              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+              withEnv(args.env ?: []) {
+                timeout (time: 5, unit: 'MINUTES') {
+                  // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+                  // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+                  installPackages(
+                    [
+                      'default-jdk',
+                      'curl',
+                      'libxml2-utils', // for xmllint
+                    ]
+                  )
+                }
+              }
             }
           }
         }
@@ -294,6 +299,13 @@ spec:
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []) {
             withCredentials(args.creds ?: []) {
+              // protection because the first run of the pipeline will just assume to take the first choices of both the job name and the git ref - second run will force Build with Parameters pop-up choice
+              script {
+                if ( env.BUILD_NUMBER == 1 ) {
+                  echo "First run of pipeline - aborting for safety as it will have inherited the default first parameter choices and we can't be sure this should actually be actioned"
+                  exit 1
+                }
+              }
               gitUpdateFiles(
                 branch: env.BRANCH,
                 commit_msg: "Updated Jenkinsfile, set library tag @${params.GIT_REF}",
