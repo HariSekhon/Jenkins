@@ -38,7 +38,12 @@
 //        ],
 //        creds: [
 //            string(credentialsId: 'job-api-token', variable: 'JENKINS_API_TOKEN')
-//        ]
+//        ],
+//        // without specifying the container you'll get an error like this by executing in the jnlp container:
+//        //
+//        //      /home/jenkins/agent/workspace/test@tmp/durable-36843a52/script.sh: 13: /home/jenkins/agent/workspace/test@tmp/durable-36843a52/script.sh: sudo: not found
+//        container: 'gcloud-sdk',
+//        yamlFile: 'ci/jenkins-pod.yaml'
 //    )
 
 def call (Map args = [
