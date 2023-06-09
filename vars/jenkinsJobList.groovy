@@ -24,6 +24,8 @@
 def call() {
   // requires several iterations of In-process Script Approvals from repeatedly failing pipelines at each level of descent into the jenkins.model hierarchy
   //List<String> jobs = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+  // might be able to be more concisely written as a spread expression:
+  //                    jenkins.model.Jenkins.instance.items.findAll()*.name
 
   List<String> jobs = sh (
     label: "List Jobs via CLI",
