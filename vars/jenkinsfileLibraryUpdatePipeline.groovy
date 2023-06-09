@@ -217,7 +217,7 @@ spec:
                 //if ( ! args.github_ssh_key_credential_id ) {
                 //  error("github_ssh_key_credential_id parameter was not set when calling jenkinsfileLibraryUpdatePipeline()")
                 //}
-                args.args.github_ssh_key_credential_id = args.github_ssh_key_credential_id ?: 'github-ssh-key'
+                args.github_ssh_key_credential_id = args.github_ssh_key_credential_id ?: 'github-ssh-key'
               }
               gitSetup()
               sshKnownHostsGitHub()
@@ -313,7 +313,7 @@ spec:
                       //
                       //    hudson.plugins.git.GitException: Failed to fetch from git@github.com:
                       //
-                      // but when setting credentialsId:
+                      // but be careful not to set credentialsId to args.credentials array, otherwise:
                       //
                       // org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: No such field found: field org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation credentialsId
                       //
