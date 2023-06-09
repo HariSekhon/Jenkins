@@ -27,6 +27,10 @@
 
 def call(jobXml) {
 
+  if ( ! jobXml ) {
+    error('no job xml passed to function jenkinsJobJenkinsfile()')
+  }
+
   // https://groovy-lang.org/processing-xml.html
 
   //def xmlroot = new XmlSlurper().parseText(jobXml)
