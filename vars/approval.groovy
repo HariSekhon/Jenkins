@@ -44,13 +44,13 @@ def call (Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:''])
   //  "Using a milestone step inside parallel is not allowed"
   //
   milestone ordinal: null, label: "Milestone: Approval"
-  args.timeout = args.timeout ?: 60
-  args.timeoutUnits = args.timeoutUnits ?: 'MINUTES'
-  timeout (time: args.timeout, unit: args.timeoutUnits) {
+  int timeout = args.timeout ?: 60
+  String timeoutUnits = args.timeoutUnits ?: 'MINUTES'
+  timeout (time: timeout, unit: timeoutUnits) {
     input (
       message: """Are you sure you want to release this build?
 
-This prompt will time out in ${args.timeout} ${args.timeoutUnits.toLowerCase()}""",
+This prompt will time out in ${timeout} ${timeoutUnits.toLowerCase()}""",
       ok: args.ok,
       // only allow people in these 2 groups to approve before proceeeding eg. to production deployment - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,Deployers"
