@@ -150,8 +150,8 @@ spec:
             gitTagsAndBranchesList = gitTagList + gitBranchList + gitTagList
 
             // grep needs to be approved XXX: hits error, debug later
-            List<String> duplicates = gitTagsAndBranches.countBy { it }.grep { it.value > 1 }.collect { it.key }
-            //List<String> duplicates = gitTagsAndBranches.countBy { it }.grep { it.value > 1 }*.key
+            List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
+            //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }*.key
 
             if ( duplicates ) {
               echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
