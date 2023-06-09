@@ -569,6 +569,7 @@ pipeline {
     //                                    T e s t
     // ========================================================================== //
 
+    // XXX: Stage names in Blue Ocean UI seem to truncate at around 14-15 chars on the 2nd line
     stage('Wait for Selenium Grid to be up') {
       steps {
         sh script: "./selenium_hub_wait_ready.sh '$SELENIUM_HUB_URL' 60"  // script available in DevOps-Bash-tools repo
@@ -1300,6 +1301,7 @@ pipeline {
 //node {
 //  stage 'Checkout'
 //
+//  // default checkout of the repo containing this Jenkinsfile - this is done automatically for you in Declarative Pipelines
 //  checkout scm
 //
 //  stage 'Gradle Static Analysis'
