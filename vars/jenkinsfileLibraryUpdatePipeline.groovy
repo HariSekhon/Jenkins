@@ -294,9 +294,11 @@ spec:
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           checkout scm(
+            $class: 'GitSCM',
             userRemoteConfigs: [
               [
-                url: env.REPO
+                url: env.REPO,
+                credentialsId: args.creds ? args.creds.credentialsId  : null
               ]
             ],
             branches: [
