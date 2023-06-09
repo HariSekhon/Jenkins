@@ -31,7 +31,7 @@ def call (shortRef=false) {
   // could limit this with 'git log -n NN' but only takes 0.5 secs for nearly 30,000 in local git testing
   hashRefs = sh (
       label: 'Git Log Hashrefs',
-      returnStdOut: true,
+      returnStdout: true,
       script: """
         set -eux
         git log --pretty=format:'$format'
