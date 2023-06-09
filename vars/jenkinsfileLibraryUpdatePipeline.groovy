@@ -212,7 +212,6 @@ spec:
 
           stage('Jenkins Auth Env Check') {
             steps {
-              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
               withEnv(args.env ?: []) {
                 withCredentials(args.creds ?: []) {
                   jenkinsCLICheckEnvVars()
@@ -223,7 +222,6 @@ spec:
 
           stage ('Git Setup') {
             steps {
-              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
               gitSetup()
               sshKnownHostsGitHub()
             }
@@ -231,7 +229,6 @@ spec:
 
           stage('Install Packages') {
             steps {
-              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
               withEnv(args.env ?: []) {
                 timeout (time: 5, unit: 'MINUTES') {
                   // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
