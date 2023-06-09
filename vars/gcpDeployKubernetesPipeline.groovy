@@ -73,6 +73,8 @@ def call (Map args = [
                       ]
       ) {
 
+  int timeoutMins = args.timeoutMinutes ?: 60
+
   pipeline {
 
     agent {
@@ -91,7 +93,7 @@ def call (Map args = [
       ansiColor('xterm')
       buildDiscarder(logRotator(numToKeepStr: '30'))
       timestamps()
-      timeout (time: "${args.timeoutMinutes ?: 60}", unit: 'MINUTES')
+      timeout (time: timeoutMins, unit: 'MINUTES')
     }
 
     environment {
@@ -259,7 +261,7 @@ def call (Map args = [
         }
         steps {
           gcpCloudBuild(args: args.cloudbuild_args ?: '--config="$CLOUDBUILD_CONFIG" --project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$VERSION,_GIT_BRANCH=${GIT_BRANCH##*/}"',
-                        timeoutMinutes: 90,
+                        timeoutMinutes: timeoutMins,
                         // auto-inferred now
                         //skipIfDockerImagesExist: env.DOCKER_IMAGES.split(',').collect { "$it:$VERSION" }
                         )
