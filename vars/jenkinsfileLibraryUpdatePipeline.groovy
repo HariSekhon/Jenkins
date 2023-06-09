@@ -121,7 +121,7 @@ spec:
             //
             //List<String> jobList = jenkinsJobList()
 
-            checkout scm
+            checkout scmGit()
 
             echo "Getting Git Tags and Branches"
 
