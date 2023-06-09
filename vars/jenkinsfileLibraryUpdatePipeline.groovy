@@ -188,7 +188,7 @@ spec:
       )
       booleanParam(
         name: 'BUILD',
-        description: 'Build this pipeline after updated its Jenkinsfile?',
+        description: 'Build this pipeline after updating its Jenkinsfile?',
         defaultValue: false
       )
     }
