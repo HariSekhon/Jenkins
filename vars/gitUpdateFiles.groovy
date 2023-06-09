@@ -65,7 +65,7 @@ def call (Map args = []) {
                 git fetch --all
 
                 git checkout "$BRANCH" --force
-                git pull --no-edit
+                git pull --no-edit --no-rebase
 
                 $commands
 
