@@ -283,7 +283,7 @@ spec:
                 String xml = jenkinsJobConfigXml(params.JOB)
                 env.REPO = jenkinsJobRepo(xml)
                 env.BRANCH = jenkinsJobBranch(xml)
-                env.JENKINSFILE = jenkinsJobJenkinsfile(env.TARGET_JOB_XML)
+                env.JENKINSFILE = jenkinsJobJenkinsfile(xml)
               }
             }
           }
