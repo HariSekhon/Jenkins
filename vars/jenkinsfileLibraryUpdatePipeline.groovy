@@ -39,7 +39,7 @@ def call (Map args = [
 
   echo "Getting Jenkins Jobs"
 
-  List<String> jenkinsJobList = jenkinsJobList()
+  List<String> jobList = jenkinsJobList()
 
   echo "Getting Git Tags and Branches"
 
@@ -78,7 +78,7 @@ def call (Map args = [
 			choice(
 				name: 'JOB',
 				description: "Pipeline to update 'Libary(jenkins@version)'",
-				choices: jenkinsJobList
+				choices: jobList
 			)
 			choice(
         name: 'GIT_REF',
