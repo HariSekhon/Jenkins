@@ -278,10 +278,14 @@ spec:
       stage("Get Target Pipeline Config") {
         steps {
           script{
-            String xml = jenkinsJobConfigXml(params.JOB)
-            env.REPO = jenkinsJobRepo(xml)
-            env.BRANCH = jenkinsJobBranch(xml)
-            env.JENKINSFILE = jenkinsJobJenkinsfile(env.TARGET_JOB_XML)
+            withEnv(args.env ?: []) {
+              withCredentials(args.creds ?: []) {
+                String xml = jenkinsJobConfigXml(params.JOB)
+                env.REPO = jenkinsJobRepo(xml)
+                env.BRANCH = jenkinsJobBranch(xml)
+                env.JENKINSFILE = jenkinsJobJenkinsfile(env.TARGET_JOB_XML)
+              }
+            }
           }
         }
       }
