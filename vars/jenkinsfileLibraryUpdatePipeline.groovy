@@ -72,8 +72,10 @@ def call (Map args = [
   List<String> jobList = []
   List<String> gitTagsAndBranchesList = []
 
+  // Scripted Pipelines have horrible Kubernetes support, can't use yamlFile and the podTemplate doesn't work properly
+  // so avoid using a full fledged gcloud-sdk container and just make do with a minimal dependencies jenkinsJobListAPI()
+  // without installing anything
   node {
-
     stage('Dynamically Populate Choices'){
       withEnv(args.env ?: []) {
         withCredentials(args.creds ?: []) {
