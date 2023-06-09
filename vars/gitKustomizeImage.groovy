@@ -130,6 +130,8 @@ def call (Map args = [:]) {
 
               git add -A
 
+              git status
+
               if ! git diff-index --quiet HEAD; then
                 git commit -m "updated app images under '${args.dir}' to version '${args.version}'"
               fi
