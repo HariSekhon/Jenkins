@@ -61,7 +61,7 @@
 
 def call (Map args = [
                       creds: [],
-                      github_ssh_key_credential_id: null, // set this to the Jenkins credential id of the private key for checking out private repos
+                      github_ssh_key_credential_id: 'github-ssh-key', // set this to the Jenkins credential id of the private key for checking out private repos
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
                       yamlFile: 'ci/jenkins-pod.yaml',
@@ -114,10 +114,6 @@ spec:
       stage('Dynamically Populate Choices'){
         withEnv(args.env ?: []) {
           withCredentials(args.creds ?: []) {
-
-            if ( ! args.github_ssh_key ) {
-              error("github_ssh_key_credential_id parameter was not set when calling jenkinsfileLibraryUpdatePipeline()")
-            }
 
             printEnv()
             sh 'whoami'
@@ -217,6 +213,12 @@ spec:
 
           stage ('Git Setup') {
             steps {
+              script {
+                //if ( ! args.github_ssh_key_credential_id ) {
+                //  error("github_ssh_key_credential_id parameter was not set when calling jenkinsfileLibraryUpdatePipeline()")
+                //}
+                args.args.github_ssh_key_credential_id = args.github_ssh_key_credential_id ?: 'github-ssh-key'
+              }
               gitSetup()
               sshKnownHostsGitHub()
             }
