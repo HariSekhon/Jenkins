@@ -363,7 +363,7 @@ spec:
         }
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          build job: params.JOB
+          build params.JOB
         }
       }
 
