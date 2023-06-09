@@ -48,7 +48,8 @@ def call(jobXml) {
             split('\n').
             find { it.contains('<url>') }.
             replace('<url>', '').
-            replace('</url>', '')
+            replace('</url>', '').
+            trim()
 
   return repo
 }
