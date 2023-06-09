@@ -114,7 +114,7 @@ def call (Map args = [:]) {
 
               cd "\$repo_dir/${args.dir}"
 
-              git checkout "${args.branch}"
+              git checkout "${args.branch}" --force
 
               git pull
 
