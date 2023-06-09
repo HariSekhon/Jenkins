@@ -17,12 +17,9 @@
 //                        J e n k i n s   J o b   R e p o
 // ========================================================================== //
 
-// Returns the SCM repo url for a given Jenkins job using the Jenkins CLI
-//
-// assumes JENKIN_CLI_JAR has been downloaded in a previous stage via downloadJenkinsCLI() function
+// Returns the SCM repo url for a given Jenkins job from its XML config as returned by jenkinsJobConfigXml(jobName)
 
-def call(jobName) {
-  jobXml = jenkinsJobConfigXml(jobName)
+def call(jobXml) {
 
   // https://groovy-lang.org/processing-xml.html
 
