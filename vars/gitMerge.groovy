@@ -50,7 +50,7 @@ def call (fromBranch, toBranch, credential = 'github-ssh-key') {
                 git fetch --all
 
                 git checkout "$TO_BRANCH" --force
-                git pull --no-edit
+                git pull --no-edit --no-rebase
                 git merge "origin/$FROM_BRANCH" --no-edit
 
                 # XXX: push is done here and not a separate stage (which would be nicer visually in a Blue Ocean pipeline)
