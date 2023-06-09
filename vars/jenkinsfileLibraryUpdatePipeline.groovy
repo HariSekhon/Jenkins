@@ -298,7 +298,7 @@ spec:
             userRemoteConfigs: [
               [
                 url: env.REPO,
-                credentialsId: args.creds ? args.creds.credentialsId  : null
+                credentialsId: args.creds ? args.creds.credentialsId : null
               ]
             ],
             branches: [
