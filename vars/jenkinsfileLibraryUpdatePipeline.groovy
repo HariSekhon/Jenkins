@@ -276,9 +276,7 @@ spec:
       stage("Checkout Target Pipeline Repo") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          checkout scmGit(userRemoteConfigs: [
-                              [ url: env.REPO ]
-                                              ])
+          checkout scmGit(userRemoteConfigs: [ [ url: env.REPO ] ])
         }
       }
 
