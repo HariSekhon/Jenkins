@@ -293,17 +293,19 @@ spec:
       stage("Checkout Target Pipeline Repo") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          checkout scm(
-            $class: 'GitSCM',
-            userRemoteConfigs: [
-              [
-                url: env.REPO,
-                credentialsId: args.creds ? args.creds.credentialsId : null
-              ]
-            ],
-            branches: [
-              [
-                name: env.BRANCH
+          checkout (
+            [
+              $class: 'GitSCM',
+              userRemoteConfigs: [
+                [
+                  url: env.REPO,
+                  credentialsId: args.creds ? args.creds.credentialsId : null
+                ]
+              ],
+              branches: [
+                [
+                  name: env.BRANCH
+                ]
               ]
             ]
           )
