@@ -51,12 +51,21 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
+  List creds = args.creds ?: []
+  // env2 because env is the built-in System.env
+  List env2 = args.env ?: []
+  String cronline = args.cron ?: 'H */3 * * *'
+  String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
+  String yamlFilePath = args.yamlFile ?: 'ci/jenkins-pod.yaml'
+  String timeoutMinutes = "${args.timeoutMinutes ?: 15}"
+
   pipeline {
 
     agent {
       kubernetes {
-        defaultContainer args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
-        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
+        defaultContainer container
+        yamlFile yamlFilePath
       }
     }
 
@@ -69,7 +78,7 @@ def call (Map args = [
 
     // backup to catch GitHub -> Jenkins webhook failures
     triggers {
-      cron("${args.cron ?: 'H */3 * * *'}")
+      cron(cronline)
     }
 
     environment {
@@ -98,8 +107,8 @@ def call (Map args = [
 
           stage('Jenkins Auth Env Check') {
             steps {
-              withEnv(args.env ?: []) {
-                withCredentials(args.creds ?: []) {
+              withEnv(env2) {
+                withCredentials(creds) {
                   jenkinsCLICheckEnvVars()
                 }
               }
@@ -122,7 +131,7 @@ def call (Map args = [
       stage('Install Packages') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
+          withEnv(env2) {
             timeout (time: 5, unit: 'MINUTES') {
               // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
               // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
@@ -141,7 +150,7 @@ def call (Map args = [
       stage('Download Jenkins CLI') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
+          withEnv(env2) {
             downloadJenkinsCLI()
           }
         }
@@ -150,8 +159,8 @@ def call (Map args = [
       stage('Jenkins CLI Version') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
+          withEnv(env2) {
+            withCredentials(creds) {
               sh (
                 label: 'Version',
                 script: '''
@@ -168,8 +177,8 @@ def call (Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR") {
-            withEnv(args.env ?: []) {
-              withCredentials(args.creds ?: []) {
+            withEnv(env2) {
+              withCredentials(creds) {
                 jenkinsJobsDownloadConfigurations(jobs: args.jobs ?: [])
               }
             }
@@ -181,8 +190,8 @@ def call (Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR") {
-            withEnv(args.env ?: []) {
-              withCredentials(args.creds ?: []) {
+            withEnv(env2) {
+              withCredentials(creds) {
                 jenkinsDeleteRemovedJobXmls()
               }
             }
@@ -194,8 +203,8 @@ def call (Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR") {
-            withEnv(args.env ?: []) {
-              withCredentials(args.creds ?: []) {
+            withEnv(env2) {
+              withCredentials(creds) {
                 sh (
                   label: 'Git Commit',
                   script: '''
@@ -222,8 +231,8 @@ def call (Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           dir("$DIR") {
-            withEnv(args.env ?: []) {
-              withCredentials(args.creds ?: []) {
+            withEnv(env2) {
+              withCredentials(creds) {
                 // Shouldn't be necessary if you're running this in the Jenkins repo, as the automatic checkout should be authenticated as part of the pipeline setup
                 // So removing this to avoid one more hard dependency and just follow the repo's auth
                 // SSH private key in Jenkins -> Manage Jenkins -> Credentials as SSH username with private key
