@@ -55,8 +55,39 @@ def call (Map args = [
                      ] ) {
 
   podTemplate(
-    defaultContainer: args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions'),
-    yamlFile: args.yamlFile ?: 'ci/jenkins-pod.yaml'
+    yaml: """
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: jenkins
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+spec:
+  priorityClassName: high-priority
+  affinity:
+    # avoid GKE preemption causing build failures
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: cloud.google.com/gke-preemptible
+            operator: DoesNotExist
+  # needed for argocd container to /home/jenkins/agent/workspace/<pipeline>@tmp/durable-888973f9/jenkins-log.txt, otherwise Permission Denied
+  securityContext:
+    runAsUser: 0
+  containers:
+  - name: gcloud-sdk
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
+    tty: true
+    resources:
+      requests:
+        cpu: 300m
+        memory: 300Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+    """
     ) {
 
     node {
