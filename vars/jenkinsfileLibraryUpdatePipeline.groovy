@@ -37,22 +37,26 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
-  echo "Getting Jenkins Jobs"
+  node {
+    stage('Dynamically Populated Choices'){
+      echo "Getting Jenkins Jobs"
 
-  List<String> jobList = jenkinsJobList()
+      List<String> jobList = jenkinsJobList()
 
-  echo "Getting Git Tags and Branches"
+      echo "Getting Git Tags and Branches"
 
-  List<String> gitTagList = gitTagList()
+      List<String> gitTagList = gitTagList()
 
-  List<String> gitBranchList = gitBranchList()
+      List<String> gitBranchList = gitBranchList()
 
-  List<String> gitTagsAndBranches = gitTagList + gitBranchList
+      List<String> gitTagsAndBranches = gitTagList + gitBranchList
 
-  List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
+      List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
 
-  if ( duplicates ) {
-    echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+      if ( duplicates ) {
+        echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+      }
+    }
   }
 
   pipeline {
