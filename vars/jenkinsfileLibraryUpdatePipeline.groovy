@@ -55,6 +55,14 @@ def call (Map args = [
                      ] ) {
 
   node {
+
+    agent {
+      kubernetes {
+        defaultContainer args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
+      }
+    }
+
     stage('Dynamically Populate Choices'){
       withEnv(args.env ?: []) {
         withCredentials(args.creds ?: []) {
