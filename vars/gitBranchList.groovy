@@ -30,7 +30,7 @@
 def call (all=false) {
   branches = sh (
       label: 'Git Branches',
-      returnStdOut: true,
+      returnStdout: true,
       script: """
         set -eux
         git branch --list -r
