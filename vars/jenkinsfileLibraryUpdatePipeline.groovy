@@ -38,23 +38,42 @@ def call (Map args = [
                      ] ) {
 
   node {
-    stage('Dynamically Populated Choices'){
-      echo "Getting Jenkins Jobs"
+    stage('Dynamically Populate Choices'){
+      withEnv(args.env ?: []) {
+        withCredentials(args.creds ?: []) {
 
-      List<String> jobList = jenkinsJobList()
+          jenkinsCLICheckEnvVars()
+          timeout (time: 5, unit: 'MINUTES') {
+            // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+            // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+            installPackages(
+              [
+                'default-jdk',
+                'curl',
+                'libxml2-utils', // for xmllint
+              ]
+            )
+          }
+          downloadJenkinsCLI()
 
-      echo "Getting Git Tags and Branches"
+          echo "Getting Jenkins Jobs"
 
-      List<String> gitTagList = gitTagList()
+          List<String> jobList = jenkinsJobList()
 
-      List<String> gitBranchList = gitBranchList()
+          echo "Getting Git Tags and Branches"
 
-      List<String> gitTagsAndBranches = gitTagList + gitBranchList
+          List<String> gitTagList = gitTagList()
 
-      List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
+          List<String> gitBranchList = gitBranchList()
 
-      if ( duplicates ) {
-        echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+          List<String> gitTagsAndBranches = gitTagList + gitBranchList
+
+          List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
+
+          if ( duplicates ) {
+            echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+          }
+        }
       }
     }
   }
