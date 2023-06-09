@@ -76,7 +76,7 @@ def call (Map args = [
   // so avoid using a full fledged gcloud-sdk container and just make do with a minimal dependencies jenkinsJobListAPI()
   // without installing anything
   node {
-    stage('Dynamically Populate Choices'){
+    stage('Dynamically Populate Choices') {
       withEnv(args.env ?: []) {
         withCredentials(args.creds ?: []) {
 
