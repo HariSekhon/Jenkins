@@ -17,6 +17,15 @@
 //              J e n k i n s f i l e   L i b r a r y   U p d a t e
 // ========================================================================== //
 
+// Perhaps too clever for my own good, this is not simple, but it is impressively dynamic
+//
+// Choices are generated dynamically via node{} scripted pipeline, and then fed to a declarative pipeline{}
+//
+// Choices are remembered after first run and subsequently Build with Parameters prompt is then available
+//
+// XXX: Beware: the first run may try to execute against the first pipeline in the list though, with the first tag in the list which is always the default.
+//      You should cancel the first pipeline if this will cause you an issue
+
 // Templated pipeline:
 //
 // - run from Jenkins Shared Library repo
@@ -54,6 +63,7 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
+  // must be here so that these variables can be scoped from node{} to pipeline{}
   List<String> jobList = []
   List<String> gitTagsAndBranchesList = []
 
@@ -168,7 +178,7 @@ spec:
     parameters {
       choice(
         name: 'JOB',
-        description: "Pipeline to update 'Libary(jenkins@version)'",
+        description: "Pipeline to update 'Library(jenkins@version)'",
         choices: jobList
       )
       choice(
