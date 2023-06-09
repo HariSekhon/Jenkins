@@ -17,7 +17,7 @@
 //                                   B u i l d
 // ========================================================================== //
 
-// XXX: Do not call this build.groovy, it will clash with the built-in 'build' which is used by jenkinsfileLibraryUpdatePipeline.groovy
+// Do not call this file build.groovy, it will clash with the built-in 'build' which is used by jenkinsfileLibraryUpdatePipeline.groovy
 
 def call () {
   echo "Running Job '${env.JOB_NAME}' Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
