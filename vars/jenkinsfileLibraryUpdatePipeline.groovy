@@ -241,7 +241,6 @@ spec:
         parallel {
           stage('Download Jenkins CLI') {
             steps {
-              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
               withEnv(args.env ?: []) {
                 downloadJenkinsCLI()
               }
