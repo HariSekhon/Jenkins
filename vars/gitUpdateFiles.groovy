@@ -48,7 +48,8 @@ def call (Map args = []) {
 
   echo "Acquiring Git Update Lock: $label"
   lock (resource: label, inversePrecedence: true) {
-    milestone ordinal: null, label: "Milestone: $label"
+    // don't do this because the same pipeline may run multiple times for different repos eg. jenkinsfileLibraryUpdatePipeline.groovy
+    //milestone ordinal: null, label: "Milestone: $label"
     timeout (time: 5, unit: 'MINUTES') {
       sshagent (credentials: [credential]) {
         retry (2) {
