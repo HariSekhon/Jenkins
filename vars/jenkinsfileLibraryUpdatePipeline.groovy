@@ -69,7 +69,7 @@ def call (Map args = [
                      ] ) {
 
   List creds = args.creds ?: []
-  // env2 because env is the built-in System.env
+  // env2 because env is a built-in derived from System.env
   List env2 = args.env ?: []
   String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
   // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
