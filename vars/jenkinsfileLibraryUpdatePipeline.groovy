@@ -210,16 +210,6 @@ spec:
             }
           }
 
-          stage('Jenkins Auth Env Check') {
-            steps {
-              withEnv(args.env ?: []) {
-                withCredentials(args.creds ?: []) {
-                  jenkinsCLICheckEnvVars()
-                }
-              }
-            }
-          }
-
           stage ('Git Setup') {
             steps {
               gitSetup()
@@ -247,11 +237,24 @@ spec:
         }
       }
 
-      stage('Download Jenkins CLI') {
-        steps {
-          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
-          withEnv(args.env ?: []) {
-            downloadJenkinsCLI()
+      stage('Jenkins CLI Setup') {
+        parallel {
+          stage('Download Jenkins CLI') {
+            steps {
+              milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+              withEnv(args.env ?: []) {
+                downloadJenkinsCLI()
+              }
+            }
+          }
+          stage('Jenkins Auth Env Check') {
+            steps {
+              withEnv(args.env ?: []) {
+                withCredentials(args.creds ?: []) {
+                  jenkinsCLICheckEnvVars()
+                }
+              }
+            }
           }
         }
       }
