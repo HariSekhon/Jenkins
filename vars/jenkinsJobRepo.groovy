@@ -41,7 +41,7 @@ def call(jobXml) {
   //
   //    org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: No such field found: field groovy.util.Node **
   //
-  repo = xmlroot.'**'.find { it.name() == 'url' }.value()[0].trim()
+  //repo = xmlroot.'**'.find { it.name() == 'url' }.value()[0].trim()
 
   // quick and dirty
   repo = jobXml.
