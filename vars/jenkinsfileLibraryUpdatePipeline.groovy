@@ -208,14 +208,14 @@ def call (Map args = [
 
     }
 
-    post {
-      failure {
-        Notify()
-      }
-      fixed {
-        Notify()
-      }
-    }
+    //post {
+    //  failure {
+    //    Notify()
+    //  }
+    //  fixed {
+    //    Notify()
+    //  }
+    //}
 
   }
 
