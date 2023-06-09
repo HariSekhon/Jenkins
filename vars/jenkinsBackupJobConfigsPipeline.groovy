@@ -236,7 +236,7 @@ def call (Map args = [
                       branch="${GIT_BRANCH#origin/}"
 
                       # do a local merge rather than fail if there are new edits in the branch
-                      git pull origin "$branch" --no-edit
+                      git pull origin "$branch" --no-edit --no-rebase
 
                       git push origin HEAD:"$branch"
                     '''
