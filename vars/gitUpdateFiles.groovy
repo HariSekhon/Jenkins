@@ -73,6 +73,8 @@ def call (Map args = []) {
 
                 git add -A
 
+                git status
+
                 if ! git diff-index --quiet HEAD; then
                   git commit -m "$commit_msg"
                 fi
