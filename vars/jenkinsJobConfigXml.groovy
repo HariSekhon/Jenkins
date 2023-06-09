@@ -22,7 +22,7 @@
 // assumes JENKIN_CLI_JAR has been downloaded in a previous stage via downloadJenkinsCLI() function
 
 def call(jobName) {
-  withEnv(["JOB_NAME=$jobName"]){
+  withEnv(["JOB_NAME=$jobName"]) {
     String jobXml = sh (
       label: "Get Job XML via CLI",
       returnStdout: true,
