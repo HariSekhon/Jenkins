@@ -26,7 +26,7 @@
 def call () {
   currentBranch = sh (
       label: 'Git Current Branch',
-      returnStdOut: true,
+      returnStdout: true,
       script: """
         set -eux
         git rev-parse --abbrev-ref HEAD
