@@ -131,11 +131,12 @@ spec:
 
             List<String> gitTagsAndBranches = gitTagList + gitBranchList
 
-            List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
+            // grep needs to be approved XXX: hits error, debug later
+            //List<String> duplicates = gitTagsAndBranches.countBy{it}.grep{it.value > 1}.collect{it.key}
 
-            if ( duplicates ) {
-              echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
-            }
+            //if ( duplicates ) {
+            //  echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+            //}
           }
         }
       }
