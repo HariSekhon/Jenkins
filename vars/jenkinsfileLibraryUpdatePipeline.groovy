@@ -30,10 +30,6 @@
 // - May need a GitHub branch protection exception for the Jenkins CI github user
 
 def call (Map args = [
-                      jobs: [],
-                      dir: '.',
-                      checkout: [],
-                      cron: 'H */3 * * *',
                       creds: [],
                       env: [],
                       container: null, // default or this container must have java and curl installed for Jenkins CLI
@@ -63,14 +59,9 @@ def call (Map args = [
 
     agent {
       kubernetes {
-        defaultContainer 'gcloud-sdk'
-        yamlFile "ci/jenkins-pod.yaml"
+        defaultContainer args.container
+        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
       }
-    }
-
-    // backup to catch GitHub -> Jenkins webhook failures
-    triggers {
-      pollSCM('H/10 * * * *')
     }
 
     options {
