@@ -33,11 +33,22 @@ def call(jobXml) {
   // gets java.lang.NullPointerException
   //assert xmlroot instanceof groovy.xml.slurpersupport.GPathResult
 
-  def xmlroot = new XmlParser().parseText(jobXml)
+  //def xmlroot = new XmlParser().parseText(jobXml)
 
-  assert xmlroot instanceof groovy.util.Node
+  //assert xmlroot instanceof groovy.util.Node
 
+  // works in groovysh but not in Jenkins:
+  //
+  //    org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: No such field found: field groovy.util.Node **
+  //
   repo = xmlroot.'**'.find { it.name() == 'url' }.value()[0].trim()
+
+  // quick and dirty
+  repo = jobXml.
+            split('\n').
+            find { it.contains('<url>') }.
+            replace('<url>', '').
+            replace('</url>', '')
 
   return repo
 }
