@@ -68,6 +68,14 @@ def call (Map args = [
                       timeoutMinutes: 5
                      ] ) {
 
+  List creds = args.creds ?: []
+  // env2 because env is the built-in System.env
+  List env2 = args.env ?: []
+  String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
+  String yamlFilePath = args.yamlFile ?: 'ci/jenkins-pod.yaml'
+  String timeoutMinutes = "${args.timeoutMinutes ?: 15}"
+
   // must be here so that these variables can be scoped from node{} to pipeline{}
   List<String> jobList = []
   List<String> gitTagsAndBranchesList = []
@@ -77,8 +85,8 @@ def call (Map args = [
   // without installing anything
   node {
     stage('Dynamically Populate Choices') {
-      withEnv(args.env ?: []) {
-        withCredentials(args.creds ?: []) {
+      withEnv(env2) {
+        withCredentials(creds) {
 
           printEnv()
           sh 'whoami'
@@ -130,8 +138,8 @@ def call (Map args = [
 
     agent {
       kubernetes {
-        defaultContainer args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
-        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
+        defaultContainer container
+        yamlFile yamlFilePath
       }
     }
 
@@ -139,7 +147,7 @@ def call (Map args = [
       ansiColor('xterm')
       buildDiscarder(logRotator(numToKeepStr: '30'))
       timestamps()
-      timeout (time: "${args.timeoutMinutes ?: 15}", unit: 'MINUTES')
+      timeout (time: timeoutMinutes, unit: 'MINUTES')
     }
 
     //environment {
@@ -169,7 +177,7 @@ def call (Map args = [
         parallel {
           stage('Environment') {
             steps {
-              withEnv(args.env ?: []) {
+              withEnv(env2) {
                 printEnv()
                 sh 'whoami'
               }
@@ -191,7 +199,7 @@ def call (Map args = [
 
           stage('Install Packages') {
             steps {
-              withEnv(args.env ?: []) {
+              withEnv(env2) {
                 timeout (time: 5, unit: 'MINUTES') {
                   // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
                   // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
@@ -213,15 +221,15 @@ def call (Map args = [
         parallel {
           stage('Download Jenkins CLI') {
             steps {
-              withEnv(args.env ?: []) {
+              withEnv(env2) {
                 downloadJenkinsCLI()
               }
             }
           }
           stage('Jenkins Auth Env Check') {
             steps {
-              withEnv(args.env ?: []) {
-                withCredentials(args.creds ?: []) {
+              withEnv(env2) {
+                withCredentials(creds) {
                   jenkinsCLICheckEnvVars()
                 }
               }
@@ -232,8 +240,8 @@ def call (Map args = [
 
       stage('Jenkins CLI Version') {
         steps {
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
+          withEnv(env2) {
+            withCredentials(creds) {
               sh (
                 label: 'Version',
                 script: '''
@@ -250,8 +258,8 @@ def call (Map args = [
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
           script {
-            withEnv(args.env ?: []) {
-              withCredentials(args.creds ?: []) {
+            withEnv(env2) {
+              withCredentials(creds) {
                 String xml = jenkinsJobConfigXml(params.JOB)
                 env.REPO = jenkinsJobRepo(xml)
                 env.BRANCH = jenkinsJobBranch(xml)
@@ -265,8 +273,8 @@ def call (Map args = [
       stage("Checkout Pipeline Repo") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
+          withEnv(env2) {
+            withCredentials(creds) {
               checkout (
                 [
                   $class: 'GitSCM',
@@ -299,8 +307,8 @@ def call (Map args = [
       stage('Update Pipeline Jenkinsfile') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}, Job: ${params.JOB}"
-          withEnv(args.env ?: []) {
-            withCredentials(args.creds ?: []) {
+          withEnv(env2) {
+            withCredentials(creds) {
               // protection because the first run of the pipeline will just assume to take the first choices of both the job name and the git ref - second run will force Build with Parameters pop-up choice
               script {
                 if ( env.BUILD_NUMBER == 1 ) {
