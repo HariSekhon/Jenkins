@@ -199,9 +199,9 @@ def call (Map args = [
                   script: '''
                     set -eux
 
-                    git add -A
-
                     git diff
+
+                    git add -A
 
                     git status
 
