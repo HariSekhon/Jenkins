@@ -28,6 +28,7 @@
 // Requires 'git' to be in the $PATH
 
 def call (all=false) {
+  String opt
   if (all) {
     opt = '-a'
   } else {
