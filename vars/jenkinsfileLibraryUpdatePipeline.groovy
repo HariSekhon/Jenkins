@@ -72,91 +72,53 @@ def call (Map args = [
   List<String> jobList = []
   List<String> gitTagsAndBranchesList = []
 
-  // XXX: not working yet
-  podTemplate(
-    yaml: """
----
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: jenkins
-  annotations:
-    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-spec:
-  priorityClassName: high-priority
-  affinity:
-    # avoid GKE preemption causing build failures
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: cloud.google.com/gke-preemptible
-            operator: DoesNotExist
-  # needed for argocd container to /home/jenkins/agent/workspace/<pipeline>@tmp/durable-888973f9/jenkins-log.txt, otherwise Permission Denied
-  securityContext:
-    runAsUser: 0
-  containers:
-  - name: gcloud-sdk
-    image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
-    tty: true
-    resources:
-      requests:
-        cpu: 300m
-        memory: 300Mi
-      limits:
-        cpu: "1"
-        memory: 1Gi
-    """
-    ) {
+  node {
 
-    node {
+    stage('Dynamically Populate Choices'){
+      withEnv(args.env ?: []) {
+        withCredentials(args.creds ?: []) {
 
-      stage('Dynamically Populate Choices'){
-        withEnv(args.env ?: []) {
-          withCredentials(args.creds ?: []) {
+          printEnv()
+          sh 'whoami'
 
-            printEnv()
-            sh 'whoami'
+          // much lighter weight than having to install the CLI
+          jobList = jenkinsJobListAPI()
 
-            // much lighter weight than having to install the CLI
-            jobList = jenkinsJobListAPI()
+          //jenkinsCLICheckEnvVars()
+          //timeout (time: 5, unit: 'MINUTES') {
+          //  // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+          //  // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+          //  installPackages(
+          //    [
+          //      'default-jdk',
+          //      'curl',
+          //      'libxml2-utils', // for xmllint
+          //    ]
+          //  )
+          //}
+          //downloadJenkinsCLI()
+          //
+          //echo "Getting Jenkins Jobs"
+          //
+          //List<String> jobList = jenkinsJobList()
 
-            //jenkinsCLICheckEnvVars()
-            //timeout (time: 5, unit: 'MINUTES') {
-            //  // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
-            //  // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
-            //  installPackages(
-            //    [
-            //      'default-jdk',
-            //      'curl',
-            //      'libxml2-utils', // for xmllint
-            //    ]
-            //  )
-            //}
-            //downloadJenkinsCLI()
-            //
-            //echo "Getting Jenkins Jobs"
-            //
-            //List<String> jobList = jenkinsJobList()
+          checkout scm
 
-            checkout scm
+          echo "Getting Git Tags and Branches"
 
-            echo "Getting Git Tags and Branches"
+          List<String> gitTagList = gitTagList()
 
-            List<String> gitTagList = gitTagList()
+          List<String> gitBranchList = gitBranchList()
 
-            List<String> gitBranchList = gitBranchList()
+          gitTagsAndBranchesList = gitTagList + gitBranchList
 
-            gitTagsAndBranchesList = gitTagList + gitBranchList
+          //  grep needs to be approved, but would also require @NonCPS which probably isn't worth it for this
+          //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
+          //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }*.key
 
-            //  grep needs to be approved, but would also require @NonCPS which probably isn't worth it for this
-            //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
-            //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }*.key
-
-            //if ( duplicates ) {
-            //  echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
-            //}
-          }
+          //if ( duplicates ) {
+          //  echo("WARNING: duplicates detected between Git tags and branches: ${duplicates.sort().join(', ')}")
+          //}
         }
       }
     }
@@ -235,7 +197,7 @@ spec:
                     [
                       'default-jdk',
                       'curl',
-                      'libxml2-utils', // for xmllint
+                      //'libxml2-utils', // for xmllint - not using in this pipeline
                     ]
                   )
                 }
