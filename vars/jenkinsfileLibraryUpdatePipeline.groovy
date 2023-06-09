@@ -54,6 +54,9 @@ def call (Map args = [
       withEnv(args.env ?: []) {
         withCredentials(args.creds ?: []) {
 
+          printEnv()
+          sh 'whoami'
+
           jenkinsCLICheckEnvVars()
           timeout (time: 5, unit: 'MINUTES') {
             // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
