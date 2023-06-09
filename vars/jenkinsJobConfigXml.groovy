@@ -31,10 +31,10 @@ def call(jobName) {
         java -jar "${JENKINS_CLI_JAR:-$HOME/bin/jenkins-cli.jar}" ${JENKINS_CLI_ARGS:-} get-job "$JOB_NAME"
       '''
     )
-  }
-  if ( ! jobXml ) {
-    error("Failed to retrieve Jenkins job config xml for job '$jobName'")
-  }
+    if ( ! jobXml ) {
+      error("Failed to retrieve Jenkins job config xml for job '$jobName'")
+    }
 
-  return jobXml
+    return jobXml
+  }
 }
