@@ -101,6 +101,9 @@ spec:
 
             List<String> jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
 
+            echo "Found Jobs:"
+            jobList.each { println it }
+
             //jenkinsCLICheckEnvVars()
             //timeout (time: 5, unit: 'MINUTES') {
             //  // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
