@@ -283,7 +283,7 @@ spec:
         }
       }
 
-      stage("Get Target Pipeline Config") {
+      stage("Get Pipeline Config") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           script {
@@ -299,7 +299,7 @@ spec:
         }
       }
 
-      stage("Checkout Target Pipeline Repo") {
+      stage("Checkout Pipeline Repo") {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []) {
@@ -333,7 +333,7 @@ spec:
         }
       }
 
-      stage('Update Target Pipeline Jenkinsfile') {
+      stage('Update Pipeline Jenkinsfile') {
         steps {
           milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           withEnv(args.env ?: []) {
