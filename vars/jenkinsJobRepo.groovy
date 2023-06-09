@@ -19,6 +19,12 @@
 
 // Returns the SCM repo url for a given Jenkins job from its XML config as returned by jenkinsJobConfigXml(jobName)
 
+// You will get these errors the first couple times and must go to $JENKINS_URL/scriptApproval/ to allow XML parsing each time:
+//
+//    Scripts not permitted to use new groovy.util.XmlParser. Administrators can decide whether to approve or reject this signature.
+//
+//     org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use method groovy.util.XmlParser parseText java.lang.String
+
 def call(jobXml) {
 
   // https://groovy-lang.org/processing-xml.html
