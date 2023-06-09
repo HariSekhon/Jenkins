@@ -55,7 +55,8 @@ def call (Map args = [
   String veresion = version ?: error('Terraform version not specified')
   args.dir = args.dir ?: '.'
   String apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
-  String argv = args.args ?: ''
+  String tfArgs = args.args ?: ''
+  // env2 because env is a built-in derived from System.env
   List env2 = args.env ?: []
   List creds = args.creds ?: []
   String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
@@ -122,7 +123,7 @@ def call (Map args = [
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$version"
       TF_IN_AUTOMATION = 1
-      APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
+      APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
       //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
@@ -284,7 +285,7 @@ def call (Map args = [
         steps {
           withEnv(env2) {
             withCredentials(creds) {
-              terraformPlan(args.args)
+              terraformPlan(tfArgs)
             }
           }
         }
