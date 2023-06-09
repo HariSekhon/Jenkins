@@ -27,7 +27,7 @@ def call () {
   // could limit this with 'git log -n NN' but only takes 0.5 secs for nearly 30,000 in local git testing
   tags = sh (
       label: 'Git Tags',
-      returnStdOut: true,
+      returnStdout: true,
       script: """
         set -eux
         git tag --list
