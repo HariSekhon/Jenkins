@@ -29,6 +29,18 @@
 // - Commits & Pushes the Jenkinsfiles
 // - May need a GitHub branch protection exception for the Jenkins CI github user
 
+// Usage:
+//
+//    jenkinsfileLibraryUpdatePipeline(
+//        env: [
+//            "JENKINS_USER_ID=hari@domain.com",
+//            "JENKINS_CLI_ARGS=-webSocket"
+//        ],
+//        creds: [
+//            string(credentialsId: 'job-api-token', variable: 'JENKINS_API_TOKEN')
+//        ]
+//    )
+
 def call (Map args = [
                       creds: [],
                       env: [],
