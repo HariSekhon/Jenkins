@@ -199,7 +199,7 @@ def call (Map args = [
                   script: '''
                     set -eux
 
-                    git add .
+                    git add -A
 
                     git diff
 
