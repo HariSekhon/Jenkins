@@ -31,8 +31,11 @@
 // - run from Jenkins Shared Library repo
 // - enumerates all Jenkins jobs to give a choice matrix of
 //   - Job Name
-//   - Git Tag
-// - Determines the Jenkinsfile for the given job
+//   - Git Tags / Branches
+// - Fetches the given job's XML config and determines
+//    - the repo for the given job
+//    - the branch for the given job
+//    - the Jenkinsfile for the given job
 // - Checks out the Git repo containing the Jenkinsfile on the branch it watches
 // - Updates the Jenkinsfile Library("somelib@version") reference with the selected Git tag
 // - Commits & Pushes the Jenkinsfiles
@@ -273,6 +276,7 @@ spec:
           script{
             String xml = jenkinsJobConfigXml(params.JOB)
             env.REPO = jenkinsJobRepo(xml)
+            env.BRANCH = jenkinsJobBranch(xml)
             env.JENKINSFILE = jenkinsJobJenkinsfile(env.TARGET_JOB_XML)
           }
         }
