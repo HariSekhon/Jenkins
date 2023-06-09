@@ -77,11 +77,11 @@ def call (Map args = []) {
 
                 if ! git diff-index --quiet HEAD; then
                   git commit -m "$commit_msg"
-                fi
 
-                # XXX: push is done here and not a separate stage (which would be nicer visually in a Blue Ocean pipeline)
-                #      because we need the lock to encompass the entire operation for safety
-                git push
+                  # XXX: push is done here and not a separate stage (which would be nicer visually in a Blue Ocean pipeline)
+                  #      because we need the lock to encompass the entire operation for safety
+                  git push
+                fi
               """
             )
           }
