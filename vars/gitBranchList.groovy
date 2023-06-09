@@ -28,12 +28,17 @@
 // Requires 'git' to be in the $PATH
 
 def call (all=false) {
+  if (all) {
+    opt = '-a'
+  } else {
+    opt = '-r'
+  }
   branches = sh (
       label: 'Git Branches',
       returnStdout: true,
       script: """
         set -eux
-        git branch --list -r
+        git branch --list $opt
       """
   )
   if ( ! branches ) {
