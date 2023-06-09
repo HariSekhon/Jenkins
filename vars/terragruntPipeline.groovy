@@ -52,19 +52,23 @@ def call (Map args = [
                       yamlFile: 'ci/jenkins-pod.yaml'
                      ] ) {
 
-  args.version ?: error('Terragrunt version not specified')
+  String veresion = version ?: error('Terragrunt version not specified')
   args.dir = args.dir ?: '.'
-  args.apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
-  args.args = args.args ?: ''
-  args.env = args.env ?: []
-  args.creds = args.creds ?: []
+  String apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
+  String tfArgs = args.args ?: ''
+  // env2 because env is a built-in derived from System.env
+  List env2 = args.env ?: []
+  List creds = args.creds ?: []
+  String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
+  String yamlFilePath = args.yamlFile ?: 'ci/jenkins-pod.yaml'
 
   pipeline {
 
     agent {
       kubernetes {
-        defaultContainer args.container
-        yamlFile args.yamlFile ?: 'ci/jenkins-pod.yaml'
+        defaultContainer container
+        yamlFile args.yamlFilePath
       }
     }
 
@@ -82,9 +86,9 @@ def call (Map args = [
 
     environment {
       TERRAFORM_DIR = "$args.dir"
-      TERRAFORM_VERSION = "$args.version"
+      TERRAFORM_VERSION = "$version"
       TF_IN_AUTOMATION = 1
-      APPLY_BRANCH_PATTERN = "${args.apply_branch_pattern}"
+      APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
       //TF_LOG = "$DEBUG"
     }
@@ -93,7 +97,7 @@ def call (Map args = [
 
       stage('Environment') {
         steps {
-          withEnv(args.env) {
+          withEnv(env2) {
             sh 'whoami'
             script {
               // ${env.HOME} at script level evaluates to /home/jenkins, not that of running container
@@ -121,8 +125,8 @@ def call (Map args = [
 
       stage('Auth') {
         steps {
-          withEnv(args.env) {
-            withCredentials(args.creds) {
+          withEnv(env2) {
+            withCredentials(creds) {
               // tries everything
               login()
               // or call something simpler if you know what environment you're executing in
@@ -134,7 +138,7 @@ def call (Map args = [
 
       stage('Install Packages') {
         steps {
-          withEnv(args.env) {
+          withEnv(env2) {
             timeout (time: 5, unit: 'MINUTES') {
               installPackages(['curl', 'unzip'])
             }
@@ -144,7 +148,7 @@ def call (Map args = [
 
       stage('Download Terragrunt Version') {
         steps {
-          withEnv(args.env) {
+          withEnv(env2) {
             downloadTerragrunt("$TERRAFORM_VERSION")
           }
         }
@@ -152,7 +156,7 @@ def call (Map args = [
 
       stage('Terragrunt Version') {
         steps {
-          withEnv(args.env) {
+          withEnv(env2) {
             sh 'terragrunt version'
           }
         }
@@ -162,7 +166,7 @@ def call (Map args = [
         stage('Terragrunt Fmt') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              withEnv(args.env) {
+              withEnv(env2) {
                 terragruntFmt()
               }
             }
@@ -174,8 +178,8 @@ def call (Map args = [
 
       stage('Terragrunt Init') {
         steps {
-          withEnv(args.env) {
-            withCredentials(args.creds) {
+          withEnv(env2) {
+            withCredentials(creds) {
               terragruntInit()
             }
           }
@@ -184,7 +188,7 @@ def call (Map args = [
 
       stage('Terragrunt Validate') {
         steps {
-          withEnv(args.env) {
+          withEnv(env2) {
             terragruntValidate()
           }
         }
@@ -192,9 +196,9 @@ def call (Map args = [
 
       stage('Terragrunt Plan') {
         steps {
-          withEnv(args.env) {
-            withCredentials(args.creds) {
-              terragruntPlan(args.args)
+          withEnv(env2) {
+            withCredentials(creds) {
+              terragruntPlan(tfArgs)
             }
           }
         }
@@ -219,7 +223,7 @@ def call (Map args = [
         }
         steps {
           //approval(args.approval_args)
-          withEnv(args.env) {
+          withEnv(env2) {
             approval()
           }
         }
@@ -242,9 +246,9 @@ def call (Map args = [
           }
         }
         steps {
-          withEnv(args.env) {
-            withCredentials(args.creds) {
-              terragruntApply(args.args)
+          withEnv(env2) {
+            withCredentials(creds) {
+              terragruntApply()
             }
           }
         }
