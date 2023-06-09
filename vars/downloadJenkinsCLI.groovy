@@ -35,6 +35,7 @@ def call () {
         script: '''
           set -eu
           #unset JENKINS_URL JENKINS_SERVER_COOKIE JENKINS_USER_ID JENKINS_NODE_COOKIE
+          # need to keep JENKINS_CLI_ARGS="-webSocket" to prevent hang and fail
           unset $(env | grep '^JENKINS_' | grep -v '^JENKINS_CLI_ARGS=' | sed 's/=.*//')
           java -jar ~/bin/jenkins-cli.jar ${JENKINS_CLI_ARGS:-} version || :
         '''
