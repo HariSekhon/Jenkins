@@ -295,6 +295,7 @@ spec:
           withEnv(args.env ?: []) {
             withCredentials(args.creds ?: []) {
               gitUpdateFiles(
+                branch: env.BRANCH,
                 commit_msg: "Updated Jenkinsfile, set library tag @${params.GIT_REF}",
                 commands: """
                   sed -i 's/\\(^[[:space:]]*@Library(.*@\\).*\\(.)\\)/\\1${params.GIT_REF}\\2/' "$JENKINSFILE"
