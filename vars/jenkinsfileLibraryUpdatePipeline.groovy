@@ -277,6 +277,7 @@ spec:
 
       stage("Get Target Pipeline Config") {
         steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
           script{
             withEnv(args.env ?: []) {
               withCredentials(args.creds ?: []) {
