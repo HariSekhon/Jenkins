@@ -99,23 +99,25 @@ spec:
             printEnv()
             sh 'whoami'
 
-            jenkinsCLICheckEnvVars()
-            timeout (time: 5, unit: 'MINUTES') {
-              // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
-              // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
-              installPackages(
-                [
-                  'default-jdk',
-                  'curl',
-                  'libxml2-utils', // for xmllint
-                ]
-              )
-            }
-            downloadJenkinsCLI()
+            List<String> jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
 
-            echo "Getting Jenkins Jobs"
-
-            List<String> jobList = jenkinsJobList()
+            //jenkinsCLICheckEnvVars()
+            //timeout (time: 5, unit: 'MINUTES') {
+            //  // assumes we're running on a Debian/Ubuntu based system (pretty much the standard these days)
+            //  // including GCloud SDK's image gcr.io/google.com/cloudsdktool/cloud-sdk
+            //  installPackages(
+            //    [
+            //      'default-jdk',
+            //      'curl',
+            //      'libxml2-utils', // for xmllint
+            //    ]
+            //  )
+            //}
+            //downloadJenkinsCLI()
+            //
+            //echo "Getting Jenkins Jobs"
+            //
+            //List<String> jobList = jenkinsJobList()
 
             echo "Getting Git Tags and Branches"
 
