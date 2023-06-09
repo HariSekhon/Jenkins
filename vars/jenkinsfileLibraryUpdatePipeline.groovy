@@ -186,6 +186,11 @@ spec:
         description: "Jenkins Library git tag/branch to update Jenkinsfile to use",
         choices: gitTagsAndBranchesList
       )
+      booleanParam(
+        name: 'BUILD',
+        description: 'Build this pipeline after updated its Jenkinsfile?',
+        defaultValue: false
+      )
     }
 
     stages {
@@ -293,6 +298,16 @@ spec:
               )
             }
           }
+        }
+      }
+
+      stage('Build Job') {
+        when {
+          expression { params.BUILD == true }
+        }
+        steps {
+          milestone ordinal: null, label: "Milestone: ${env.STAGE_NAME}"
+          build job: params.JOB
         }
       }
 
