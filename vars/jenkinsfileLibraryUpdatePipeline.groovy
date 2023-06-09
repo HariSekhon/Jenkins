@@ -147,7 +147,7 @@ spec:
 
             List<String> gitBranchList = gitBranchList()
 
-            gitTagsAndBranchesList = gitTagList + gitBranchList + gitTagList
+            gitTagsAndBranchesList = gitTagList + gitBranchList
 
             //  grep needs to be approved, but would also require @NonCPS which probably isn't worth it for this
             //List<String> duplicates = gitTagsAndBranchesList.countBy { it }.grep { it.value > 1 }.collect { it.key }
