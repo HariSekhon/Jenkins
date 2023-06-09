@@ -104,7 +104,7 @@ spec:
             sh 'whoami'
 
             // much lighter weight than having to install the CLI
-            jobList = jenkins.model.Jenkins.instance.items.findAll().collect { it.name }
+            jobList = jenkinsJobListAPI()
 
             //jenkinsCLICheckEnvVars()
             //timeout (time: 5, unit: 'MINUTES') {
