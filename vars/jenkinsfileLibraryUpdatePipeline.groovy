@@ -23,9 +23,9 @@
 //
 // Choices are remembered after first run and subsequently Build with Parameters prompt is then available
 //
-// XXX: the first run will populated the choices but it continues assuming the default first choices for job and git ref
-//      so the pipeline checks the build number and aborts BUILD_NUMBER=1 for safety
-//      the second run will force a Build with Parameters pop-up choice to the calling user
+// XXX: The first run will populate the choices but  continues executing assuming the default first choices for job and git ref
+//      so the pipeline checks the build number and aborts if BUILD_NUMBER=1 for safety
+//      The second run will force a "Build with Parameters" pop-up choice to the calling user
 
 // Templated pipeline:
 //
