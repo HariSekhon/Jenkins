@@ -295,7 +295,7 @@ If you want to prevent changes to this library re-triggering the last run of you
 See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details.
 
 
-### Jenkins on Kubernetes Diagram
+## Jenkins on Kubernetes Diagram
 
 ![](https://raw.githubusercontent.com/HariSekhon/Diagrams-as-Code/master/images/jenkins_kubernetes_cicd.svg)
 
