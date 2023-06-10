@@ -106,6 +106,8 @@ pipeline {
 }
 ```
 
+some slightly more advanced functions in another Jenkinsfile:
+
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
