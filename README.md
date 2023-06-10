@@ -202,7 +202,8 @@ jenkinsBackupJobConfigsPipeline(
   dir: 'jobs',  // directory in current repo to download and git commit to
   env: ["JENKINS_USER_ID=hari@mydomain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],  // -webSocket gets through reverse proxies like Kubernetes Ingress
   creds: [string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')],
-  container: 'gcloud-sdk')
+  container: 'gcloud-sdk',
+  yamlFile: 'ci/jenkins-pod.yaml')
 )
 ```
 
