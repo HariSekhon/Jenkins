@@ -160,7 +160,31 @@ pipeline {
 }
 ```
 
-## Terraform CI/CD
+## Ready Made Pipeline Templates
+
+### GCP CloudBuild and Kubernetes deploy via ArgoCD
+
+```groovy
+@Library('github.com/harisekhon/jenkins@master') _
+
+gcpDeployKubernetesPipeline(
+  project: 'my-gcp-project',
+  region: 'europe-west2',
+  app: 'my-app',
+  env: 'uk-production',
+  images: [
+    "my-app-webapp",
+    "my-app-sidecar",
+  ],
+  gcr_registry: 'eu.gcr.io',
+  gcp_serviceaccount_key: 'jenkins-gcp-serviceaccount-key',  // Jenkins credential id
+  cloudflare_email: 'my-cicd-account@domain.co.uk',       // optional, triggers Cloudflare Cache Purge
+  cloudflare_zone_id: '12a34b5c6d7ef8a901b2c3def45ab6c7', // if both these are set and Jenkins 'cloudflare-api-key' credential is available
+)
+```
+
+
+### Terraform CI/CD
 
 Handles all logins, Terraform fmt, validate, plan, approval, apply etc.
 
@@ -183,7 +207,7 @@ terraformPipeline(version: '1.1.7',
                   yamlFile: 'ci/kubernetes-agent-pod.yaml')
 ```
 
-## Git Merges & Backports
+### Git Merges & Backports
 
 Automatically merge one branch into another upon any change eg. backport between environment branches such as any hotfixes in Staging to Dev:
 
@@ -194,7 +218,7 @@ Automatically merge one branch into another upon any change eg. backport between
 gitMergePipeline('staging', 'dev')
 ```
 
-## Jenkins Job Configuration Backups
+### Jenkins Job Configuration Backups
 
 Download and commit all Jenkins job configurations to the calling Git repo every 3 hours (configurable via optional `cron: '...'` parameter)
 
