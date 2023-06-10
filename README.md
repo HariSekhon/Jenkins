@@ -162,7 +162,9 @@ pipeline {
 
 ## Ready Made Pipeline Templates
 
-### GCP CloudBuild and Kubernetes deploy via ArgoCD
+### GCP CloudBuild and Deploy Docker Images to Kubernetes via ArgoCD
+
+Builds Docker images and deploys them to [Kubernetes](https://github.com/HariSekhon/Kubernetes-configs) via [ArgoCD](https://github.com/HariSekhon/Kubernetes-configs/tree/master/argocd/base). Optionally scans the repo code, built container images, and purges Cloudflare Cache.
 
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
@@ -222,6 +224,8 @@ Plan found changes but Approval was not authorized, so Apply did not proceed:
 
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/terraform_not_approved.png)
 
+https://github.com/HariSekhon/Terraform
+
 
 ### Git Merges & Backports
 
@@ -233,6 +237,28 @@ Automatically merge one branch into another upon any change eg. backport between
 // git merge from staging branch into dev branch
 gitMergePipeline('staging', 'dev')
 ```
+
+
+### Git Update Jenkinsfile Library Tag
+
+Enumerates all Jenkins Jobs and Git Tags and Branches to give user a pop-up with parameter choices about which Pipeline's Jenkinsfile to update it's @Library tag for, and optionally build that pipeline afterwards.
+
+```groovy
+@Library('jenkins@master') _
+
+jenkinsfileLibraryUpdatePipeline(
+    env: [
+      "JENKINS_USER_ID=hari@domain.co.uk",
+      "JENKINS_CLI_ARGS=-webSocket"
+    ],
+    creds: [string(credentialsId: 'job-config-backups', variable: 'JENKINS_API_TOKEN')],
+    container: 'gcloud-sdk',
+    yamlFile: 'ci/jenkins-pod.yaml'
+)
+```
+
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/jenkinsfile_update_library_tag_update_jenkinsfile.png)
+
 
 ### Jenkins Job Configuration Backups
 
@@ -256,6 +282,7 @@ jenkinsBackupJobConfigsPipeline(
 ```
 
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/jenkins_job_config_backups.png)
+
 
 ## More Documentation
 
