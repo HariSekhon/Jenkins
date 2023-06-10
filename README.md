@@ -188,7 +188,7 @@ Automatically merge one branch into another upon any change eg. backport between
 ```groovy
 @Library('github.com/harisekhon/jenkins@master') _
 
-// git merge from staging branch into dev branch
+// git merge from 'staging' branch into 'dev' branch
 gitMergePipeline('staging', 'dev')
 ```
 
