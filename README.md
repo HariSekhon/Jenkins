@@ -85,7 +85,32 @@ pipeline {
         // see groovy files under vars/ for more documentation, details and many more useful functions
       }
     }
+  }
 
+  // send notifications on broken builds and recoveries
+  post {
+    failure {
+      // finds Git committers who broke build,
+      // resolves their Slack user IDs and
+      // actively notifies them with @user1 @user2 tags
+      slackNotify()
+    }
+    fixed {
+      // calls one or more notify functions to send Slack messages, emails etc.
+      // such as slackNotify()
+      // Uppercase N because lowercase clashes with java keyword
+      // Use Notify() instead of multiple calls to different notify functions
+      Notify()
+    }
+  }
+}
+```
+
+```groovy
+@Library('github.com/harisekhon/jenkins@master') _
+
+pipeline {
+  stages {
     stage('Advanced Example'){
       steps {
         // run individual login functions instead of login()
@@ -128,24 +153,6 @@ pipeline {
         argoDeploy('app1')
         argoDeploy('app2')
       }
-    }
-
-  }
-
-  // send notifications on broken builds and recoveries
-  post {
-    failure {
-      // finds Git committers who broke build,
-      // resolves their Slack user IDs and
-      // actively notifies them with @user1 @user2 tags
-      slackNotify()
-    }
-    fixed {
-      // calls one or more notify functions to send Slack messages, emails etc.
-      // such as slackNotify()
-      // Uppercase N because lowercase clashes with java keyword
-      // Use Notify() instead of multiple calls to different notify functions
-      Notify()
     }
   }
 }
