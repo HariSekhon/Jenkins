@@ -176,7 +176,9 @@ Saves the Terraform plan output and an approval will only apply that exact plan 
 terraformPipeline(version: '1.1.7',
                   dir: 'deployments/dev',
                   apply_branch_pattern: 'master',
-                  creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
+                  creds: [
+                    string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')
+                  ],
                   container: 'gcloud-sdk',
                   yamlFile: 'ci/kubernetes-agent-pod.yaml')
 ```
@@ -201,8 +203,13 @@ Download and commit all Jenkins job configurations to the calling Git repo every
 
 jenkinsBackupJobConfigsPipeline(
   dir: 'jobs',  // directory in current repo to download and git commit to
-  env: ["JENKINS_USER_ID=hari@mydomain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],  // -webSocket gets through reverse proxies like Kubernetes Ingress
-  creds: [string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')],
+  env: [
+    "JENKINS_USER_ID=hari@mydomain.co.uk",
+    "JENKINS_CLI_ARGS=-webSocket"   // -webSocket gets through reverse proxies like Kubernetes Ingress
+  ],
+  creds: [
+    string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')
+  ],
   container: 'gcloud-sdk',
   yamlFile: 'ci/kubernetes-agent-pod.yaml')
 )
