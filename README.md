@@ -255,6 +255,8 @@ jenkinsBackupJobConfigsPipeline(
 )
 ```
 
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/jenkins_job_config_backups.png)
+
 ## More Documentation
 
 Read the comments at the top of each library function under [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars)`<function>.groovy` for more details.
