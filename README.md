@@ -168,7 +168,8 @@ terraformPipeline(version: '1.1.7',
                   dir: 'deployments/dev',
                   apply_branch_pattern: 'master',
                   creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
-                  container: 'gcloud-sdk')
+                  container: 'gcloud-sdk',
+                  yamlFile: 'ci/jenkins-pod.yaml')
 ```
 
 ## Git Merges & Backports
