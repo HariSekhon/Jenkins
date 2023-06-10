@@ -178,7 +178,7 @@ terraformPipeline(version: '1.1.7',
                   apply_branch_pattern: 'master',
                   creds: [string(credentialsId: 'jenkins-gcp-serviceaccount-key', variable: 'GCP_SERVICEACCOUNT_KEY')],
                   container: 'gcloud-sdk',
-                  yamlFile: 'ci/jenkins-pod.yaml')
+                  yamlFile: 'ci/kubernetes-agent-pod.yaml')
 ```
 
 ## Git Merges & Backports
@@ -204,7 +204,7 @@ jenkinsBackupJobConfigsPipeline(
   env: ["JENKINS_USER_ID=hari@mydomain.co.uk", "JENKINS_CLI_ARGS=-webSocket"],  // -webSocket gets through reverse proxies like Kubernetes Ingress
   creds: [string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')],
   container: 'gcloud-sdk',
-  yamlFile: 'ci/jenkins-pod.yaml')
+  yamlFile: 'ci/kubernetes-agent-pod.yaml')
 )
 ```
 
