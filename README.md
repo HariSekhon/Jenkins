@@ -299,6 +299,10 @@ See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared
 
 ![](https://raw.githubusercontent.com/HariSekhon/Diagrams-as-Code/master/images/jenkins_kubernetes_cicd.svg)
 
+For more excellent diagrams like this, see my Diagrams-as-Code repo:
+
+https://github.com/HariSekhon/Diagrams-as-Code
+
 
 ## Production
 
