@@ -255,7 +255,7 @@ jenkinsfileLibraryUpdatePipeline(
     ],
     creds: [string(credentialsId: 'job-config-backups', variable: 'JENKINS_API_TOKEN')],
     container: 'gcloud-sdk',
-    yamlFile: 'ci/jenkins-pod.yaml'
+    yamlFile: 'ci/kubernetes-agent-pod.yaml'
 )
 ```
 
