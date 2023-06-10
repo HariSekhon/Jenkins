@@ -182,6 +182,9 @@ gcpDeployKubernetesPipeline(
   cloudflare_zone_id: '12a34b5c6d7ef8a901b2c3def45ab6c7', // if both these are set and Jenkins 'cloudflare-api-key' credential is available
 )
 ```
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/gcp_cloudbuild_deployed_after_container_scans_failed.png)
+
+See [gcpDeployKubernetesPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpDeployKubernetesPipeline.groovy) for more details, options etc.
 
 
 ### Terraform CI/CD
