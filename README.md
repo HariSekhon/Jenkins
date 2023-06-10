@@ -188,6 +188,8 @@ gcpDeployKubernetesPipeline(
 
 See [gcpDeployKubernetesPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpDeployKubernetesPipeline.groovy) for more details, options etc.
 
+See [Jenkins on Kubernetes Diagram](#jenkins-on-kubernetes-diagram) further down.
+
 
 ### Terraform CI/CD
 
@@ -291,6 +293,12 @@ Read the comments at the top of each library function under [vars/](https://gith
 If you want to prevent changes to this library re-triggering the last run of your pipelines, configure it as a a Shared Library in your global Jenkins configuration and untick "Include @Library changes in job recent changes".
 
 See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details.
+
+
+### Jenkins on Kubernetes Diagram
+
+![](https://raw.githubusercontent.com/HariSekhon/Diagrams-as-Code/master/images/jenkins_kubernetes_cicd.svg)
+
 
 ## Production
 
