@@ -243,7 +243,7 @@ gitMergePipeline('staging', 'dev')
 
 ### Git Update Jenkinsfile Library Tag
 
-Enumerates all Jenkins Jobs and Git Tags and Branches to give user a pop-up with parameter choices about which Pipeline's Jenkinsfile to update it's @Library tag for, and optionally build that pipeline afterwards.
+Enumerates all Jenkins Jobs and Git Tags and Branches to give user a pop-up with parameter choices about which Pipeline's Jenkinsfile to update its `@Library` tag for, and optionally build that pipeline afterwards.
 
 ```groovy
 @Library('jenkins@master') _
