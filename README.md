@@ -210,6 +210,19 @@ terraformPipeline(version: '1.1.7',
                   yamlFile: 'ci/kubernetes-agent-pod.yaml')
 ```
 
+Applied, ignoring informational fmt check:
+
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/terraform_applied_but_failed_fmt_check.png)
+
+Plan found no changes so skipped Apply or asking for Approval:
+
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/terraform_plan_no_changes.png)
+
+Plan found changes but Approval was not authorized, so Apply did not proceed:
+
+![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/terraform_not_approved.png)
+
+
 ### Git Merges & Backports
 
 Automatically merge one branch into another upon any change eg. backport between environment branches such as any hotfixes in Staging to Dev:
