@@ -579,7 +579,7 @@ pipeline {
       //  jdk 'my-jdk'  // configure specific JDK versions under Global Tool Configuration
       //}
       steps {
-        sh "mvn clean"
+        sh "./mvnw clean"
       }
     }
 
@@ -631,7 +631,7 @@ pipeline {
     stage('Run Single Package Tests') {
       steps {
         // params.PACKAGE is populated from the parameters { choice { ... } } defined further above which creates a drop-down list prompt in Jenkins UI
-        sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dtest='${params.PACKAGE}' -DthreadCount='$THREAD_COUNT'"
+        sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dtest='${params.PACKAGE}' -DthreadCount='$THREAD_COUNT'"
       }
     }
 
@@ -639,13 +639,13 @@ pipeline {
       parallel {
         stage('Run Desktop Tests') {
           steps {
-            sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
+            sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
           }
         }
 
         stage('Run Mobile Tests') {
           steps {
-            sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
+            sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
           }
         }
       }
@@ -657,14 +657,35 @@ pipeline {
       steps {
         // continue to Mobile tests regardless of whether this stage fails, will still mark the build to failed though
         catchError (buildResult: 'FAILURE', stageResult: 'FAILURE') {  // set stage to failed too, not just build
-          sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
+          sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
         }
       }
     }
 
     stage('Run Mobile Tests') {
       steps {
-        sh "mvn test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
+        sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
+      }
+    }
+
+    // ========================================================================== //
+    //                         S u r e f i r e   R e p o r t
+    // ========================================================================== //
+
+    stage('Surefire Report'){
+      steps {
+        sh './mvnw clean install site surefire-report:report'
+        // Requires HTML Publisher plugin
+        publishHTML([
+          allowMissing: false,
+          alwaysLinkToLastBuild: true,
+          keepAll: false,
+          reportDir: 'target/site',
+          reportFiles: 'surefire-report.html',
+          reportName: 'Surefire Report',
+          reportTitles: '',
+          useWrapperFileDirectory: true
+        ])
       }
     }
 
