@@ -139,6 +139,7 @@ pipeline {
 
   //tools {
   //  jdk 'my-jdk'  // configure specific JDK versions under Global Tool Configuration
+  //  jfrog 'jfrog-cli'  // set this up in Manage Jenkins -> Global Tool Configuration
   //}
 
   // ========================================================================== //
@@ -667,6 +668,21 @@ pipeline {
         sh "./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"
       }
     }
+
+    // ========================================================================== //
+    //                       J F r o g   A r t i f a c t o r y
+    // ========================================================================== //
+
+    // jf function is equivalent to running jfrog-cli
+
+    // show version
+    jf '-v'
+
+    // check connecitivity
+    jf 'rt ping'
+
+    // upload
+    jf 'rt u target/ my-repo/'
 
     // ========================================================================== //
     //                         S u r e f i r e   R e p o r t
