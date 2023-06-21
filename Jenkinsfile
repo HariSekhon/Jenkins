@@ -675,14 +675,18 @@ pipeline {
 
     // jf function is equivalent to running jfrog-cli
 
-    // show version
-    jf '-v'
+    stage('JFrog Artifactory') {
+      steps {
+        // show version
+        jf '-v'
 
-    // check connecitivity
-    jf 'rt ping'
+        // check connecitivity
+        jf 'rt ping'
 
-    // upload
-    jf 'rt u target/ my-repo/'
+        // upload
+        jf 'rt u target/ my-repo/'
+      }
+    }
 
     // ========================================================================== //
     //                         S u r e f i r e   R e p o r t
