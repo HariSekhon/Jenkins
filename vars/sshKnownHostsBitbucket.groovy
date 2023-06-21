@@ -27,7 +27,7 @@ def call () {
 # bitbucket.org:22 SSH-2.0-conker_3aee7f2e9e 29a8875ef620
 # bitbucket.org:22 SSH-2.0-conker_3aee7f2e9e c6f6c13a1084
 #
-# https://bitbucket.org/blog/ssh-host-key-changes?utm_source=alert-email&utm_medium=email&utm_campaign=ssh-key-rotation_EML-15878&jobid=106067432&subid=1525273356
+# https://bitbucket.org/blog/ssh-host-key-changes
 #
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQeJzhupRu0u0cdegZIa8e86EG2qOCsIsD1Xw0xSeiPDlCr7kq97NLmMbpKTX6Esc30NuoqEEHCuc7yWtwp8dI76EEEB1VqY9QJq6vk+aySyboD5QF61I/1WeTwu+deCbgKMGbUijeXhtfbxSxm6JwGrXrhBdofTsbKRUsrN1WoNgUa8uqN1Vx6WAJw1JHPhglEGGHea6QICwJOAr/6mrui/oB7pkaWKHj3z7d1IC4KWLtY47elvjbaTlkN04Kc/5LFEirorGYVbt15kAUlqGM65pk6ZBxtaO3+30LVlORZkxOh+LKL/BvbZ/iRNhItLqNyieoQj/uh/7Iv4uyH/cV/0b4WDSd3DptigWq84lJubb9t/DnZlrJazxyDCulTmKdOR7vs9gMTo+uoIrPSb8ScTtvw65+odKAlBj59dhnVp9zd7QUojOpXlL62Aw56U4oO+FALuevvMjiWeavKhJqlR7i5n9srYcrNV7ttmDw7kf/97P5zauIhxcjX+xHv4M= bitbucket.org
 """, 'Bitbucket'
