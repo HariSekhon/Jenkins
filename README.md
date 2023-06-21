@@ -79,7 +79,7 @@ pipeline {
         // GitOps update docker image version for app1 & app2 in Kubernetes Kustomize
         gitKustomizeImage(['myrepo/app1', 'myrepo/app2'])
 
-        // deploy to Kubernetes via ArgoCD
+        // trigger ArgoCD deployment to Kubernetes for app 'my-app'
         argoDeploy('my-app')
 
         // see groovy files under vars/ for more documentation, details and many more useful functions
