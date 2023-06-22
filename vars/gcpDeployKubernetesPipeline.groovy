@@ -75,7 +75,8 @@ def call (Map args = [
                       ]
       ) {
 
-  String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  //String container = args.container ?: error('you must specify a container and not execute in the jnlp default container as that will almost certainly fail for lack of tools and permissions')
+  String container = args.container ?: 'gcloud-sdk'
   // yamlFile is an arg to agent{ kubernetes {} } so choose a different variable name
   String yamlFilePath = args.yamlFile ?: 'ci/jenkins-pod.yaml'
   int timeoutMins = args.timeoutMinutes ?: 60
