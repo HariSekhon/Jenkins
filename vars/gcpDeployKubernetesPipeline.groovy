@@ -69,6 +69,8 @@ def call (Map args = [
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
                         no_code_scan: false,  // set to 'true' or environment variable NO_CODE_SCAN=true to not run Code Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
                         no_container_scan: false,  // set to 'true' or environment variable NO_CONTAINER_SCAN=true to not run Container Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
+                        approve_before_deploy: false,
+                        approvers: '',
                         cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
                         cloudflare_zone_id: '',
                         timeoutMinutes: 60,  // total pipeline timeout limit to catch stuck pipelines
@@ -118,6 +120,8 @@ def call (Map args = [
       ARGOCD_AUTH_TOKEN  = credentials('argocd-auth-token')
       CLOUDFLARE_API_KEY = credentials('cloudflare-api-key')
       GITHUB_TOKEN       = credentials('github-token')
+
+      APPROVERS = "${ args.approvers ?: env.APPROVERS ?: error('approvers arg not specified and APPROVERS environment variable not already set') }"
 
       CLOUDFLARE_EMAIL   = "${ args.cloudflare_email ?: '' }"
       CLOUDFLARE_ZONE_ID = "${ args.cloudflare_zone_id ?: '' }"
@@ -339,6 +343,12 @@ def call (Map args = [
               }
             }
           }
+        }
+      }
+
+      stage('Approval') {
+        steps {
+          approval(submitter: "$APPROVERS", timeout: 24, timeoutUnits: 'HOURS')
         }
       }
 
