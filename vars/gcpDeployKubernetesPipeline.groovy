@@ -140,7 +140,7 @@ def call (Map args = [
               env.APPROVAL_REQUIRED = "${ args.approval_required || false }"  // any value other than 'false' becomes 'true' explicitly this way so it's easier to see what the behaviour will be in printEnv()
             } else {
               env.APPROVAL_REQUIRED = false
-              if ( env.ENVIRONMENT ==~ /prod$|production/ ) {
+              if ( env.APPROVERS && env.ENVIRONMENT ==~ /prod$|production/ ) {
                 env.APPROVAL_REQUIRED = true
               }
             }
