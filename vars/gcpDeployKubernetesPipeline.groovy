@@ -69,7 +69,7 @@ def call (Map args = [
                         k8s_dir: '',  // the Kubernetes GitOps repo's directory to Kustomize the image tags in before triggering ArgoCD
                         no_code_scan: false,  // set to 'true' or environment variable NO_CODE_SCAN=true to not run Code Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
                         no_container_scan: false,  // set to 'true' or environment variable NO_CONTAINER_SCAN=true to not run Container Scanning stage - tip: set this at the Jenkins global server to disable for all pipelines templated from this template
-                        approve_before_deploy: false,
+                        approval_required: false,
                         approvers: '',
                         cloudflare_email: '',  // if both cloudflare email and zone id are set causes a Cloudflare Cache Purge at the end of the pipeline
                         cloudflare_zone_id: '',
@@ -136,6 +136,14 @@ def call (Map args = [
             env.K8S_DIR = "${ args.k8s_dir ?: env.K8S_DIR ?: "$APP/$ENVIRONMENT" }"  // Directory path in the GitOps Kubernetes repo in which to Kustomize edit the docker image tag versions
             env.NO_CODE_SCAN = args.no_code_scan ?: env.NO_CODE_SCAN ?: false
             env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
+            if ( args.approval_required != null ) {
+              env.APPROVAL_REQUIRED = "${ args.approval_required || false }"  // any value other than 'false' becomes 'true' explicitly this way so it's easier to see what the behaviour will be in printEnv()
+            } else {
+              env.APPROVAL_REQUIRED = false
+              if ( env.ENVIRONMENT ==~ /prod$|production/ ) {
+                env.APPROVAL_REQUIRED = true
+              }
+            }
           }
           loadEnvVars(args.env_vars)
           loadCredentials(args.creds)
@@ -347,6 +355,9 @@ def call (Map args = [
       }
 
       stage('Approval') {
+        when {
+          expression { "${env.APPROVAL_REQUIRED}".toBoolean() }
+        }
         steps {
           approval(submitter: "$APPROVERS", timeout: 24, timeoutUnits: 'HOURS')
         }
