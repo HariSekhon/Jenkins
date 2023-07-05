@@ -138,11 +138,13 @@ def call (Map args = [
             env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
             if ( args.approval_required != null ) {
               env.APPROVAL_REQUIRED = "${ args.approval_required || false }"  // any value other than 'false' becomes 'true' explicitly this way so it's easier to see what the behaviour will be in printEnv()
+              echo "Approval required set = '$APPROVAL_REQUIRED'
             } else {
               env.APPROVAL_REQUIRED = false
-              if ( env.APPROVERS && env.ENVIRONMENT ==~ /prod$|production/ ) {
+              if ( env.APPROVERS && env.ENVIRONMENT =~ /prod$|production/ ) {
                 env.APPROVAL_REQUIRED = true
               }
+              echo "Approval required inferred to be '$APPROVAL_REQUIRED'"
             }
           }
           loadEnvVars(args.env_vars)
