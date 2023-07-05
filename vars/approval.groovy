@@ -51,7 +51,7 @@ def call (Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:''])
     input (
       message: """Are you sure you want to release this build?
 
-This prompt will time out in ${timeout} ${timeoutUnits.toLowerCase()}""",
+This prompt will time out in ${time} ${timeoutUnits.toLowerCase()}""",
       ok: args.ok,
       // only allow people in these 2 groups to approve before proceeeding eg. to production deployment - this list can now be provided as an argument
       //submitter: "platform-engineering@mydomain.co.uk,ApproversGroup"
