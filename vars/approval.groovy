@@ -45,9 +45,9 @@ def call (Map args = [submitter:'', timeout:60, timeoutUnits: 'MINUTES', ok:''])
   //  "Using a milestone step inside parallel is not allowed"
   //
   milestone ordinal: null, label: "Milestone: Approval"
-  int timeout = args.timeout ?: 60
+  int time = args.timeout ?: 60
   String timeoutUnits = args.timeoutUnits ?: 'MINUTES'
-  timeout (time: timeout, unit: timeoutUnits) {
+  timeout (time: time, unit: timeoutUnits) {
     input (
       message: """Are you sure you want to release this build?
 
