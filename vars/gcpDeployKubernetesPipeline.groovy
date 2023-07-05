@@ -141,6 +141,7 @@ def call (Map args = [
               echo "Approval required set = '$APPROVAL_REQUIRED'
             } else {
               env.APPROVAL_REQUIRED = false
+              // in boolean context =~ works as expected rather than returning a matcher, don't use ==~ as it is anchored and breaks matching without surrounding .*
               if ( env.APPROVERS && env.ENVIRONMENT =~ /prod$|production/ ) {
                 env.APPROVAL_REQUIRED = true
               }
