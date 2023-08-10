@@ -30,7 +30,7 @@ def call (app, timeoutMinutes=20) {
   if(timeoutMinutes < 2){
     error("Cannot set timeoutMinute < 2 in argoDeploy() function")
   }
-  int timeoutSeconds = (timeoutMinutes * 60 / numRetries ) - 10
+  int timeoutSeconds = ( timeoutMinutes * 60 / numRetries ) - 10
   echo "Acquiring ArgoCD Lock: $label"
   lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
