@@ -24,9 +24,13 @@
 //
 // The ArgoCD app must be passed as the first argument
 
-def call (app, timeoutMinutes=10) {
+def call (app, timeoutMinutes=20) {
   String label = "ArgoCD Deploy - App: '$app'"
-  int timeoutSeconds = timeoutMinutes * 60
+  int numRetries = 2
+  if(timeoutMinutes < 2){
+    error("Cannot set timeoutMinute < 2 in argoDeploy() function")
+  }
+  int timeoutSeconds = (timeoutMinutes * 60 / numRetries ) - 10
   echo "Acquiring ArgoCD Lock: $label"
   lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
@@ -40,20 +44,25 @@ def call (app, timeoutMinutes=10) {
 
         argoSync("$app")
 
-        waitUntil (initialRecurrencePeriod: 5000) {
+        // results in a timeout status, but prefer an error status to bubble up instead
+        //waitUntil (initialRecurrencePeriod: 5000) {
+        retry(numRetries) {
           withEnv (["APP=$app", "TIMEOUT_SECONDS=$timeoutSeconds"]) {
             //echo "$label"
             script {
-              int exitCode = sh (
+              //int exitCode = sh (
+              sh (
                 label: "$label",
-                // tried hard refresh to work around this problem:
+                //returnStatus: true,
+                //
+                // tried argocd --hard-refresh to work around this problem:
                 //
                 //   Message:            ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): `kustomize build /tmp/git@github.com_MYORG_kubernetes/www/production --enable-helm` failed timeout after 1m30s
                 //
                 // it seemed to work initially when run as a one off in the UI,
                 // but when applied in CI/CD and run every time to try to patch over that problem,
                 // it resulted in performance issues and 504 gateway timeouts to ArgoCD (via an ingress)
-                returnStatus: true,
+                //
                 script: '''
                   set -eux
 
@@ -89,7 +98,7 @@ def call (app, timeoutMinutes=10) {
                 '''
               )
               // convert exitCode boolean for waitUntil()
-              exitCode == 0
+              //exitCode == 0
             }
           }
         }
