@@ -30,7 +30,7 @@ def call (app, timeoutMinutes=20) {
   if(timeoutMinutes < 2){
     error("Cannot set timeoutMinute < 2 in argoDeploy() function")
   }
-  int timeoutSeconds = ( timeoutMinutes * 60 / numRetries ) - 10
+  int timeoutSeconds = ( timeoutMinutes * 60 / (numRetries + 1) ) - 10
   echo "Acquiring ArgoCD Lock: $label"
   lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
@@ -42,7 +42,9 @@ def call (app, timeoutMinutes=20) {
     //container ('argocd') {
       timeout (time: timeoutMinutes, unit: 'MINUTES') {
 
-        argoSync("$app")
+        syncTimeoutMinutes = Math.max(1, Math.ceil(timeoutSeconds / 60).toInteger() )
+
+        argoSync("$app", syncTimeoutMinutes)
 
         // results in a timeout status, but prefer an error status to bubble up instead
         //waitUntil (initialRecurrencePeriod: 5000) {
