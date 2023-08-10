@@ -27,8 +27,9 @@
 def call (app, timeoutMinutes=20) {
   String label = "ArgoCD Deploy - App: '$app'"
   int numRetries = 2
-  if(timeoutMinutes < 2){
-    error("Cannot set timeoutMinute < 2 in argoDeploy() function")
+  int minMinutes = 3
+  if(timeoutMinutes < minMinutes){
+    error("Cannot set timeoutMinute < $minMinutes in argoDeploy() function")
   }
   int timeoutSeconds = ( timeoutMinutes * 60 / (numRetries + 1) ) - 10
   echo "Acquiring ArgoCD Lock: $label"
