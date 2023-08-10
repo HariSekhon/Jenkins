@@ -32,7 +32,7 @@
 
 def call (app, timeoutMinutes=5) {
   String label = "ArgoCD Sync - App: '$app'"
-  int timeoutSeconds = timeoutMinutes * 10
+  int timeoutSeconds = timeoutMinutes * 60 - 10
   echo "Acquiring ArgoCD Lock: $label"
   lock (resource: label, inversePrecedence: true) {
     // XXX: prevents calling in a parallel stage otherwise you'll get this error:
