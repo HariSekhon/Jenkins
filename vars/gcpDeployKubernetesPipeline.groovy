@@ -138,7 +138,7 @@ def call (Map args = [
             env.NO_CONTAINER_SCAN = args.no_container_scan ?: env.NO_CONTAINER_SCAN ?: false
             if ( args.approval_required != null ) {
               env.APPROVAL_REQUIRED = "${ args.approval_required || false }"  // any value other than 'false' becomes 'true' explicitly this way so it's easier to see what the behaviour will be in printEnv()
-              echo "Approval required set = '$APPROVAL_REQUIRED'
+              echo "Approval required set = '$APPROVAL_REQUIRED'"
             } else {
               env.APPROVAL_REQUIRED = false
               // in boolean context =~ works as expected rather than returning a matcher, don't use ==~ as it is anchored and breaks matching without surrounding .*
