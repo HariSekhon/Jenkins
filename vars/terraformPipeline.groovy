@@ -52,7 +52,7 @@ def call (Map args = [
                       yamlFile: 'ci/jenkins-pod.yaml'
                      ] ) {
 
-  String veresion = version ?: error('Terraform version not specified')
+  String version = args.version ?: error('Terraform version not specified')
   args.dir = args.dir ?: '.'
   String apply_branch_pattern = args.apply_branch_pattern ?: '^(.*/)?(main|master)$'
   String tfArgs = args.args ?: ''
