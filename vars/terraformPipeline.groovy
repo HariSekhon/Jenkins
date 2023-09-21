@@ -300,10 +300,10 @@ def call (Map args = [
             }
             anyOf {
               // XXX: branch pattern fails to match anything unless part of a multibranch pipeline
-              branch pattern: "$args.apply_branch_pattern", comparator: "REGEXP"
+              branch pattern: "$apply_branch_pattern", comparator: "REGEXP"
               // which is why we use an expression evaluation here
               expression {
-                (env.GIT_BRANCH =~ ~"$args.apply_branch_pattern").matches()
+                (env.GIT_BRANCH =~ ~"$apply_branch_pattern").matches()
               }
             }
           }
