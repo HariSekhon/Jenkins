@@ -17,7 +17,7 @@
 //                  D o w n l o a d   G i t H u b   C o d e Q L
 // ========================================================================== //
 
-// adapted from DevOps Bash tools script setup/install_github_codeql.sh
+// adapted from DevOps Bash tools script install/install_github_codeql.sh
 
 def call () {
   String label = "Download CodeQL on agent '$HOSTNAME'"

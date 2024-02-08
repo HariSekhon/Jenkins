@@ -43,7 +43,7 @@ def call (version = '1.5.1') {
             git clone https://github.com/HariSekhon/DevOps-Bash-tools bash-tools
           fi
 
-          bash-tools/setup/install_kics.sh
+          bash-tools/install/install_kics.sh
         '''
       )
       sh (

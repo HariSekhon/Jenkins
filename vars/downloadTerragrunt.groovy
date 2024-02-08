@@ -23,7 +23,7 @@
 
 // Designed for Kubernetes ephemeral agents rather than old style long running agents, in which case it'd need to be modified with a unique destination per version
 
-// Adapted from DevOps Bash Tools setup/install_terragrunt.sh
+// Adapted from DevOps Bash Tools install/install_terragrunt.sh
 
 // get release version from:
 //

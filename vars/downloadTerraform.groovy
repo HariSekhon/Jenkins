@@ -23,7 +23,7 @@
 
 // Designed for Kubernetes ephemeral agents rather than old style long running agents, in which case it'd need to be modified with a unique destination per version, although I'd recommend using tfenv instead in that case
 
-// Adapted from DevOps Bash Tools setup/install_terraform.sh, install_binary.sh, install_packages.sh and lib/utils.sh
+// Adapted from DevOps Bash Tools install/install_terraform.sh, install_binary.sh, install_packages.sh and lib/utils.sh
 
 // you may need to call this first to ensure the prerequisite commands curl and unzip are available:
 //
