@@ -359,6 +359,8 @@ You will be responsible for committing and reconciling any divergences in your l
 
   - [Diagrams-as-Code](https://github.com/HariSekhon/Diagrams-as-Code) - Cloud & Open Source architecture diagrams with Python & D2 source code provided - automatically regenerated via GitHub Actions CI/CD - AWS, GCP, Kubernetes, Jenkins, ArgoCD, Traefik, Kong API Gateway, Nginx, Redis, PostgreSQL, Kafka, Spark, web farms, event processing...
 
+  - [Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) - IT Knowledge Base from 20 years in DevOps, Linux, Cloud, Big Data, AWS, GCP etc.
+
 ### Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/HariSekhon/Jenkins.svg)](https://starchart.cc/HariSekhon/Jenkins)
