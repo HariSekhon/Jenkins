@@ -73,29 +73,29 @@ def call (app, timeoutMinutes=20) {
                   #
                   #   https://github.com/argoproj/argo-cd/issues/9701
                   #
-                  #argocd app get  "$APP" --grpc-web --hard-refresh
-                  #argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
+                  # argocd app get  "$APP" --grpc-web --hard-refresh
+                  # argocd app wait "$APP" --grpc-web --timeout "$TIMEOUT_SECONDS" || :
 
                   # workaround for issue:
                   #
                   #   https://github.com/argoproj/argo-cd/issues/5592
                   #
-                  #argocd --grpc-web app get "$APP" --refresh > /dev/null
+                  # argocd --grpc-web app get "$APP" --refresh > /dev/null
 
                   # needed in case auto-sync isn't enabled - above workaround isn't enough
                   # done in argoSync() function now to be able to parallelize app deployments by pre-calling Sync
-                  #argocd app sync "$APP" --grpc-web --force
+                  # argocd app sync "$APP" --grpc-web --force
 
                   # workaround for issue:
                   #
                   #   https://github.com/argoproj/argo-cd/issues/6013
                   #
-                  #argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
-                  #argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  # argocd app wait "$APP" --sync      --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  # argocd app wait "$APP" --operation --grpc-web --timeout "$TIMEOUT_SECONDS"
                   # HPAs transition to degraded, causing deployments to fail even on retry
-                  ##argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
+                  # #argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
                   #
-                  # is no good because not running --health checks returns ok on the deployment in Jenkins pipeine when k8s pods are actually failing healthchecks
+                  # It's no good because not running --health checks returns ok on the deployment in Jenkins pipeline when k8s pods are actually failing healthchecks.
 
                   argocd app wait "$APP" --sync --operation --health --grpc-web --timeout "$TIMEOUT_SECONDS"
                 '''
