@@ -1,4 +1,4 @@
-# Jenkins - Advanced Jenkinsfile & Groovy Shared Library
+  # Jenkins - Advanced Jenkinsfile & Groovy Shared Library
 
 [![GitHub stars](https://img.shields.io/github/stars/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/network)
@@ -36,6 +36,12 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 - [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars) - Groovy Shared Library reusable functions - used in Production for years
 
 Additional Jenkins scripts are available in my [HariSekhon/DevOps-Bash-tools](https://github.com/HariSekhon/DevOps-Bash-tools) repo for Jenkins Rest API and Jenkins Groovy scripts for the Admin Script Console, and Jenkins-on-Kubernetes in my [HariSekhon/Kubernetes-configs](https://github.com/HariSekhon/Kubernetes-configs) repo.
+
+### Useful Notes:
+
+[HariSekhon/Knowledge-Base - Jenkins](https://github.com/HariSekhon/Knowledge-Base/blob/main/jenkins.md)
+
+[HariSekhon/Knowledge-Base - Jenkins-on-Kubernetes](https://github.com/HariSekhon/Knowledge-Base/blob/main/jenkins-on-kubernetes.md)
 
 ## QuickStart
 
