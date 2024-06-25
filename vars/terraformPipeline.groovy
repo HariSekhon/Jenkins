@@ -122,7 +122,9 @@ def call (Map args = [
     environment {
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$version"
+      TF_INPUT = "false"
       TF_IN_AUTOMATION = 1
+      TERRAGRUNT_NON_INTERACTIVE = "true"
       APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
       //GOOGLE_APPLICATION_CREDENTIALS = "$HOME/.gcloud/application-credentials.json.$GIT_COMMIT"
