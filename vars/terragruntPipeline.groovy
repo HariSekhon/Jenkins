@@ -90,7 +90,10 @@ def call (Map args = [
       TF_INPUT = "false"
       TF_IN_AUTOMATION = 1
       TERRAGRUNT_NON_INTERACTIVE = "true"
+      // force the pipeline to fail if the hcl is not properly formatted
+      //TERRAGRUNT_CHECK = "true"
       //TERRAGRUNT_NO_COLOR = "true"
+      //TERRAGRUNT_DIFF = "true"
       APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
       //TF_LOG = "$DEBUG"
