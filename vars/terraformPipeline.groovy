@@ -122,6 +122,7 @@ def call (Map args = [
     environment {
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$version"
+      // https://developer.hashicorp.com/terraform/cli/config/environment-variables#tf_input
       TF_INPUT = "false"
       TF_IN_AUTOMATION = 1
       APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
