@@ -123,7 +123,9 @@ def call (Map args = [
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$version"
       // https://developer.hashicorp.com/terraform/cli/config/environment-variables#tf_input
+      // run non-interactively - don't prompt for any inputs
       TF_INPUT = "false"
+      // don't output next command suggestions
       TF_IN_AUTOMATION = 1
       APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       /// $HOME evaluates to /home/jenkins here but /root inside gcloud-sdk container, leading to a mismatch 'no such file or directory' error
