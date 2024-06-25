@@ -88,6 +88,7 @@ def call (Map args = [
       TERRAFORM_DIR = "$args.dir"
       TERRAFORM_VERSION = "$version"
       TF_IN_AUTOMATION = 1
+      TERRAGRUNT_NON_INTERACTIVE = "true"
       APPLY_BRANCH_PATTERN = "$apply_branch_pattern"
       GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG" // gcpSetupApplicationCredentials() will follow this path
       //TF_LOG = "$DEBUG"
