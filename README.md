@@ -1,4 +1,4 @@
-  # Jenkins - Advanced Jenkinsfile & Groovy Shared Library
+# Jenkins - Advanced Jenkinsfile & Groovy Shared Library
 
 [![GitHub stars](https://img.shields.io/github/stars/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/HariSekhon/Jenkins?logo=github)](https://github.com/HariSekhon/Jenkins/network)
@@ -37,7 +37,7 @@ Advanced Jenkinsfile & Jenkins Shared Library.
 
 Additional Jenkins scripts are available in my [HariSekhon/DevOps-Bash-tools](https://github.com/HariSekhon/DevOps-Bash-tools) repo for Jenkins Rest API and Jenkins Groovy scripts for the Admin Script Console, and Jenkins-on-Kubernetes in my [HariSekhon/Kubernetes-configs](https://github.com/HariSekhon/Kubernetes-configs) repo.
 
-### Useful Notes:
+## Useful Notes
 
 [HariSekhon/Knowledge-Base - Jenkins](https://github.com/HariSekhon/Knowledge-Base/blob/main/jenkins.md)
 
@@ -46,6 +46,7 @@ Additional Jenkins scripts are available in my [HariSekhon/DevOps-Bash-tools](ht
 ## QuickStart
 
 Jenkinsfile:
+
 ```groovy
 // load this library straight from github - the '_' at the end imports all functions
 @Library('github.com/harisekhon/jenkins@master') _
@@ -191,12 +192,12 @@ gcpDeployKubernetesPipeline(
   cloudflare_zone_id: '12a34b5c6d7ef8a901b2c3def45ab6c7', // if both these are set and Jenkins 'cloudflare-api-key' credential is available
 )
 ```
+
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/gcp_cloudbuild_deployed_after_container_scans_failed.png)
 
 See [gcpDeployKubernetesPipeline.groovy](https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpDeployKubernetesPipeline.groovy) for more details, options etc.
 
 See [Jenkins on Kubernetes Diagram](#jenkins-on-kubernetes-diagram) further down.
-
 
 ### Terraform CI/CD
 
@@ -233,8 +234,7 @@ Plan found changes but Approval was not authorized, so Apply did not proceed:
 
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/terraform_not_approved.png)
 
-https://github.com/HariSekhon/Terraform
-
+<https://github.com/HariSekhon/Terraform>
 
 ### Git Merges & Backports
 
@@ -246,7 +246,6 @@ Automatically merge one branch into another upon any change eg. backport between
 // git merge from staging branch into dev branch
 gitMergePipeline('staging', 'dev')
 ```
-
 
 ### Git Update Jenkinsfile Library Tag
 
@@ -267,7 +266,6 @@ jenkinsfileLibraryUpdatePipeline(
 ```
 
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/jenkinsfile_update_library_tag_update_jenkinsfile.png)
-
 
 ### Jenkins Job Configuration Backups
 
@@ -292,7 +290,6 @@ jenkinsBackupJobConfigsPipeline(
 
 ![](https://github.com/HariSekhon/Diagrams-as-Code/blob/master/screenshots/jenkins_job_config_backups.png)
 
-
 ## More Documentation
 
 Read the comments at the top of each library function under [vars/](https://github.com/HariSekhon/Jenkins/tree/master/vars)`<function>.groovy` for more details.
@@ -301,15 +298,13 @@ If you want to prevent changes to this library re-triggering the last run of you
 
 See this [Jenkins Documentation](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries) for more details.
 
-
 ## Jenkins on Kubernetes Diagram
 
 ![](https://raw.githubusercontent.com/HariSekhon/Diagrams-as-Code/master/images/jenkins_kubernetes_cicd.svg)
 
 For more excellent diagrams like this, see my Diagrams-as-Code repo:
 
-https://github.com/HariSekhon/Diagrams-as-Code
-
+<https://github.com/HariSekhon/Diagrams-as-Code>
 
 ## Production
 
