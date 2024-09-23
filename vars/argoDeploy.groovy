@@ -95,7 +95,8 @@ def call (app, timeoutMinutes=20) {
                   # HPAs transition to degraded, causing deployments to fail even on retry
                   ##argocd app wait "$APP" --health    --grpc-web --timeout "$TIMEOUT_SECONDS"
                   #
-                  # is no good because not running --health checks returns ok on the deployment in Jenkins pipeine when k8s pods are actually failing healthchecks
+                  # The above commands are no good because not running --health checks returns ok on the deployment
+                  # in Jenkins pipeline when k8s pods are actually failing healthchecks
 
                   argocd app wait "$APP" --sync --operation --health --grpc-web --timeout "$TIMEOUT_SECONDS"
                 '''
