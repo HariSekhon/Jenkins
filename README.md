@@ -330,9 +330,9 @@ You can use the [vars/download.sh](https://github.com/HariSekhon/Jenkins/blob/ma
 
 You will be responsible for committing and reconciling any divergences in your local copies.
 
-### Stargazers over time
+## Star History
 
-[![Stargazers over time](https://starchart.cc/HariSekhon/Jenkins.svg)](https://starchart.cc/HariSekhon/Jenkins)
+[![Star History Chart](https://api.star-history.com/svg?repos=HariSekhon/Jenkins&type=Date)](https://star-history.com/#HariSekhon/Jenkins&Date)
 
 ## More Core Repos
 
