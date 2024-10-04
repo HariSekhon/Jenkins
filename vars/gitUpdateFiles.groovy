@@ -72,6 +72,7 @@ def call (Map args = []) {
 
                 git status
 
+                # the --quiet switch is required to get a non-zero exit code upon any changes
                 if ! git diff-index --quiet HEAD; then
                   git commit -m "$commit_msg"
 
