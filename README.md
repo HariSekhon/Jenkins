@@ -22,6 +22,7 @@
 [![Jenkinsfile](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml)
 [![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
 [![YAML](https://github.com/HariSekhon/Jenkins/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/yaml.yaml)
+[![Markdown](https://github.com/HariSekhon/Jenkins/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/markdown.yaml)
 [![Validation](https://github.com/HariSekhon/Jenkins/actions/workflows/validate.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/validate.yaml)
 [![Grype](https://github.com/HariSekhon/Jenkins/actions/workflows/grype.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/grype.yaml)
 [![Kics](https://github.com/HariSekhon/Jenkins/actions/workflows/kics.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/kics.yaml)
