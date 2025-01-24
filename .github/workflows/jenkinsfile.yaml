@@ -20,7 +20,7 @@ on:
       - master
       - main
     paths:
-      - Jenkinsfile
+      - '**/Jenkinsfile'
   pull_request:
     branches:
       - master
