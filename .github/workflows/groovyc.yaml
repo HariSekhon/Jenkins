@@ -14,7 +14,7 @@
 ---
 name: Groovy Shared Library
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
