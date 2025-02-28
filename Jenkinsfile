@@ -140,6 +140,7 @@ pipeline {
   //tools {
   //  jdk 'my-jdk'  // configure specific JDK versions under Global Tool Configuration
   //  jfrog 'jfrog-cli'  // set this up in Manage Jenkins -> Global Tool Configuration
+  //  nodejs 'nodejs16'
   //}
 
   // ========================================================================== //
