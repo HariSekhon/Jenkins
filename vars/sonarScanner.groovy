@@ -25,7 +25,7 @@
 
 // CLI Scanner for SonarQube
 //
-// Repo should have a sonar-project.properties at its root for the project specific settings
+// Repo should have a 'sonar-project.properties' file at its root for the project specific settings
 //
 // Jenkins should have its Global Config for the SonarQube section set at:
 //
